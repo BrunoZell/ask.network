@@ -10,11 +10,13 @@ Further, Ask Network establishes a new paradigm of coordination markets which al
 
 ## Brief History of Banking
 
-**Bartering** is perhaps the earliest system of exchange, with no formalized currency or medium of exchange. Goods and services were traded directly for other goods and services. However, the problem of 'double coincidence of wants' made this system inefficient.
+The journey of banking from its inception to its current state is a series of problem-solving milestones that progressively revolutionized how humans exchange value. Let's take a walk down this intriguing historical path.
 
-To solve this problem, early societies adopted **commodity money**, such as gold or silver, which had intrinsic value. It was a significant improvement but had its own issues like divisibility, portability, and durability.
+**Bartering** emerged as an early solution to facilitate the direct exchange of goods and services. The driver behind this was the simple fact that exchanging goods and services could create mutual benefits. By trading something you have in surplus for something you need, both parties could end up better off.
 
-The use of **debt** also has ancient roots. Farmers in Mesopotamia and elsewhere used to borrow seeds and repay after harvest. The problem of trust, ensuring that borrowers will repay, was a significant issue here, often addressed through social pressure and legal codes.
+However, the problem of 'double coincidence of wants' made this system inefficien. The use of **debt** also has ancient roots. Farmers in Mesopotamia and elsewhere used to borrow seeds and repay after harvest. The problem of trust, ensuring that borrowers will repay, was a significant issue here, often addressed through social pressure and legal codes.
+
+To solve this problem, early societies adopted **commodity money**, such as gold or silver coins. It was a significant improvement but had its own issues like divisibility, portability, and durability.
 
 **Banknotes** were introduced as a convenient alternative to carrying large amounts of commodity money. They represented a promise to pay the bearer a certain amount of gold or silver. This system worked well as long as people had faith in the institution issuing the banknotes. If that faith was lost, as happened during many banking crises, the system could collapse.
 
@@ -40,6 +42,6 @@ Ask Networks unlocks the new frontier of automatic multi-party transactions and 
 
 In terms of pairwise transactions contributing to economic inequality, Ask Network enables multi-party transactions, has the potential to disrupt this dynamic, potentially leading to a more equitable distribution of wealth.
 
-Ask Network is also fostering a new ecosystem of entrepreneurs who develop and operate coordination schemes, similar to how organizations have traditionally operated within the monetary for-profit framework. This can lead to a whole new range of innovative applications and services, potentially reshaping the financial landscape.
+Ask Network is also fostering a new ecosystem of entrepreneurs who develop and operate coordination schemes, similar to how organizations have traditionally operated within the monetary for-profit framework, but with the use of coordination markets now have access to organization engineering techniques at scale never seen before. This can lead to a whole new range of innovative applications and services, potentially reshaping the financial and corporate landscape.
 
-In conclusion, the Ask Network represents a fascinating evolution in the history of money, banking, and finance. As with all new technologies, its ultimate impact will depend on how it is adopted and used, but the potential is certainly there for significant innovation and transformation.
+In conclusion, the Ask Network represents a fascinating evolution in the history of money, banking, finance, and commerce. As with all new technologies, its ultimate impact will depend on how it is adopted and used, but the potential is certainly there for significant innovation and transformation.

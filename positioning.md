@@ -24,7 +24,7 @@ By the 1970s, with the advent of mainframe computers, such **clearinghouse syste
 
 However, this system also had issues, especially regarding international transactions. The **SWIFT** system was established to allow secure and reliable international transactions, but it has been criticized for its centralized control, potential for surveillance, and vulnerability to sanctions and political pressures.
 
-Despite these advances, the problem of economic inequality has persisted and, according to some analyses, worsened. Economist John Angle's work on the Inequality Process, or **Angle Process**, suggests that the increased volume of pairwise transactions may exacerbate wealth inequality over time.
+Despite these advances, the problem of economic inequality has persisted and, according to some analyses, worsened. Economist John Angle's work on the Inequality Process, or **Angle Process**, suggests that the increased volume of pairwise transactions may exacerbate wealth inequality over time, ultimately always resulting in an oligarchy.
 
 ## Solution
 

@@ -14,7 +14,11 @@ The use of **debt** also has ancient roots. Farmers in Mesopotamia and elsewhere
 
 In the 20th century, technology began to reshape banking. The **ERMA computer**, introduced in the 1950s, automated the tedious task of sorting and recording checks, laying the groundwork for modern computerized banking.
 
-**Clearinghouse systems** evolved, allowing for automatic payments and ATM transactions, simplifying the process of transferring funds between accounts, making transactions faster and more efficient.
+Before ERMA, tellers at banks had to manually sort and record each check. This process was not only time-consuming but also susceptible to human error. With the rapid growth of the post-war economy, banks were dealing with an increasing number of checks, and the manual method was becoming unmanageable.
+
+ERMA changed all that by using Magnetic Ink Character Recognition (MICR) to read the numbers at the bottom of checks automatically. ERMA could sort checks, record account data, and even detect fraudulent checks. It could process about 240 checks per minute, a rate far beyond what any human could achieve.
+
+By the 1970s, with the advent of mainframe computers, such **clearinghouse systems** began to take on a form that we might recognize as a precursor to online banking. These systems supported automatic payments and ATM transactions, simplifying the process of transferring funds between accounts, making transactions faster and more efficient.
 
 However, this system also had issues, especially regarding international transactions. The **SWIFT** system was established to allow secure and reliable international transactions, but it has been criticized for its centralized control, potential for surveillance, and vulnerability to sanctions and political pressures.
 

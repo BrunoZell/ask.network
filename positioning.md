@@ -2,6 +2,12 @@
 
 The history of banking is as rich and varied as human civilization itself, characterized by a constant evolution of methods and mediums to fulfill one of humanity's most basic needs: the exchange of value.
 
+First we will outline current systems used in modern day banking.
+
+Next, we explicate what problem each system solves and show how Ask Network is a suitable replacement for all those systems.
+
+Further, Ask Network establishes a new paradigm of coordination markets which allow to negotiate social coordination directly, enabling the realization of non-exchangeable desires.
+
 ## Brief History of Banking
 
 **Bartering** is perhaps the earliest system of exchange, with no formalized currency or medium of exchange. Goods and services were traded directly for other goods and services. However, the problem of 'double coincidence of wants' made this system inefficient.

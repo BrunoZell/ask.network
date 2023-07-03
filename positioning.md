@@ -38,10 +38,10 @@ Despite these advances, the problem of economic inequality has persisted and, ac
 
 **Ask Network** aims to address many of the problems identified above. By using modern distributed ledger technology, it brings us back to the trust-based personal ledgers of old, with the trust ensured by cryptography, decentralization, and big data. It takes the concept of commodity money and updates it for the digital age.
 
-Ask Networks unlocks the new frontier of automatic multi-party transactions and realtime adaptive economies.
+It features a globally liquid basket of crypto assets, removing the need for a global banking standard that relies on national laws and voluntary participation.
 
-In terms of pairwise transactions contributing to economic inequality, Ask Network enables multi-party transactions, has the potential to disrupt this dynamic, potentially leading to a more equitable distribution of wealth.
+Ask Network enables automatic multi-party transactions, removing the reliance on pairwise transactions and potentially leading to a more equitable distribution of wealth.
 
-Ask Network is also fostering a new ecosystem of entrepreneurs who develop and operate coordination schemes, similar to how organizations have traditionally operated within the monetary for-profit framework, but with the use of coordination markets now have access to organization engineering techniques at scale never seen before. This can lead to a whole new range of innovative applications and services, potentially reshaping the financial and corporate landscape.
+Ask Network is also fostering a new ecosystem of entrepreneurs who develop and operate coordination schemes, similar to how organizations have traditionally operated within the monetary for-profit framework, but with the use of coordination markets entrapreneurs now have access to scalable techniques for organization engineering and operation as never seen before. This can lead to a whole new range of innovative applications and services, potentially reshaping the financial and corporate landscape.
 
 In conclusion, the Ask Network represents a fascinating evolution in the history of money, banking, finance, and commerce. As with all new technologies, its ultimate impact will depend on how it is adopted and used, but the potential is certainly there for significant innovation and transformation.

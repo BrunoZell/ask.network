@@ -2,6 +2,8 @@
 
 The history of banking is as rich and varied as human civilization itself, characterized by a constant evolution of methods and mediums to fulfill one of humanity's most basic needs: the exchange of value.
 
+## Brief History of Banking
+
 **Bartering** is perhaps the earliest system of exchange, with no formalized currency or medium of exchange. Goods and services were traded directly for other goods and services. However, the problem of 'double coincidence of wants' made this system inefficient.
 
 To solve this problem, early societies adopted **commodity money**, such as gold or silver, which had intrinsic value. It was a significant improvement but had its own issues like divisibility, portability, and durability.
@@ -22,18 +24,16 @@ By the 1970s, with the advent of mainframe computers, such **clearinghouse syste
 
 However, this system also had issues, especially regarding international transactions. The **SWIFT** system was established to allow secure and reliable international transactions, but it has been criticized for its centralized control, potential for surveillance, and vulnerability to sanctions and political pressures.
 
-## Inequality
-
 Despite these advances, the problem of economic inequality has persisted and, according to some analyses, worsened. Economist John Angle's work on the Inequality Process, or **Angle Process**, suggests that the increased volume of pairwise transactions may exacerbate wealth inequality over time.
 
 ## Solution
 
-**Ask Network** aims to address many of the problems identified above. By using modern distributed ledger technology, it brings us back to the trust-based personal ledgers of old, with the trust ensured by cryptography and decentralization. It takes the concept of commodity money and updates it for the digital age.
+**Ask Network** aims to address many of the problems identified above. By using modern distributed ledger technology, it brings us back to the trust-based personal ledgers of old, with the trust ensured by cryptography, decentralization, and big data. It takes the concept of commodity money and updates it for the digital age.
 
 Ask Networks unlocks the new frontier of automatic multi-party transactions and realtime adaptive economies.
 
-In terms of pairwise transactions contributing to economic inequality, the Ask Network, by enabling multi-party transactions, has the potential to disrupt this dynamic, potentially leading to a more equitable distribution of wealth.
+In terms of pairwise transactions contributing to economic inequality, Ask Network enables multi-party transactions, has the potential to disrupt this dynamic, potentially leading to a more equitable distribution of wealth.
 
-The Ask Network is also fostering a new ecosystem of entrepreneurs who develop and operate coordination schemes, similar to how organizations have traditionally operated within the monetary for-profit framework. This can lead to a whole new range of innovative applications and services, potentially reshaping the financial landscape.
+Ask Network is also fostering a new ecosystem of entrepreneurs who develop and operate coordination schemes, similar to how organizations have traditionally operated within the monetary for-profit framework. This can lead to a whole new range of innovative applications and services, potentially reshaping the financial landscape.
 
 In conclusion, the Ask Network represents a fascinating evolution in the history of money, banking, and finance. As with all new technologies, its ultimate impact will depend on how it is adopted and used, but the potential is certainly there for significant innovation and transformation.

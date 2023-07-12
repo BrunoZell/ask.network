@@ -34,7 +34,7 @@ Instead of pairwise transactions, Ask Network accounts for future economic activ
 
 Matchmaking and counterparty-discovery is done by Market Makers who search for and propose possibly valuable matches, which are then automatically filtered, prioritized, and annotated based on how the users Asks (wants or aversions) are expectedly satisfied by it before affected users make the final call of committing to them or not.
 
-Asks and Service Contracts are defined in terms of causal-semantic models of reality which enable onchain reasoning about effects of different possible action paths, and whether these effects are desired or not.
+Asks and service offerings are defined in terms of causal-semantic models of reality which enable onchain reasoning about effects of different possible action paths, and whether these effects are desired or not.
 
 To ensure all desired economic activity can be accounted for regardless how everyday life changes over the next centuries, the network is invariant to how users view the world and what values they pursue in that world. That also makes it interoperable with existing coordination mechanisms like companies, money, laws, political institutions, and text messages.
 

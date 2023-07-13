@@ -28,7 +28,7 @@ Most importantly for social coordination is the identification of beings and thi
 
 Let us first differentiate economic participants from everything else. An economic participant is everything and everybody that influences voluntary participants to a degree that the influenced participant accounts for. Essentially it's the set of everything that is directly or indirectly important to at least one voluntary participant, with voluntary participant referring to a being that uses Ask Network to coordinate.
 
-Let us further differentiate between passive and active  participants:
+Let us further differentiate between passive and active participants:
 
 Passive participants are things with no behavior of their own other than the natural laws that govern their physical body. Desired things are economic goods (for example, a glass of wine) whereas undesired things are economic costs (like waste).
 
@@ -39,3 +39,65 @@ Now let's distinguish between communicating and silent participants. Communicati
 We identify a human as every communicating participant which is not labeled as a thing. Simply because we haven't yet observed any animal being able to make use of internet protocols.
 
 Humans can authenticate themselves by claiming spots on the economic social graph. Smart things can authenticate themselves with an onboard private key.
+
+## Coordination
+
+From here onwards, we call an active economic participant, those beings or things operating a sensory-motor cycle, an _agent_. Further, let's call all agents that are beings _subjects_, and all agents that are things _objects_.
+
+We assume all agents aim to optimize their behavior to best respect the desires and aversions of their own. We refer to such an aim as the agents _wants_. While each agent certaily incorporates wants in their decision process as there always is a trade off between picking one action over another, the agent may not be explicitly aware of the wants that drive his decision.
+
+All agents are assumed to do whatever they wants at any given moment by default. But beings and things may influence each other with their acts, positively or negatively. This soon will give rise to coordination between agents. For that, agents communicate an unambiguous shared world view, and negotiate who does what directly.
+
+This section defines a general scheme for such a  conversation to semi-automatically negotiate social coordination directly in terms of conditional actions (_"I do this if I observe that"_), from which then commitment schemes are constructed (_"I do this if you do that"_).
+
+The goals for this conversaition is:
+
+- (i) We recognize that subjects carry their own individual wants and each subject should be heard
+- (ii) We also would welcome an open and unambiguous conversation about what we can do, esentially searching through our possible action paths.
+- (iii) Further, an unambiguous social contract with automatic accounting and trustless settlement could help to coordinate on what we do.
+
+The conversation defines three communication channels:
+
+- (i) Broadcasting of wants for each subject
+- (ii) Broadcasting of potential action paths
+- (iii) Declaring of own commitment to action paths
+
+With three types of messages, respectively:
+
+- (i) **Wants**, answering: **how do we like it?**
+  
+  _(Represented as binary queries (fulfilled or not) in a given context.)_
+
+- (ii) **Proposals**, answering: **what could we do?**
+
+  _(Represented as changes (additions and removals) of commitments of one or more subjects.)_
+  
+- (iii) **Commitments**, answering: **what will we do?**
+
+  _(A signed action path, represented as an ordered set of conditional actions. Conditions are either satisfied or not in a given context. The action choice is derived from the matching context via a specified query.)_
+
+Recall that the public observation pool together with applied domain theories answers: **how is it?**
+
+Those queries can be combined into a formalization of the foundational question of social coordination:
+
+**what could we do | so we like it | in the future?**
+
+Which translates into scanning the corpus of _Proposals_ for action paths that increase the probability of _Wants_ being satisfied according to future observations.
+
+After desired action paths have been identified, users commit to them by signing the selected action path and publishing it as a _Commitment_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
+
+Then the subjects go ahead and actually do it accordingly, or they won't, depending in their final decision in the moment of the act. Subjects may purposefuly record evidence to later prove they caused certain economic activity.
+
+Wants are evaluated continuously on all observations as a measure for economic health. Fulfilled wants are indicators of realized value, possibly from successful coordination. Unfulfilled critical wants are indicators of unsuccessful coordination taking place.
+
+## Economics
+
+This section analyzes the dynamics of active participants interacting with each other. First we'll analyze interaction in the actual, and then show how communication in the virtual gives rise to coordinating such interactions so that everyone is better off.
+
+Each agent can or can't do a given action. The group of all actions available to an agent is called its _action space_. What the agent ended up doing is called his _acts_.
+
+## Coordination Markets
+
+## Tokenomics
+
+_[Work in progress. Feel free to ask for more information.]_

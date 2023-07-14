@@ -48,7 +48,7 @@ We assume all agents aim to optimize their behavior to best respect the desires 
 
 All agents are assumed to do whatever they wants at any given moment by default. But beings and things may influence each other with their acts, positively or negatively. This soon will give rise to coordination between agents. For that, agents communicate an unambiguous shared world view, and negotiate who does what directly.
 
-This section defines a general scheme for such a  conversation to semi-automatically negotiate social coordination directly in terms of conditional actions (_"I do this if I observe that"_), from which then commitment schemes are constructed (_"I do this if you do that"_).
+This section defines a general scheme for such a conversation to semi-automatically negotiate social coordination directly in terms of conditional actions (_"I do this if I observe that"_), from which then coordination schemes are constructed (_"I do this if you do that"_).
 
 The goals for this conversaition is:
 
@@ -104,9 +104,9 @@ Actions can be chained together into action paths, with previous actions changin
 
 We differentiate between two areas of interactions: _governance_ and _production_.
 
-**Governance** is about what not to do. Or to rephrase, to make value destruction less likely. It is concerned with conflict prevention (ex-ante) and conflict correction (ex-post). It deals with practically mutually exclusive wants across individual agents and is used for final settlement after delivery.
+**Governance** is about what not to do. Or to rephrase, to make value destruction less likely. It is concerned with conflict prevention ex-ante by negotiating compromises and conflict correction ex-post using counter-actions. It deals with practically mutually exclusive wants across individual agents and is used for final settlement after delivery.
 
-**Production** is about what to do. Or to rephrase, to make value construction more likely. It is concerned with coordination towards mutually beneifitial action plans. After some rounds of agents updating commitments we should gradually improve the projected rate of filled wants as agents tend to go for opportunities of positive-sum cooperation.
+**Production** is about what to do. Or to rephrase, to make value construction more likely. It is concerned with coordination towards mutually beneifitial action plans. After some rounds of agents updating their commitments, the collective action plan should gradually improve the projected rate of filled wants as agents tend to go for opportunities of positive-sum cooperation.
 
 ## Coordination Markets
 

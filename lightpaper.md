@@ -94,7 +94,7 @@ Those queries can be combined into a formalization of the foundational question 
 
 **what could we do | so we like it | in the future?**
 
-Which translates into scanning the corpus of _proposals_ for actions that increase the probability of _wants_ being satisfied according to future observations.
+Which translates into scanning the corpus of _proposals_ for those that increase the probability of _wants_ being satisfied by future observations according to selected domain models.
 
 After desired actions have been identified, users commit to them by signing and publishing according _commitments_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
 

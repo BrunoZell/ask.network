@@ -110,7 +110,15 @@ We differentiate between two areas of interactions: _governance_ and _production
 
 ## Coordination Markets
 
+Let's generalize the order book: Define _asks_, _offers_, and _matches_.
 
+Asks represent the demand side of productive output and are published by consumers. They specify what services they currently look out for, formulated in the consumers perspective abstracting out all to him irrelevant details of production and delivery.
+
+Offers represent the supply side of productive output and are published by service providers according to their organizations production capacity.
+
+Matches represent a selection of one or more active offers, each specifying a partially filled order form, which expectedly will lead to one or more asks being fulfilled. Further it specifies user instructions if the delivery is interactive.
+
+Asks and offers are authored in different perspectives, that of the consumer or service provider, respectively. Market makers task is to translate between those perspectives, finding out when to order what service offering to expectidely fulfill asks of one or more users.
 
 ## Tokenomics
 

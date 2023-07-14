@@ -92,7 +92,7 @@ Wants are evaluated continuously on all observations as a measure for economic h
 
 ## Economics
 
-This section analyzes the dynamics of active participants interacting with each. First we'll analyze interactions in the actual, and then show how communication and the usage of the coordination conversation defined in the previous section can leave everyone better off.
+This section analyzes the dynamics of active participants interacting with each. First we'll analyze interactions in the actual, and then show how coordination can leave practically everyone better off.
 
 Each agent can or can't do a given action. The group of all actions available to an agent is called its _action space_. What the agent ended up doing is called his _acts_.
 
@@ -109,6 +109,8 @@ We differentiate between two areas of interactions: _governance_ and _production
 **Production** is about what to do. Or to rephrase, to make value construction more likely. It is concerned with coordination towards mutually beneifitial action plans. After some rounds of agents updating commitments we should gradually improve the projected rate of filled wants as agents tend to go for opportunities of positive-sum cooperation.
 
 ## Coordination Markets
+
+
 
 ## Tokenomics
 

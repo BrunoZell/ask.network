@@ -112,19 +112,33 @@ We differentiate between two areas of interactions: _governance_ and _production
 
 Let's generalize the order book: Define _asks_, _offers_, and _matches_.
 
-Asks represent the demand side of productive output and are published by consumers. They specify what services they currently look out for, formulated in the consumers perspective abstracting out all to him irrelevant details of production and delivery.
+**Asks** represent the demand side of productive output and are published by consumers. They specify what services they currently look out for, formulated in the consumers perspective abstracting out all to him irrelevant details of production and delivery.
 
-Offers represent the supply side of productive output and are published by service providers according to their organizations production capacity.
+**Offers** represent the supply side of productive output and are published by service providers according to their organizations production capacity.
 
-Matches represent a selection of one or more active offers, each specifying a partially filled order form, which expectedly will lead to one or more asks being fulfilled. Further it specifies user instructions if the delivery is interactive.
+**Matches** represent a selection of one or more active offers, each specifying a partially filled order form, which expectedly will lead to one or more asks being fulfilled. Further it specifies user instructions if the delivery is interactive.
 
 Asks and offers are authored in different perspectives, that of the consumer or service provider, respectively. Market makers task is to translate between those perspectives, finding out when to order what service offering to expectidely fulfill asks of one or more users.
+
+Now let's generalize a futures product with physical delivery. For any offer to be listed in the networks offer book, it must implement an abstract coordination interface: offer -> order -> deal -> production -> delivery -> settlement -> settled.
+
+Each offer defines an order formular. When a user likes to order a service, he will fill out the offers order formular, sign it and send it to the service provider. The service provider analyzes the order and if we likes to provide that service, he signs a deal acknowledging and accepting that order. A newly signed deal initially is in an active state and comparable to open interest in a traditional futures product.
+
+Offer consists of commitments conditioned on signed deals of that offer. Therefore, once the deal is signed and published, worker agents orchestrated by the service provider automatically commit to actions that make up the service.
+
+First, there is a production phase in which worker agents prepare everything for a successful delivery. When production is done, the benefitiary will be notified that the product is ready for delivery. The condition for this notification is defined in the original offer and can only be changed if the active deal is renegotiated.
+
+Next, the delivery phase is interactive involving both workers and benefitiaries. Each offer outlines usage instructions to benefitiaries describing what to do when in order to have an easy experience and a successful delivery.
+
+When delivery is done, as defined in the terms of the deal, the settlement phase begins. This is where payments are released or disputes are raised, all in line with the terms defined in the active deal.
+
+After a delay proportional to the economic size of the deal relative to other deals in the network, the deal is moved into its final state of being closed.
 
 ## Tokenomics
 
 _Work in progress. Feel free to ask for more information._
 
-Summary: A voucher economy is constructed which lets the user navigate within a generalization-specialization spectrum of productive services. On the one extreme, there is $ASK which represents a general purpose voucher for everything offerable. Users can specialize their amount of $ASK into more specialized vouchers, constraining the use of the tokens to just the service offerings that match the voucher definition. On the other extreme, we have a fully specialized voucher which defines a specific service offering from a specific service provider.
+Summary: A voucher economy is constructed which lets the user navigate within a generalization-specialization spectrum of productive services. On the one extreme, there is $ASK which represents a general purpose voucher for everything offerable. Users can specialize their amount of $ASK into more narrow vouchers, constraining the use of the tokens to just the service offerings that match the voucher definition. On the other extreme, we have a fully specialized voucher which is tied to a specific service offering from a specific service provider.
 
 ## Next steps
 

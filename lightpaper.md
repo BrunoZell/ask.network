@@ -12,7 +12,7 @@ The rest of this document walks through the design of the network with the most 
 
 ## Observations
 
-Data is our window into reality. All data in the network is modelled as _Messages_. Messages can occur in the virtual as network traffic between computers, and in the actual as causal effects between physical systems. As cultural capital, messages are captured and preserved by default.
+Data is our window into reality. All data in the network is modelled as _messages_. Messages can occur in the virtual as network traffic between computers, and in the actual as causal effects between physical systems. As cultural capital, messages are captured and preserved by default.
 
 Software can only capture virtual messages as digital data and does not have direct access to causal effects in reality. To capture real world data, hardware sensors must be utilized. We assume that all real world sensors are communicating their measurements as virtual messages via networking protocols. Thus, every node records network protocol sessions only, with interpretations of reality being applied after consensus.
 
@@ -54,17 +54,17 @@ Humans can authenticate themselves by claiming spots on the economic social grap
 
 ## Coordination
 
-From here onwards, we call an active economic participant, those beings or things operating a sensory-motor cycle, an _agent_. Further, let's call all agents that are beings _subjects_, and all agents that are things _objects_.
+From here onwards, we call an active economic participant an _agent_, those beings or things operating a sensory-motor cycle.
 
 We assume all agents aim to optimize their behavior to best respect the desires and aversions of their own. We refer to such an aim as the agents _wants_. While each agent certaily incorporates wants in their decision process as there always is a trade off between picking one action over another, the agent may not be explicitly aware of the wants that drive his decision.
 
-All agents are assumed to do whatever they wants at any given moment by default. But beings and things may influence each other with their acts, positively or negatively. This soon will give rise to coordination between agents. For that, agents communicate an unambiguous shared world view, and negotiate who does what directly.
+All agents are assumed to do whatever they want at any given moment by default. But agents may influence each other with their acts, positively or negatively. This soon will give rise to voluntary coordination between agents. For that, agents communicate an unambiguous shared world view, and negotiate who does what directly.
 
-This section defines a general scheme for such a conversation to semi-automatically negotiate social coordination directly in terms of conditional actions (_"I do this if I observe that"_), from which then coordination schemes are constructed (_"I do this if you do that"_).
+This section defines a general scheme for such a conversation to semi-automatically negotiate social coordination directly in terms of conditional actions (_"I do this if I observe that"_), from which then commitment schemes are constructed (_"I do this if you do that"_).
 
 The goals for this conversaition is:
 
-- (i) We recognize that agents carry their own individual wants and each subject should be heard
+- (i) We recognize that agents carry their own individual wants and each agent should have a voice
 - (ii) We also would welcome an open and unambiguous conversation about what we can do, esentially searching through our possible action plans.
 - (iii) Further, an unambiguous social contract with automatic accounting and trustless settlement could help to coordinate on what we do.
 
@@ -96,9 +96,9 @@ Those queries can be combined into a formalization of the foundational question 
 
 Which translates into scanning the corpus of _proposals_ for actions that increase the probability of _wants_ being satisfied according to future observations.
 
-After desired actions have been identified, users commit to them by signing its actions and publishing it as _commitments_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
+After desired actions have been identified, users commit to them by signing and publishing according _commitments_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
 
-Then the subjects go ahead and actually do it accordingly, or they won't, depending in their final decision in the moment of the act. Subjects may purposefuly record evidence to later prove they caused certain economic activity.
+Then the agents go ahead and actually do it accordingly, or they won't, depending in their final decision in the moment of the act. Agents may purposefuly record evidence to later prove they caused or haven't caused certain economic activity.
 
 Wants are evaluated continuously on all observations as a measure for economic health. Fulfilled wants are indicators of realized value, possibly from successful coordination. Unfulfilled critical wants are indicators of unsuccessful coordination taking place.
 
@@ -116,7 +116,7 @@ Actions can be chained together into action plans, with previous actions changin
 
 We differentiate between two areas of interactions: _governance_ and _production_.
 
-**Governance** is about what not to do. Or to rephrase, to make value destruction less likely. It is concerned with conflict prevention ex-ante by negotiating compromises and conflict correction ex-post using counter-actions. It deals with practically mutually exclusive wants across individual agents and is used for final settlement after delivery.
+**Governance** is about what not to do. Or to rephrase, to make value destruction less likely. It is concerned with conflict prevention ex-ante by negotiating compromises and conflict correction ex-post use of counter-acts. It deals with practically mutually exclusive wants across individual agents and is used for final settlement after delivery.
 
 **Production** is about what to do. Or to rephrase, to make value construction more likely. It is concerned with coordination towards mutually beneifitial action plans. After some rounds of agents updating their commitments, the collective action plan should gradually improve the projected rate of filled wants as agents tend to go for opportunities of positive-sum cooperation.
 
@@ -128,15 +128,15 @@ Let's generalize the order book: Define _asks_, _offers_, and _matches_.
 
 **Offers** represent the supply side of productive output and are published by service providers according to their organizations production capacity.
 
-**Matches** represent a selection of one or more active offers, each specifying a partially filled order form, which expectedly will lead to one or more asks being fulfilled. Further it specifies user instructions if the delivery is interactive.
+Proposed **Matches** claim one or more ask would get filled if a specified list of offers would get ordered.
 
-Asks and offers are authored in different perspectives, that of the consumer or service provider, respectively. Market makers task is to translate between those perspectives, finding out when to order what service offering to expectidely fulfill asks of one or more users.
+Asks and offers are authored in different perspectives, that of the consumer or service provider, respectively. The market makers task is to translate between those perspectives, finding out when to order what service offering to expectedly fulfill asks of one or more users.
 
 Now let's generalize a futures product with physical delivery. For any offer to be listed in the networks offer book, it must implement an abstract coordination interface: offer -> order -> deal -> production -> delivery -> settlement -> settled.
 
-Each offer defines an order formular. When a user likes to order a service, he will fill out the offers order formular, sign it and send it to the service provider. The service provider analyzes the order and if we likes to provide that service, he signs a deal acknowledging and accepting that order. A newly signed deal initially is in an active state and comparable to open interest in a traditional futures product.
+Each offer defines an order formular. When a user likes to order a service, he will fill out the offers order formular, sign it and send it to the service provider. The service provider analyzes the order and if we likes to provide that service, he signs a deal acknowledging and accepting that order. A newly signed deal initially is in an active state and comparable to open interest in a traditional futures contract.
 
-Offer consists of commitments conditioned on signed deals of that offer. Therefore, once the deal is signed and published, worker agents orchestrated by the service provider automatically commit to actions that make up the service.
+An offers underlying commitment scheme consists of commitments conditioned on signed deals of that very offer. Therefore, once the deal is signed and published, worker agents orchestrated by the service provider automatically commit to actions that make up the service.
 
 First, there is a production phase in which worker agents prepare everything for a successful delivery. When production is done, the benefitiary will be notified that the product is ready for delivery. The condition for this notification is defined in the original offer and can only be changed if the active deal is renegotiated.
 
@@ -154,7 +154,7 @@ Summary: A voucher economy is constructed which lets the user navigate within a 
 
 ## Next steps
 
-Implementations of the observation pool and local semantic-causal reasoning are in the works. First it is used for algorithmic trading. Once that software is stable, the public network is implemented which makes trading bots across organizational boundaries coordinate with each other, creating a global market making botnet and possibly a p2p crypto exchange. Further, domains that model physical reality are authored to gradually enable negotiation of social coordination in reality directly without the need for traditional financial products.
+Implementations of the observation pool and local semantic-causal reasoning are in the works. First it is used for algorithmic trading. Once the software is stable, the public network is implemented which lets trading bots across organizational boundaries coordinate with each other, creating a global market making botnet and possibly a p2p crypto exchange. Further, domain modules that model physical reality are authored to gradually enable negotiation of social coordination in terms of measurable and unmeasurable reality without the need for traditional financial products or accounting procedures.
 
 There are two ways you can contribute:
 

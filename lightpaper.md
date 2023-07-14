@@ -82,9 +82,9 @@ Those queries can be combined into a formalization of the foundational question 
 
 **what could we do | so we like it | in the future?**
 
-Which translates into scanning the corpus of _proposals_ for action paths that increase the probability of _wants_ being satisfied according to future observations.
+Which translates into scanning the corpus of _proposals_ for actions that increase the probability of _wants_ being satisfied according to future observations.
 
-After desired action paths have been identified, users commit to them by signing its actions and publishing it as _commitments_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
+After desired actions have been identified, users commit to them by signing its actions and publishing it as _commitments_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
 
 Then the subjects go ahead and actually do it accordingly, or they won't, depending in their final decision in the moment of the act. Subjects may purposefuly record evidence to later prove they caused certain economic activity.
 
@@ -100,7 +100,7 @@ Action spaces of agents can be increased by using other economic objects as an _
 
 Acts yield effects in actuality. We quantify the expected effect of an action by comparing its causal expectations to those of inaction. All differing probabilities in the probed context compared to the inaction context must be caused by the probed action, under the same assumptions of the domain models used for reasoning.
 
-Actions can be chained together into action paths, with previous actions changing reality so to make the next action possible. Individual actions in action paths may not be directly desirable, but the effect of a depending action could be desirale enough to make it worthwhile to pursue still.
+Actions can be chained together into action plans, with previous actions changing reality so to make the next action possible. Individual actions in action plans may not be directly desirable, but the effect of a depending action could be desirale enough to make it worthwhile to pursue still.
 
 We differentiate between two areas of interactions: _governance_ and _production_.
 

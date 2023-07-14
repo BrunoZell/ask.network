@@ -74,7 +74,7 @@ With three types of messages, respectively:
   
 - (iii) **Commitments**, answering: **what will we do?**
 
-  _(A signed action path, represented as an ordered set of conditional actions. Conditions are either satisfied or not in a given context. The action choice is derived from the matching context via a specified query.)_
+  _(A signed conditioal action. Conditions are either satisfied or not in a given context. The action choice is derived from the matching context via a specified query.)_
 
 Recall that the public observation pool together with applied domain theories answers: **how is it?**
 
@@ -84,7 +84,7 @@ Those queries can be combined into a formalization of the foundational question 
 
 Which translates into scanning the corpus of _Proposals_ for action paths that increase the probability of _Wants_ being satisfied according to future observations.
 
-After desired action paths have been identified, users commit to them by signing the selected action path and publishing it as a _Commitment_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
+After desired action paths have been identified, users commit to them by signing its actions and publishing it as _Commitments_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
 
 Then the subjects go ahead and actually do it accordingly, or they won't, depending in their final decision in the moment of the act. Subjects may purposefuly record evidence to later prove they caused certain economic activity.
 

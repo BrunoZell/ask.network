@@ -52,25 +52,25 @@ This section defines a general scheme for such a  conversation to semi-automatic
 
 The goals for this conversaition is:
 
-- (i) We recognize that subjects carry their own individual wants and each subject should be heard
-- (ii) We also would welcome an open and unambiguous conversation about what we can do, esentially searching through our possible action paths.
+- (i) We recognize that agents carry their own individual wants and each subject should be heard
+- (ii) We also would welcome an open and unambiguous conversation about what we can do, esentially searching through our possible action plans.
 - (iii) Further, an unambiguous social contract with automatic accounting and trustless settlement could help to coordinate on what we do.
 
 The conversation defines three communication channels:
 
-- (i) Broadcasting of wants for each subject
-- (ii) Broadcasting of potential action paths
-- (iii) Declaring of own commitment to action paths
+- (i) Broadcasting of wants by each agent
+- (ii) Broadcasting of potential action plans
+- (iii) Declaring of own commitment to conditional actions
 
 With three types of messages, respectively:
 
 - (i) **Wants**, answering: **how do we like it?**
   
-  _(Represented as binary queries (fulfilled or not) in a given context.)_
+  _(Represented as a signed binary query (fulfilled or not) in a given context.)_
 
 - (ii) **Proposals**, answering: **what could we do?**
 
-  _(Represented as changes (additions and removals) of commitments of one or more subjects.)_
+  _(Represented as changes (additions and removals) to active commitments of one or more agents.)_
   
 - (iii) **Commitments**, answering: **what will we do?**
 
@@ -82,9 +82,9 @@ Those queries can be combined into a formalization of the foundational question 
 
 **what could we do | so we like it | in the future?**
 
-Which translates into scanning the corpus of _Proposals_ for action paths that increase the probability of _Wants_ being satisfied according to future observations.
+Which translates into scanning the corpus of _proposals_ for action paths that increase the probability of _wants_ being satisfied according to future observations.
 
-After desired action paths have been identified, users commit to them by signing its actions and publishing it as _Commitments_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
+After desired action paths have been identified, users commit to them by signing its actions and publishing it as _commitments_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
 
 Then the subjects go ahead and actually do it accordingly, or they won't, depending in their final decision in the moment of the act. Subjects may purposefuly record evidence to later prove they caused certain economic activity.
 
@@ -92,9 +92,21 @@ Wants are evaluated continuously on all observations as a measure for economic h
 
 ## Economics
 
-This section analyzes the dynamics of active participants interacting with each other. First we'll analyze interaction in the actual, and then show how communication in the virtual gives rise to coordinating such interactions so that everyone is better off.
+This section analyzes the dynamics of active participants interacting with each. First we'll analyze interactions in the actual, and then show how communication and the usage of the coordination conversation defined in the previous section can leave everyone better off.
 
 Each agent can or can't do a given action. The group of all actions available to an agent is called its _action space_. What the agent ended up doing is called his _acts_.
+
+Action spaces of agents can be increased by using other economic objects as an _instrument_, such as a car.
+
+Acts yield effects in actuality. We quantify the expected effect of an action by comparing its causal expectations to those of inaction. All differing probabilities in the probed context compared to the inaction context must be caused by the probed action, under the same assumptions of the domain models used for reasoning.
+
+Actions can be chained together into action paths, with previous actions changing reality so to make the next action possible. Individual actions in action paths may not be directly desirable, but the effect of a depending action could be desirale enough to make it worthwhile to pursue still.
+
+We differentiate between two areas of interactions: _governance_ and _production_.
+
+**Governance** is about what not to do. Or to rephrase, to make value destruction less likely. It is concerned with conflict prevention (ex-ante) and conflict correction (ex-post). It deals with practically mutually exclusive wants across individual agents and is used for final settlement after delivery.
+
+**Production** is about what to do. Or to rephrase, to make value construction more likely. It is concerned with coordination towards mutually beneifitial action plans. After some rounds of agents updating commitments we should gradually improve the projected rate of filled wants as agents tend to go for opportunities of positive-sum cooperation.
 
 ## Coordination Markets
 

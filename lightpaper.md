@@ -1,3 +1,15 @@
+# Ask Network Lightpaper Draft
+
+## Abstract
+
+This document poses a conversational structure as an alternative solution to social coordination. We expect this to be more efficient, effective, and humane than money or every other political system humanity tried out yet.
+
+The network helps to coordinate who does what so that people get what they want at a lower cost, or at a better quality.
+
+Coordination markets achieve a high quality of service by standardizing the expression of wants and aversions, essentially outsourcing market analysis and offer selection to professional market makers with just the final purchasing decision being signed by the user.
+
+The rest of this document walks through the design of the network with the most fundamental part first, toward more complex structures.
+
 ## Observations
 
 Data is our window into reality. All data in the network is modelled as _Messages_. Messages can occur in the virtual as network traffic between computers, and in the actual as causal effects between physical systems. As cultural capital, messages are captured and preserved by default.

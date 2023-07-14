@@ -115,3 +115,13 @@ We differentiate between two areas of interactions: _governance_ and _production
 _Work in progress. Feel free to ask for more information._
 
 Summary: A voucher economy is constructed which lets the user navigate within a generalization-specialization spectrum of productive services. On the one extreme, there is $ASK which represents a general purpose voucher for everything offerable. Users can specialize their amount of $ASK into more specialized vouchers, constraining the use of the tokens to just the service offerings that match the voucher definition. On the other extreme, we have a fully specialized voucher which defines a specific service offering from a specific service provider.
+
+## Next steps
+
+Implementations of the observation pool and local semantic-causal reasoning are in the works. First it is used for algorithmic trading. Once that software is stable, the public network is implemented which makes trading bots across organizational boundaries coordinate with each other, creating a global market making botnet and possibly a p2p crypto exchange. Further, domains that model physical reality are authored to gradually enable negotiation of social coordination in reality directly without the need for traditional financial products.
+
+There are two ways you can contribute:
+
+You can **help implementing this** using your technical expertise and dedication in exchange for a minimum viable life (MVL). [Text me](https://t.me/extremecookie) if you are interested.
+
+Alternatively, you can **donate crypto assets** to pay for the MVLs of our contributors. Please send crypto assets to our SAFE on Ethereum: [`0x5cf266bb7b5EFE578C2C63A14Ea2b644710E153e`](https://app.safe.global/balances?safe=eth:0x5cf266bb7b5EFE578C2C63A14Ea2b644710E153e). If you want access to the multisig, just ask.

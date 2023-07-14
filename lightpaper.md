@@ -112,4 +112,6 @@ We differentiate between two areas of interactions: _governance_ and _production
 
 ## Tokenomics
 
-_[Work in progress. Feel free to ask for more information.]_
+_Work in progress. Feel free to ask for more information._
+
+Summary: A voucher economy is constructed which lets the user navigate within a generalization-specialization spectrum of productive services. On the one extreme, there is $ASK which represents a general purpose voucher for everything offerable. Users can specialize their amount of $ASK into more specialized vouchers, constraining the use of the tokens to just the service offerings that match the voucher definition. On the other extreme, we have a fully specialized voucher which defines a specific service offering from a specific service provider.

@@ -62,7 +62,7 @@ All agents are assumed to do whatever they want at any given moment by default. 
 
 This section defines a general scheme for such a conversation to semi-automatically negotiate social coordination directly in terms of conditional actions (_"I do this if I observe that"_), from which then commitment schemes are constructed (_"I do this if you do that"_).
 
-The goals for this conversaition is:
+The goals for this conversation is:
 
 - (i) We recognize that agents carry their own individual wants and each agent should have a voice
 - (ii) We also would welcome an open and unambiguous conversation about what we can do, esentially searching through our possible action plans.

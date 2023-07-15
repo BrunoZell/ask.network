@@ -12,9 +12,19 @@ Coordination markets achieve a high quality of service by standardizing the expr
 
 The conversation is built so that economic participants negotiate social coordination directly, in terms of what you do and don't do. From that, a new paradigm of coordination markets emerges.
 
-It's based on the idea of a match, essentially complementary statements of _"I do this if you do that"_ with all participants accepting the plan.
+Instead of pairwise transactions as found in monetary economies, the network accounts for future economic activity as conditional actions (_"I do this if I observe that"_), and past economic activity is based on observations of the outer world. From that, onchain reasoning quantifies expected (future) and actual (past) changes to reality caused by the accounted economic activity. Further, these changes can be evaluated against users Asks (wants or aversions) to quantify whether the economic activity has helped.
+
+Negotiations in coordination markets are based on the idea of a match, essentially complementary statements of _"I do this if you do that"_ with all participants accepting the plan.
 
 The network provides an auction mechanism to negotiate matches, accounting of open interest from accepted matches, verification of physical delivery, and according settlement in the virtual.
+
+Matchmaking and counterparty-discovery is facilitated by market makers who search for and propose possibly valuable matches, which are then automatically filtered, prioritized, and annotated based on how the users Asks (wants or aversions) are expectedly satisfied by it before affected users make the final call of committing to them or not.
+
+Asks and service offerings are defined in terms of causal-semantic models of reality which enable onchain reasoning about effects of different possible action paths, and whether these effects are desired or not.
+
+To ensure all desired economic activity can be accounted for regardless how everyday life changes over the next centuries, the network is invariant to how users view the world and what values they pursue in that world. That also makes it interoperable with existing coordination mechanisms like companies, money, laws, political institutions, and text messages.
+
+It utilizes a data model that can express every possible representation of the world, with the state transition function being reality itself.
 
 The rest of this document walks through the design of the network with the most fundamental parts first, towards more complex structures.
 

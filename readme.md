@@ -46,3 +46,5 @@ It utilizes a data model that can express every possible representation of the w
 - Using [HGTP (the Hypergraph Transfer Protocol)](https://docs.constellationnetwork.io/learn) for validation ensures compatibility with existing L1s and physical reality since HGTPs data model is compatible with _any data type_. Thus it's possible to refer to capital that exists in the outer world and to validate physical delivery.
 
 All of these technologies have foundations in abstract mathematics, which makes them inherently compatible and if puzzled together coherently, pose a general solution to the general problem of social coordination, as simple as possible.
+
+Read our lightpaper [here](lightpaper.md).

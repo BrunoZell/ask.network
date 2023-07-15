@@ -2,13 +2,21 @@
 
 ## Abstract
 
-This document poses a conversational structure as an alternative solution to social coordination. We expect this to be more efficient, effective, and humane than money or every other political system humanity tried out yet.
+This document poses a conversational structure as an alternative solution to social coordination. We expect the mechanism proposed here to be more efficient, effective, and humane than money or every other political system humanity tried out yet.
 
 The network helps to coordinate who does what so that people get what they want at a lower cost, or at a better quality.
 
 Coordination markets achieve a high quality of service by standardizing the expression of wants and aversions, essentially outsourcing market analysis and offer selection to professional market makers with just the final purchasing decision being signed by the user.
 
-The rest of this document walks through the design of the network with the most fundamental part first, toward more complex structures.
+## Introduction
+
+The conversation is built so that economic participants negotiate social coordination directly, in terms of what you do and don't do. From that, a new paradigm of coordination markets emerges.
+
+It's based on the idea of a match, essentially complementary statements of _"I do this if you do that"_ with all participants accepting the plan.
+
+The network provides an auction mechanism to negotiate matches, accounting of open interest from accepted matches, verification of physical delivery, and according settlement in the virtual.
+
+The rest of this document walks through the design of the network with the most fundamental parts first, towards more complex structures.
 
 ## Observations
 

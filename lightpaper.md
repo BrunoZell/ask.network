@@ -8,7 +8,7 @@ The network helps to coordinate who does what so that people get what they want 
 
 Coordination markets achieve a high quality of service by standardizing the expression of wants and aversions, essentially outsourcing market analysis and offer selection to professional market makers with just the final purchasing decision being signed by the user.
 
-## Introduction
+## Overview
 
 The conversation is built so that economic participants negotiate social coordination directly, in terms of what you do and don't do. From that, a new paradigm of coordination markets emerges.
 
@@ -104,7 +104,7 @@ With three types of messages, respectively:
   
 - (iii) **Commitments**, answering: **what will we do?**
 
-  _(A signed conditioal action. Conditions are either satisfied or not in a given context. The action choice is derived from the matching context via a specified query.)_
+  _(Represented as a signed conditioal action. Conditions are either satisfied or not in a given context. The action choice is derived from the matching context via a specified query.)_
 
 Recall that the public observation pool together with applied domain theories answers: **how is it?**
 

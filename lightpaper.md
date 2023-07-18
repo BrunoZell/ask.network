@@ -80,7 +80,7 @@ We assume all agents aim to optimize their behavior to best respect the desires 
 
 All agents are assumed to do whatever they want at any given moment by default. But agents may influence each other with their acts, positively or negatively. This soon will give rise to voluntary coordination between agents. For that, agents communicate an unambiguous shared world view, and negotiate who does what in reference to that shared world view.
 
-This section defines a general scheme for such a conversation to semi-automatically negotiate social coordination directly in terms of conditional actions (_"I do this if I observe that"_), from which then commitment schemes are constructed (_"I do this if you do that"_).
+This section defines a general scheme for such a conversation to semi-automatically negotiate social coordination directly in terms of conditional actions (_"I do this if I observe that"_), from which then coorination schemes are constructed (_"I do this if you do that"_).
 
 The goals for this conversation is:
 
@@ -118,11 +118,13 @@ Which translates into scanning the corpus of _proposals_ for those that increase
 
 After desired actions have been identified, users commit to them by signing and publishing according _commitments_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
 
-Then the agents go ahead and actually do it accordingly, or they won't, depending in their final decision in the moment of the act. Agents may purposefuly record evidence to later prove they caused or haven't caused certain economic activity.
+Then the agents go ahead and actually do it accordingly, or they won't, depending in their final decision in the moment of the act. Commitments semantically are interpreted as an _intent_ of some agent to do certain actions. It does not imply a guarantee of the action being executed as declared. There simply is no way to change the fact that whatever social contracts humans may enter, it's ultimately up to them to decide what to do and don't do.
 
-Wants are evaluated continuously on all observations as a measure for economic health. Fulfilled wants are indicators of realized value, possibly from successful coordination. Unfulfilled critical wants are indicators of unsuccessful coordination taking place.
+Sufficient credibility of commitments can be achieved by relating them to other active commitments and past economic activity. Agents may purposefuly record evidence to later prove they caused or haven't caused certain economic activity. Such evidence further can be used to construct incentives and sanctions. Such a construct is what we call _coordination schemes_. They are made up of a set of parameterized commitment templates which can be automatically recognized in historic and active commitments to automatically reason about credibility of commitments.
 
 ## Economics
+
+Wants are evaluated continuously on all observations as a measure for economic health. Fulfilled wants are indicators of realized value, possibly from successful coordination. Unfulfilled critical wants are indicators of unsuccessful coordination taking place.
 
 This section analyzes the dynamics of active participants interacting with each. First we'll analyze interactions in the actual, and then show how coordination can leave practically everyone better off.
 
@@ -156,7 +158,7 @@ Now let's generalize a futures product with physical delivery. For any offer to 
 
 Each offer defines an order formular. When a user likes to order a service, he will fill out the offers order formular, sign it and send it to the service provider. The service provider analyzes the order and if we likes to provide that service, he signs a deal acknowledging and accepting that order. A newly signed deal initially is in an active state and comparable to open interest in a traditional futures contract.
 
-An offers underlying commitment scheme consists of commitments conditioned on signed deals of that very offer. Therefore, once the deal is signed and published, worker agents orchestrated by the service provider automatically commit to actions that make up the service.
+An offers underlying coordination scheme consists of commitments conditioned on signed deals of that very offer. Therefore, once the deal is signed and published, worker agents orchestrated by the service provider automatically commit to actions that make up the service.
 
 First, there is a production phase in which worker agents prepare everything for a successful delivery. When production is done, the benefitiary will be notified that the product is ready for delivery. The condition for this notification is defined in the original offer and can only be changed if the active deal is renegotiated.
 

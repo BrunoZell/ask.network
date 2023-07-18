@@ -172,7 +172,13 @@ After a delay proportional to the economic size of the deal relative to other de
 
 _Work in progress. Feel free to ask for more information._
 
-Summary: A voucher economy is constructed which lets the user navigate within a generalization-specialization spectrum of productive services. On the one extreme, there is $ASK which represents a general purpose voucher for everything offerable. Users can specialize their amount of $ASK into more narrow vouchers, constraining the use of the tokens to just the service offerings that match the voucher definition. On the other extreme, we have a fully specialized voucher which is tied to a specific service offering from a specific service provider.
+Here's a summary:
+
+A voucher economy is constructed which lets the user navigate within a generalization-specialization spectrum of productive services. On the one extreme, there is $ASK which represents a general purpose voucher for everything offerable, backed by the causal possibilities from all active commitments in the network, weighted by their preceived credibility.
+
+Users can specialize their amount of $ASK into more narrow vouchers, constraining the use of the tokens to just the service offerings that match the voucher definition. This balances the efficiency gains from pre-ordering with the time value of making decisions later in time.
+
+On the other extreme, we have a fully specialized voucher which is tied to a specific service offering from a specific service provider.
 
 ## Theoretical Foundations
 

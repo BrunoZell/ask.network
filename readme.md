@@ -2,7 +2,7 @@
 
 Ask Network defines a conversational structure as an alternative solution to social coordination. We expect this to be more efficient, effective, and humane than money or every other political system humanity tried out yet.
 
-A technical introduction can be found in the [lightpaper](lightpaper.md).
+Further implementation details can be found in the [lightpaper](lightpaper.md).
 
 ## Value Proposition
 

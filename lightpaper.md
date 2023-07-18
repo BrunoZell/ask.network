@@ -76,7 +76,7 @@ Humans can authenticate themselves by claiming spots on the economic social grap
 
 From here onwards, we call an active economic participant an _agent_, those beings or things operating a sensory-motor cycle.
 
-We assume all agents aim to optimize their behavior to best respect the desires and aversions of their own. We refer to such an aim as the agents _wants_. While each agent certainly incorporates wants in their decision process as there always is a trade-off between picking one action over another, the agent may not be explicitly aware of the wants that drive his decision.
+We assume all agents aim to optimize their behavior to best respect the desires and aversions of their own. We refer to such an aim as the agents _wants_. While each agent certainly incorporates wants in their decision process as there always is a trade-off between picking one action over another, the agent may not be explicitly aware of the wants that drive his decisions.
 
 All agents are assumed to do whatever they want at any given moment by default. But agents may influence each other with their acts, positively or negatively. This soon will give rise to voluntary coordination between agents. For that, agents communicate an unambiguous shared world view, and negotiate who does what in reference to that shared world view.
 

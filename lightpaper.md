@@ -92,7 +92,7 @@ The conversation defines three communication channels:
 
 - (i) Broadcasting of wants by each agent
 - (ii) Broadcasting of potential action plans
-- (iii) Declaring of own commitment to conditional actions
+- (iii) Declaration of own commitment to conditional actions
 
 With three types of messages, respectively:
 

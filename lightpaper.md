@@ -98,15 +98,15 @@ With three types of messages, respectively:
 
 - (i) **Wants**, answering: **how do we like it?**
   
-  _(Represented as a signed binary query (fulfilled or not) in a given context.)_
+  _Represented as a signed binary query (fulfilled or not) in a given context._
 
 - (ii) **Proposals**, answering: **what could we do?**
 
-  _(Represented as changes (additions and removals) to active commitments of one or more agents.)_
+  _Represented as changes (additions and removals) to active commitments of one or more agents._
   
 - (iii) **Commitments**, answering: **what will we do?**
 
-  _(Represented as a signed conditioal action. Conditions are either satisfied or not in a given context. The action choice is derived from the matching context via a specified query.)_
+  _Represented as a signed conditioal action. Conditions are either satisfied or not in a given context. The action choice is derived from the matching context via a specified query._
 
 Recall that the public observation pool together with applied domain theories answers: **how is it?**
 

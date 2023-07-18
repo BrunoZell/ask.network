@@ -138,7 +138,7 @@ Actions can be chained together into action plans, with previous actions changin
 
 We differentiate between two areas of interactions: _governance_ and _production_.
 
-**Governance** is about what not to do. Or to rephrase, to make value destruction less likely. It is concerned with conflict prevention ex-ante by negotiating compromises and conflict correction ex-post use of counter-acts. It deals with practically mutually exclusive wants across individual agents and is used for final settlement after delivery.
+**Governance** is about what not to do. Or to rephrase, to make value destruction less likely. It is concerned with conflict prevention ex-ante by negotiating compromises, and conflict correction ex-post by use of counter-acts. It deals with practically mutually exclusive wants across individual agents and is used for final settlement after delivery.
 
 **Production** is about what to do. Or to rephrase, to make value construction more likely. It is concerned with coordination towards mutually beneifitial action plans. After some rounds of agents updating their commitments, the collective action plan should gradually improve the projected rate of filled wants as agents tend to go for opportunities of positive-sum cooperation.
 
@@ -150,19 +150,19 @@ Let's generalize the order book: Define _asks_, _offers_, and _matches_.
 
 **Offers** represent the supply side of productive output and are published by service providers according to their organizations production capacity.
 
-Proposed **Matches** claim one or more ask would get filled if a specified list of offers would get ordered.
+Proposed **Matches** claim one or more ask would get filled when a specified list of offers is get ordered.
 
-Asks and offers are authored in different perspectives, that of the consumer or service provider, respectively. The market makers task is to translate between those perspectives, finding out when to order what service offering to expectedly fulfill asks of one or more users.
+Asks and offers are authored in different perspectives, that of the consumer or service provider, respectively. The market makers task is to translate between those perspectives, figuring out when to order what service to expectedly fulfill asks of one or more users.
 
-Now let's generalize a futures product with physical delivery. For any offer to be listed in the networks offer book, it must implement an abstract coordination interface: offer -> order -> deal -> production -> delivery -> settlement -> settled.
+Now let's generalize a futures product with physical delivery. For any offer to be listed in the networks offer book, it must implement an abstract coordination interface with following phrases: offer -> order -> deal -> production -> delivery -> settlement -> settled.
 
-Each offer defines an order formular. When a user likes to order a service, he will fill out the offers order formular, sign it and send it to the service provider. The service provider analyzes the order and if we likes to provide that service, he signs a deal acknowledging and accepting that order. A newly signed deal initially is in an active state and comparable to open interest in a traditional futures contract.
+Each offer defines an order formular. When a user likes to order a service, he will fill out the offers order formular, sign it, and send it to the service provider. The service provider analyzes the order and if he likes to provide that service, he signs a deal acknowledging and accepting that order. A newly signed deal initially is in an active state and comparable to open interest in a traditional futures contract.
 
-An offers underlying coordination scheme consists of commitments conditioned on signed deals of that very offer. Therefore, once the deal is signed and published, worker agents orchestrated by the service provider automatically commit to actions that make up the service.
+An offers underlying coordination scheme consists of commitments conditioned on signed deals of that very offer. Therefore, once the deal is signed and published, worker agents orchestrated by the service provider automatically commit to actions that make up the service. Due to the fact that a deal was signed in the first place, the underlying commitment scheme seems to be credible enough for the customer.
 
-First, there is a production phase in which worker agents prepare everything for a successful delivery. When production is done, the benefitiary will be notified that the product is ready for delivery. The condition for this notification is defined in the original offer and can only be changed if the active deal is renegotiated.
+After a deal is signed, the production phase begins in which worker agents prepare everything for a successful delivery. When production is done, the benefitiary will get notified that the product is ready for delivery. The condition for this notification is defined in the original offers coordination scheme and can only be changed if the active deal is renegotiated with all parties agreeing to it.
 
-Next, the delivery phase is interactive involving both workers and benefitiaries. Each offer outlines usage instructions to benefitiaries describing what to do when in order to have an easy experience and a successful delivery.
+Next, the delivery phase is interactive involving both workers and benefitiaries. Each coordination scheme outlines usage instructions to benefitiaries describing what to do when in order to have an easy experience and to achieve a successful delivery.
 
 When delivery is done, as defined in the terms of the deal, the settlement phase begins. This is where payments are released or disputes are raised, all in line with the terms defined in the active deal.
 

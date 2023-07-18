@@ -32,7 +32,7 @@ And modern smart contract platforms force you to define imperative procedures wi
 
 ## Solution
 
-Instead of pairwise transactions, Ask Network accounts for future economic activity as conditional actions (_"I do this if I observe that"_), and past economic activity is based on observations of the outer world. From that, onchain reasoning quantifies expected (future) and actual (past) changes to reality caused by the accounted economic activity. Further, these changes can be evaluated against users Asks (wants or aversions) to quantify whether the economic activity has helped.
+Instead of pairwise transactions, Ask Network accounts for future economic activity as conditional actions (_"I do this if I observe that"_), and past economic activity is derived from observations of the outer world. From that, onchain reasoning quantifies expected (future) and actual (past) changes to reality caused by the accounted economic activity. Further, these changes can be evaluated against users Asks (wants or aversions) to quantify whether the economic activity has helped.
 
 Matchmaking and counterparty-discovery is done by market makers who search for and propose possibly valuable matches, which are then automatically filtered, prioritized, and annotated based on how the users Asks (wants or aversions) are expectedly satisfied by it before affected users make the final call of committing to them or not.
 

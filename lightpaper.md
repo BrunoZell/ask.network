@@ -134,7 +134,7 @@ Action spaces of agents can be increased by using other economic objects as an _
 
 Acts yield effects in actuality. We quantify the expected effect of an action by comparing its causal expectations to those of inaction. All differing probabilities in the probed context compared to the inaction context must be caused by the probed action, under the same assumptions of the domain models used for reasoning.
 
-Actions can be chained together into action plans, with previous actions changing reality so to make the next action possible. Individual actions in action plans may not be directly desirable, but the effect of a depending action could be desirale enough to make it worthwhile to pursue still.
+Actions can be chained together into action plans, with previous actions changing reality so to make the next action possible. Individual actions in action plans may not be directly desirable, but the effect of a depending action could be desirale enough to make it worthwhile to pursue still. This essentially models the supply chain of value.
 
 We differentiate between two areas of interactions: _governance_ and _production_.
 

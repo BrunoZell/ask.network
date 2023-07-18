@@ -12,7 +12,9 @@ Coordination markets achieve a high quality of service by standardizing the expr
 
 The conversation is built so that economic participants negotiate social coordination directly, in terms of what you do and don't do. From that, a new paradigm of coordination markets emerges.
 
-Instead of pairwise transactions as found in monetary economies, the network accounts for future economic activity as conditional actions (_"I do this if I observe that"_), and past economic activity is based on observations of the outer world. From that, onchain reasoning quantifies expected (future) and actual (past) changes to reality caused by the accounted economic activity. Further, these changes can be evaluated against users Asks (wants or aversions) to quantify whether the economic activity has helped.
+Traditional monetary economies base all economic activity on pairwise transactions, where a good or service flows from the seller to the buyer, with a semetrical amount of money flowing from the buyer to the seller
+
+In contract, Ask Network accounts for future economic activity as conditional actions (_"I do this if I observe that"_), and past economic activity is based on observations of the outer world. From that, onchain reasoning quantifies expected (future) and actual (past) changes to reality caused by the accounted economic activity. Further, these changes can be evaluated against users Asks (wants or aversions) to quantify whether the economic activity has helped.
 
 Negotiations in coordination markets are based on the idea of a match, essentially complementary statements of _"I do this if you do that"_ with all participants accepting the plan.
 

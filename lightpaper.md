@@ -124,9 +124,9 @@ Sufficient credibility of commitments can be achieved by relating them to other 
 
 ## Economics
 
-Wants are evaluated continuously on all observations as a measure for economic health. Fulfilled wants are indicators of realized value, possibly from successful coordination. Unfulfilled critical wants are indicators of unsuccessful coordination taking place.
+Wants are evaluated continuously on all observations as a measure for economic health. Fulfilled wants are indicators of realized value, possibly from successful coordination. Unfulfilled critical wants are indicators of unsuccessful coordination taking place. This measure largely compliments existing metrics like GDP with more fine grained information about why the economy is doing good or bad.
 
-This section analyzes the dynamics of active participants interacting with each. First we'll analyze interactions in the actual, and then show how coordination can leave practically everyone better off.
+This section analyzes the dynamics of active participants interacting with each other. First we'll analyze interactions in the actual, and then show how coordination can leave practically everyone better off.
 
 Each agent can or can't do a given action. The group of all actions available to an agent is called its _action space_. What the agent ended up doing is called his _acts_.
 

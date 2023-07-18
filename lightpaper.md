@@ -85,7 +85,7 @@ This section defines a general scheme for such a conversation to semi-automatica
 The goals for this conversation is:
 
 - (i) We recognize that agents carry their own individual wants and each agent should have a voice
-- (ii) We also would welcome an open and unambiguous conversation about what we can do, esentially searching through our possible action plans.
+- (ii) We also would welcome an open and unambiguous conversation about what we can do, essentially searching through our possible action plans.
 - (iii) Further, an unambiguous social contract with automatic accounting and trustless settlement could help to coordinate on what we do.
 
 The conversation defines three communication channels:

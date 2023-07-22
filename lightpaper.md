@@ -12,15 +12,15 @@ Coordination markets achieve a high quality of service by standardizing the expr
 
 The conversation is built so that economic participants negotiate social coordination directly, in terms of what you do and don't do. From that, a new paradigm of coordination markets emerges.
 
-Traditional monetary economies base all economic activity on pairwise transactions, where a good or service flows from the seller to the buyer, with a semetrical amount of money flowing from the buyer to the seller
+Traditional monetary economies base all economic activity on pairwise transactions, where a good or service flows from the seller to the buyer, with a symmetrical amount of money flowing from the buyer to the seller
 
-In contract, Ask Network accounts for future economic activity as conditional actions (_"I do this if I observe that"_), and past economic activity is based on observations of the outer world. From that, onchain reasoning quantifies expected (future) and actual (past) changes to reality caused by the accounted economic activity. Further, these changes can be evaluated against users Asks (wants or aversions) to quantify whether the economic activity has helped.
+In contrast, Ask Network accounts for future economic activity as conditional actions (_"I do this if I observe that"_), and past economic activity is based on observations of the outer world. From that, onchain reasoning quantifies expected (future) and actual (past) changes to reality caused by the accounted economic activity. Further, these changes can be evaluated against users' Asks (wants or aversions) to quantify whether the economic activity has helped.
 
 Negotiations in coordination markets are based on the idea of a match, essentially complementary statements of _"I do this if you do that"_ with all participants accepting the plan.
 
 The network provides an auction mechanism to negotiate matches, accounting of open interest from accepted matches, verification of physical delivery, and according settlement in the virtual.
 
-Matchmaking and counterparty-discovery is facilitated by market makers who search for and propose possibly valuable matches, which are then automatically filtered, prioritized, and annotated based on how the users Asks (wants or aversions) are expectedly satisfied by it before affected users make the final call of committing to them or not.
+Matchmaking and counterparty-discovery is facilitated by market makers who search for and propose possibly valuable matches, which are then automatically filtered, prioritized, and annotated based on how the users' Asks (wants or aversions) are expectedly satisfied by it before affected users make the final call of committing to them or not.
 
 Asks and service offerings are defined in terms of causal-semantic models of reality which enable onchain reasoning about effects of different possible action paths, and whether these effects are desired or not.
 
@@ -32,7 +32,7 @@ The rest of this document walks through the design of the network with the most 
 
 ## Observations
 
-Data is our window into reality. All data in the network is modelled as _messages_. Messages can occur in the virtual as network traffic between computers, and in the actual as causal effects between physical systems. As cultural capital, messages are captured and preserved by default.
+Data is our window into reality. All data in the network is modeled as _messages_. Messages can occur in the virtual as network traffic between computers, and in the actual as causal effects between physical systems. As cultural capital, messages are captured and preserved by default.
 
 Software can only capture virtual messages as digital data and does not have direct access to causal effects in reality. To capture real world data, hardware sensors must be utilized. We assume that all real world sensors are communicating their measurements as virtual messages via networking protocols. Thus, every node records network protocol sessions only, with interpretations of reality being applied after consensus.
 
@@ -40,15 +40,15 @@ Software can only capture virtual messages as digital data and does not have dir
 
 That message history is used to derive reproducible representations of the actual and virtual external world. Such reproducible representations are specified as domains that take observations as input, and derive conclusions about the past, present, and future external world, subject to explicit assumptions about causal relationships.
 
-At each domains core lies a causal graph. One can instantiate a causal graph by integrating observations into explicitly assumed causal relationships, producing a context. On that context, it can be reasoned backwards in time (I observed this, therefore that must have happened), and forwards in itme (if I do this, expectedly that will happen).
+At each domains core lies a causal graph. One can instantiate a causal graph by integrating observations into explicitly assumed causal relationships, producing a context. On that context, it can be reasoned backwards in time (I observed this, therefore that must have happened), and forwards in time (if I do this, expectedly that will happen).
 
 Once conclusions about hidden variables or counterfactuals where made, they can be queried through a semantic query interface. Nodes in the causal graphs carry semantically computable annotations in IEML. Queries are standard CQL expressions on the uniform data model of a semantic-causal context, combined with the domains semantic annotations in the formulation of the query.
 
-Domain modellers combine observation procedures, interpretation, authentication, causal assumptions, and semantic annotations into interoperable domain modules, producing an ever growing library of domains that model reality increasingly accurate.
+Domain modelers combine observation procedures, interpretation, authentication, causal assumptions, and semantic annotations into interoperable domain modules, producing an ever growing library of domains that model reality increasingly accurate.
 
 Specifying representations of reality in standardized and thus interoperable causal-semantic models enables transferrable reasoning about the behavior of virtual and actual external systems (hidden variables), and unobserved but possible observations or actions (counterfactuals).
 
-Furthermore, the network provides a continuous integration pipeline for domain modellers by testing their causal theories against real world data.
+Furthermore, the network provides a continuous integration pipeline for domain modelers by testing their causal theories against real world data.
 
 Essentially it is an accounting system for everything measurable, with an attached unambiguous reasoning machine for everything unmeasurable.
 
@@ -56,7 +56,7 @@ Essentially it is an accounting system for everything measurable, with an attach
 
 Expressing semantic annotations in IEML ensures that all conceptualization has exact positions in the semantic sphere, which allows for rich analysis across domains.
 
-Most importantly for social coordination is the identification of beings and things, with all of them being embedded in the same physical reality, although at different positions in the geospatial process. What follows is a virtual representation of the actual economy that is acted out, through which past economic activity can be analyzed and future economic activity arranged.
+Most important for social coordination is the identification of beings and things, with all of them being embedded in the same physical reality, although at different positions in the geospatial process. What follows is a virtual representation of the actual economy that is acted out, through which past economic activity can be analyzed and future economic activity arranged.
 
 Let us first differentiate economic participants from everything else. An economic participant is everything and everybody that influences voluntary participants to a degree that the influenced participant accounts for. Essentially it's the set of everything that is directly or indirectly important to at least one voluntary participant, with voluntary participant referring to a being that uses Ask Network to coordinate.
 
@@ -80,7 +80,7 @@ We assume all agents aim to optimize their behavior to best respect the desires 
 
 All agents are assumed to do whatever they want at any given moment by default. But agents may influence each other with their acts, positively or negatively. This soon will give rise to voluntary coordination between agents. For that, agents communicate an unambiguous shared world view, and negotiate who does what in reference to that shared world view.
 
-This section defines a general scheme for such a conversation to semi-automatically negotiate social coordination directly in terms of conditional actions (_"I do this if I observe that"_), from which then coorination schemes are constructed (_"I do this if you do that"_).
+This section defines a general scheme for such a conversation to semi-automatically negotiate social coordination directly in terms of conditional actions (_"I do this if I observe that"_), from which coordination schemes are constructed (_"I do this if you do that"_).
 
 The goals for this conversation is:
 
@@ -106,7 +106,7 @@ With three types of messages, respectively:
   
 - (iii) **Commitments**, answering: **what will we do?**
 
-  _Represented as a signed conditioal action. Conditions are either satisfied or not in a given context. The action choice is derived from the matching context via a specified query._
+  _Represented as a signed conditional action. Conditions are either satisfied or not in a given context. The action choice is derived from the matching context via a specified query._
 
 Recall that the public observation pool together with applied domain theories answers: **how is it?**
 
@@ -118,9 +118,9 @@ Which translates into scanning the corpus of _proposals_ for those that increase
 
 After desired actions have been identified, users commit to them by signing and publishing according _commitments_. A commitment is an official statement of executing a specified act when the attached condition was satisfied by the latest observations.
 
-Then the agents go ahead and actually do it accordingly, or they won't, depending in their final decision in the moment of the act. Commitments semantically are interpreted as an _intent_ of some agent to do certain actions. It does not imply a guarantee of the action being executed as declared. There simply is no way to change the fact that whatever social contracts humans may enter, it's ultimately up to them to decide what to do and don't do.
+Then the agents go ahead and actually do it accordingly, or they won't, depending on their final decision in the moment of the act. Commitments semantically are interpreted as an _intent_ of some agent to do certain actions. It does not imply a guarantee of the action being executed as declared. There simply is no way to change the fact that whatever social contracts humans may enter, it's ultimately up to them to decide what to do and don't do.
 
-Sufficient credibility of commitments can be achieved by relating them to other active commitments and past economic activity. Agents may purposefuly record evidence to later prove they caused or haven't caused certain economic activity. Such evidence further can be used to construct incentives and sanctions. Such a construct is what we call _coordination schemes_. They are made up of a set of parameterized commitment templates which can be automatically recognized in historic and active commitments to automatically reason about credibility of commitments.
+Sufficient credibility of commitments can be achieved by relating them to other active commitments and past economic activity. Agents may purposely record evidence to later prove they caused or haven't caused certain economic activity. Such evidence further can be used to construct incentives and sanctions. Such a construct is what we call _coordination schemes_. They are made up of a set of parameterized commitment templates which can be automatically recognized in historic and active commitments to automatically reason about credibility of commitments.
 
 ## Economics
 
@@ -134,7 +134,7 @@ Action spaces of agents can be increased by using other economic objects as an _
 
 Acts yield effects in actuality. We quantify the expected effect of an action by comparing its causal expectations to those of inaction. All differing probabilities in the probed context compared to the inaction context must be caused by the probed action, under the same assumptions of the domain models used for reasoning.
 
-Actions can be chained together into action plans, with previous actions changing reality so to make the next action possible. Individual actions in action plans may not be directly desirable, but the effect of a depending action could be desirale enough to make it worthwhile to pursue still. This essentially models the supply chain of value.
+Actions can be chained together into action plans, with previous actions changing reality so as to make the next action possible. Individual actions in action plans may not be directly desirable, but the effect of a depending action could be desirable enough to make it worthwhile to pursue still. This essentially models the supply chain of value.
 
 We differentiate between two areas of interactions: _governance_ and _production_.
 
@@ -146,23 +146,23 @@ We differentiate between two areas of interactions: _governance_ and _production
 
 Let's generalize the order book: Define _asks_, _offers_, and _matches_.
 
-**Asks** represent the demand side of productive output and are published by consumers. They specify what services they currently look out for, formulated in the consumers perspective abstracting out all to him irrelevant details of production and delivery.
+**Asks** represent the demand side of productive output and are published by consumers. They specify what services they currently look out for, formulated in the consumers perspective, abstracting out all to him irrelevant details of production and delivery.
 
 **Offers** represent the supply side of productive output and are published by service providers according to their organizations production capacity.
 
-Proposed **Matches** claim one or more ask would get filled when a specified list of offers is get ordered.
+Proposed **Matches** claim one or more asks would get filled when a specified list of offers is ordered.
 
 Asks and offers are authored in different perspectives, that of the consumer or service provider, respectively. The market makers task is to translate between those perspectives, figuring out when to order what service to expectedly fulfill asks of one or more users.
 
 Now let's generalize a futures product with physical delivery. For any offer to be listed in the networks offer book, it must implement an abstract coordination interface with following phrases: offer -> order -> deal -> production -> delivery -> settlement -> settled.
 
-Each offer defines an order formular. When a user likes to order a service, he will fill out the offers order formular, sign it, and send it to the service provider. The service provider analyzes the order and if he likes to provide that service, he signs a deal acknowledging and accepting that order. A newly signed deal initially is in an active state and comparable to open interest in a traditional futures contract.
+Each offer defines an order form. When a user likes to order a service, he will fill out the offers order form, sign it, and send it to the service provider. The service provider analyzes the order and if he likes to provide that service, he signs a deal acknowledging and accepting that order. A newly signed deal initially is in an active state and comparable to open interest in a traditional futures contract.
 
 An offers underlying coordination scheme consists of commitments conditioned on signed deals of that very offer. Therefore, once the deal is signed and published, worker agents orchestrated by the service provider automatically commit to actions that make up the service. Due to the fact that a deal was signed in the first place, the underlying commitment scheme seems to be credible enough for the customer.
 
-After a deal is signed, the production phase begins in which worker agents prepare everything for a successful delivery. When production is done, the benefitiary will get notified that the product is ready for delivery. The condition for this notification is defined in the original offers coordination scheme and can only be changed if the active deal is renegotiated with all parties agreeing to it.
+After a deal is signed, the production phase begins in which worker agents prepare everything for a successful delivery. When production is done, the beneficiary will get notified that the product is ready for delivery. The condition for this notification is defined in the original offers coordination scheme and can only be changed if the active deal is renegotiated with all parties agreeing to it.
 
-Next, the delivery phase is interactive involving both workers and benefitiaries. Each coordination scheme outlines usage instructions to benefitiaries describing what to do when in order to have an easy experience and to achieve a successful delivery.
+Next, the delivery phase is interactive involving both workers and beneficiaries. Each coordination scheme outlines usage instructions to beneficiaries describing what to do when in order to have an easy experience and to achieve a successful delivery.
 
 When delivery is done, as defined in the terms of the deal, the settlement phase begins. This is where payments are released or disputes are raised, all in line with the terms defined in the active deal.
 
@@ -174,7 +174,7 @@ _Work in progress. Feel free to ask for more information._
 
 Here's a summary:
 
-A voucher economy is constructed which lets the user navigate within a generalization-specialization spectrum of productive services. On the one extreme, there is $ASK which represents a general purpose voucher for everything offerable, backed by the causal possibilities from all active commitments in the network, weighted by their preceived credibility.
+A voucher economy is constructed which lets the user navigate within a generalization-specialization spectrum of productive services. On the one extreme, there is $ASK which represents a general purpose voucher for everything offerable, backed by the causal possibilities from all active commitments in the network, weighted by their perceived credibility.
 
 Users can specialize their amount of $ASK into more narrow vouchers, constraining the use of the tokens to just the service offerings that match the voucher definition. This balances the efficiency gains from pre-ordering with the time value of making decisions later in time.
 

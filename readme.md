@@ -24,7 +24,7 @@ The network provides an auction mechanism to negotiate matches, accounting of op
 
 Basing all economic activity on pairwise transactions is not always the most efficient or effective conversation to have about who does what and when.
 
-Also, the matching process between service providers and benefitiaries in current economies usually is solved externally, with typical approaches like advertisements creating a lot of mental friction for consumers.
+Also, the matching process between service providers and beneficiaries in current economies usually is solved externally, with typical approaches like advertisements creating a lot of mental friction for consumers.
 
 Further, using written natural languages to define work contracts and service offerings makes them hard to automatically analyze and adapt.
 

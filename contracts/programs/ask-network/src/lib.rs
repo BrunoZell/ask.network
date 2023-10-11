@@ -11,20 +11,29 @@ pub mod ask_network {
     use super::*;
     
     pub fn place_ask(ctx: Context<PlaceAsk>, content: String) -> Result<()> {
-        msg!("User {} placed new ask: {}", ctx.accounts.user.key, content);
+        msg!("User {} placed new ask: {}", ctx.accounts.user.key, &content);
 
         // Fill new ask with its content and index number
         ctx.accounts.ask.content = content;
         ctx.accounts.ask.ordinal = ctx.accounts.user_account.running_ask_ordinal;
         
-        // Increment users active ask counter
+        // Increment users ever-increasing ask counter
         ctx.accounts.user_account.running_ask_ordinal += 1;
 
         Ok(())
     }
 
+    pub fn update_ask(ctx: Context<UpdateAsk>, content: String, _ordinal: u64) -> Result<()> {
+        msg!("User {} updates ask from: {}", ctx.accounts.user.key, &ctx.accounts.ask.content);
+
+        ctx.accounts.ask.content = content;
+        
+        msg!("New ask: {}", &ctx.accounts.ask.content);
+        Ok(())
+    }
+
     pub fn cancel_ask(ctx: Context<CancelAsk>, _ordinal: u64) -> Result<()> {
-        msg!("Ask of user {} cancelled: {}", ctx.accounts.user.key, ctx.accounts.ask.content);
+        msg!("User {} cancelled ask: {}", ctx.accounts.user.key, &ctx.accounts.ask.content);
         Ok(())
     }
 }
@@ -51,9 +60,30 @@ pub struct PlaceAsk<'info> {
     pub user_account: Account<'info, User>,
     
     #[account(mut)]
-    pub user: Signer<'info>,
+    pub user: Signer<'info>, // signer of the transaction, implying the 'user' account
 
     // Solana's built-in system program. Required for operations like account initialization.
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(content: String, ordinal: u64)]
+pub struct UpdateAsk<'info> {
+    #[account(
+        mut, // the content of the existing 'ask' account will be mutated
+        seeds = [user.key().as_ref(), &ordinal.to_le_bytes()], // 'ask' account is identified by instruction parameters
+        bump,
+        realloc = 8 + 4 + content.len() + 8,
+        realloc::zero = true,
+        realloc::payer = user)] // 'user' account pays fees
+    pub ask: Account<'info, Ask>,
+    
+    #[account(seeds = [user.key().as_ref()], bump)]
+    pub user_account: Account<'info, User>,
+    
+    #[account(mut)]
+    pub user: Signer<'info>, // signer of the transaction, implying the 'user' account
+
     pub system_program: Program<'info, System>,
 }
 
@@ -91,5 +121,5 @@ pub struct Ask {
 
     /// A numeric index of this Ask local to the user. The tuple (user.key, ordinal)
     /// uniquely addresses an Ask. Keep in mind that Asks are mutable.
-    pub ordinal: u64,       // 8
+    pub ordinal: u64,     // 8
 }

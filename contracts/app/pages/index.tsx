@@ -86,19 +86,23 @@ const Page = () => {
       [Buffer.from('mint')],
       program.programId
     );
+    
     const [authority] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from('authority')],
       program.programId
     );
+
     const ATA = await getAssociatedTokenAddress(mint, wallet.publicKey);
+
     if (!userPda) return;
+
     const tx = await program.methods
       .initializeUser()
       .accounts({
         userAccount: userPda,
         user: wallet.publicKey,
         mint,
-        tokenAccount: ATA,
+        userTokenAccount: ATA,
       })
       .rpc();
 
@@ -131,7 +135,7 @@ const Page = () => {
     }
   };
 
-  const stakeAsk = async (index: anchor.BN) => {
+  const prioritizeAsk = async (index: anchor.BN, addedStake: anchor.BN) => {
     const [askPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [wallet.publicKey.toBuffer(), index.toArrayLike(Buffer, 'le', 8)],
       program.programId
@@ -145,11 +149,17 @@ const Page = () => {
       program.programId
     );
 
-    const ata = await getAssociatedTokenAddress(mint, wallet.publicKey);
+    const userAta = await getAssociatedTokenAddress(mint, wallet.publicKey);
+    const askAta = await getAssociatedTokenAddress(mint, askPda);
 
     const tx = await program.methods
-      .stakeAsk(index)
-      .accounts({ ask: askPda, mint, tokenAccount: ata, authority })
+      .prioritizeAsk(index, addedStake)
+      .accounts({
+        ask: askPda,
+        mint,
+        userTokenAccount: userAta,
+        askTokenAccount: askAta,
+        authority })
       .rpc();
 
     console.log(
@@ -183,6 +193,18 @@ const Page = () => {
     );
 
     scheduleAskRefetch(r => !r);
+  };
+
+  const getUserBalance = async () => {
+    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from('mint')],
+      program.programId
+    );
+    const ata = await getAssociatedTokenAddress(mint, wallet.publicKey);
+    const userBalance = await getAccount(connection, ata);
+    // Todo: Also fetch user account to read current amount of tokens staked
+
+    setUserBalance(Number(userBalance.amount) / 10 ** 6);
   };
 
   /**
@@ -281,25 +303,19 @@ const Page = () => {
                       alignItems: 'center',
                       width: '100%',
                     }}>
-                    <>
-                      {Object.keys(ask.status).includes('completed') ? (
-                        <span style={{ textDecoration: 'line-through' }}>
-                          {ask?.content}
-                        </span>
-                      ) : (
-                        ask.content
-                      )}
-                    </>
+
+                    <span>
+                      {ask?.content}
+                    </span>
+
                     <div>
                       <Button onClick={() => cancelAsk(ask.ordinal)}>
                         Cancel
                       </Button>
 
-                      {!Object.keys(ask.status).includes('completed') && (
-                        <Button onClick={() => stakeAsk(ask.ordinal)}>
-                          Stake
-                        </Button>
-                      )}
+                      <Button onClick={() => prioritizeAsk(ask.ordinal, 1)}>
+                        Stake 1 $ASK
+                      </Button>
                     </div>
                   </div>
                 ))}

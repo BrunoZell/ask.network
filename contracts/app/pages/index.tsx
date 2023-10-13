@@ -93,7 +93,7 @@ const Page = () => {
 
       setUserPda(pda);
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   }, [wallet]);
 
@@ -114,7 +114,6 @@ const Page = () => {
     (async () => {
       if (wallet?.publicKey && program && userPda) {
         const userAccount = await program.account.user.fetchNullable(userPda);
-
 
         if (userAccount) {
           console.log('Fetched existing user account:');
@@ -156,6 +155,7 @@ const Page = () => {
   };
 
   const initializeUser = async () => {
+    console.log("initialize user");
     const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from('mint')],
       program.programId
@@ -168,7 +168,10 @@ const Page = () => {
 
     const ATA = await getAssociatedTokenAddress(mint, wallet.publicKey);
 
-    if (!userPda) return;
+    if (!userPda) {
+      console.warn("user PDA not set. Reconnect the wallet and try again.");
+      return;
+    }
 
     const tx = await program.methods
       .initializeUser()
@@ -318,10 +321,8 @@ const Page = () => {
         {!wallet?.publicKey ? (
           <div>Connect your wallet 🧸</div>
         ) : !isInitialized ? (
-          <div>
-            <Button onClick={initializeToken}>Init contract</Button>
-            <Button onClick={initializeUser}>Init user</Button>
-          </div>
+            <Button onClick={initializeUser}>Sign up</Button>
+            // <Button onClick={initializeToken}>Init contract</Button>
         ) : (
           <Stack
             w='700px'

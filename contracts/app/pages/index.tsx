@@ -11,7 +11,7 @@ import { PublicKey } from '@solana/web3.js';
 import { AskNetwork as AskIdl } from '../../target/types/ask_network';
 import { IdlAccounts, Program } from '@project-serum/anchor';
 import { AppBar } from '../components/AppBar';
-import { getAccount, getAssociatedTokenAddress } from '@solana/spl-token';
+import { createCloseAccountInstruction, getAccount, getAssociatedTokenAddress } from '@solana/spl-token';
 import {
   IdlAccount,
   IdlEnumFields,
@@ -103,31 +103,6 @@ const Page = () => {
     })();
   }, [wallet, program, refetchAsks]);
 
-  const initializeToken = async () => {
-    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('mint')],
-      program.programId
-    );
-    
-    const [authority] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('authority')],
-      program.programId
-    );
-
-    const tx = await program.methods
-      .initializeToken()
-      .accounts({
-        mint,
-        user: wallet.publicKey,
-        authority
-      })
-      .rpc();
-
-    console.log(
-      `https://explorer.solana.com/tx/${tx}?cluster=localnet&customUrl=http://localhost:8899`
-    );
-  };
-
   const initializeUser = async () => {
     console.log("initialize user");
     
@@ -136,20 +111,11 @@ const Page = () => {
       program.programId
     );
 
-    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('mint')],
-      program.programId
-    );
-    
-    const userAta = await getAssociatedTokenAddress(mint, wallet.publicKey);
-
     const tx = await program.methods
       .initializeUser()
       .accounts({
         userAccount: userPda,
-        user: wallet.publicKey,
-        mint,
-        userTokenAccount: userAta,
+        user: wallet.publicKey
       })
       .rpc();
 
@@ -207,19 +173,10 @@ const Page = () => {
         program.programId
       );
 
-      const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from('mint')],
-        program.programId
-      );
-      
-      const askAta = await getAssociatedTokenAddress(mint, askPda, true);
-  
       const tx = await program.methods
         .placeAsk(content)
         .accounts({
           ask: askPda,
-          mint,
-          askTokenAccount: askAta,
           userAccount: userPda,
           user: wallet.publicKey
         })
@@ -230,47 +187,6 @@ const Page = () => {
         `https://explorer.solana.com/tx/${tx}?cluster=devnet&customUrl=http://localhost:8899`
       );
     }
-  };
-
-  const prioritizeAsk = async (index: anchor.BN, addedStake: anchor.BN) => {
-    const [userPda] = anchor.web3.PublicKey.findProgramAddressSync(
-      [wallet?.publicKey.toBuffer()],
-      program.programId
-    );
-    const [askPda] = anchor.web3.PublicKey.findProgramAddressSync(
-      [wallet.publicKey.toBuffer(), index.toArrayLike(Buffer, 'le', 8)],
-      program.programId
-    );
-    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('mint')],
-      program.programId
-    );
-    const [authority] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('authority')],
-      program.programId
-    );
-
-    const userAta = await getAssociatedTokenAddress(mint, wallet.publicKey);
-    const askAta = await getAssociatedTokenAddress(mint, askPda, true);
-
-    const tx = await program.methods
-      .prioritizeAsk(index, addedStake)
-      .accounts({
-        ask: askPda,
-        user: wallet.publicKey,
-        userAccount: userPda,
-        authority,
-        mint,
-        userTokenAccount: userAta,
-        askTokenAccount: askAta,
-      })
-      .rpc();
-
-    console.log(
-      `https://explorer.solana.com/tx/${tx}?cluster=localnet&customUrl=http://localhost:8899`
-    );
-
-    scheduleAskRefetch(r => !r);
   };
 
   /**
@@ -290,27 +206,13 @@ const Page = () => {
       [wallet.publicKey.toBuffer(), ordinal.toArrayLike(Buffer, 'le', 8)],
       program.programId
     );
-    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('mint')],
-      program.programId
-    );
-    const [authority] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('authority')],
-      program.programId
-    );
-
-    const userAta = await getAssociatedTokenAddress(mint, wallet.publicKey);
-    const askAta = await getAssociatedTokenAddress(mint, askPda, true);
-
+    
     const tx = await program.methods
       .cancelAsk(ordinal)
       .accounts({
         ask: askPda,
         user: wallet.publicKey,
-        userAccount: userPda,
-        mint,
-        userTokenAccount: userAta,
-        askTokenAccount: askAta
+        userAccount: userPda
       })
       .rpc();
 
@@ -321,18 +223,6 @@ const Page = () => {
     scheduleAskRefetch(r => !r);
   };
 
-  // const getUserBalance = async () => {
-  //   const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-  //     [Buffer.from('mint')],
-  //     program.programId
-  //   );
-  //   const ata = await getAssociatedTokenAddress(mint, wallet.publicKey);
-  //   const userBalance = await getAccount(connection, ata);
-  //   // Todo: Also fetch user account to read current amount of tokens staked
-
-  //   setUserBalance(Number(userBalance.amount) / 10 ** 6);
-  // };
-
   return (
     <div className=''>
       <Box justifyContent='center' alignContent='center' w='full'>
@@ -341,18 +231,20 @@ const Page = () => {
         {!wallet?.publicKey ? (
           <div>Connect your wallet 🧸</div>
         ) : !isInitialized ? (
+          <div>
             <Button onClick={initializeUser}>Sign up</Button>
-            // <Button onClick={initializeToken}>Init contract</Button>
+          </div>
         ) : (
           <Stack
             w='700px'
-            h='calc(100vh)'
+            h='70%'
             margin='auto'
             justify='center'
-            align='center'>
+            align='center'
+            padding-top='80px'>
+            
             <div>
-              <h2>Points</h2>
-              {userBalance ?? ''}
+              <h2>What do you want?</h2>
             </div>
             <Input
               onChange={e => setContent(e.currentTarget.value)}
@@ -381,10 +273,6 @@ const Page = () => {
                     <div>
                       <Button onClick={() => cancelAsk(ask.ordinal)}>
                         Cancel
-                      </Button>
-
-                      <Button onClick={() => prioritizeAsk(ask.ordinal, new anchor.BN(1))}>
-                        Stake 1 $ASK
                       </Button>
                     </div>
                   </div>

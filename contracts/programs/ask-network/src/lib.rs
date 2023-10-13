@@ -238,11 +238,17 @@ pub struct PrioritizeAsk<'info> {
     pub mint: Account<'info, Mint>,
 
     // User's ATA
-    #[account(mut, associated_token::mint = mint, associated_token::authority = user)]
+    #[account(
+        mut,
+        associated_token::mint = mint,
+        associated_token::authority = user)]
     pub user_token_account: Account<'info, TokenAccount>,
 
     // Asks's ATA
-    #[account(mut, associated_token::mint = mint, associated_token::authority = ask)]
+    #[account(
+        mut,
+        associated_token::mint = mint,
+        associated_token::authority = ask)]
     pub ask_token_account: Account<'info, TokenAccount>,
 
     // Token program stuff
@@ -277,7 +283,10 @@ pub struct CancelAsk<'info> {
     pub mint: Account<'info, Mint>,
 
     // User's ATA
-    #[account(mut, associated_token::mint = mint, associated_token::authority = user)]
+    #[account(
+        mut,
+        associated_token::mint = mint,
+        associated_token::authority = user)]
     pub user_token_account: Account<'info, TokenAccount>,
 
     // Asks's ATA

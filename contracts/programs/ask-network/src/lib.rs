@@ -174,7 +174,7 @@ pub struct PlaceAsk<'info> {
         init_if_needed,
         payer = user,
         associated_token::mint = mint,
-        associated_token::authority = ask)]
+        associated_token::authority = user)]
     pub ask_token_account: Account<'info, TokenAccount>,
 
     #[account(
@@ -251,7 +251,7 @@ pub struct PrioritizeAsk<'info> {
     #[account(
         mut,
         associated_token::mint = mint,
-        associated_token::authority = ask)]
+        associated_token::authority = user)]
     pub ask_token_account: Account<'info, TokenAccount>,
 
     // Token program stuff
@@ -297,7 +297,7 @@ pub struct CancelAsk<'info> {
         mut,
         close = user,
         associated_token::mint = mint,
-        associated_token::authority = ask)]
+        associated_token::authority = user)]
     pub ask_token_account: Account<'info, TokenAccount>,
 
     pub system_program: Program<'info, System>,

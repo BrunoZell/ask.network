@@ -127,7 +127,7 @@ const Page = () => {
         }
       }
     })();
-  }, [wallet, program, , refetchAsks]);
+  }, [wallet, program, userPda, refetchAsks]);
 
   const initializeToken = async () => {
     const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -161,11 +161,6 @@ const Page = () => {
       program.programId
     );
     
-    const [authority] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('authority')],
-      program.programId
-    );
-
     const ATA = await getAssociatedTokenAddress(mint, wallet.publicKey);
 
     if (!userPda) {
@@ -215,12 +210,28 @@ const Page = () => {
   };
 
   const placeAsk = async () => {
+    console.log("place ask");
+    
+    if (!userPda) {
+      console.warn("User PDA not set. Compute just in time...");
+
+      const [pda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [wallet?.publicKey.toBuffer()],
+        program.programId
+      );
+      
+      console.log(pda);
+
+      setUserPda(pda);
+    }
+
     // Fetch users current ask ordinal, which is the index used for his next placed ask.
     const { runningAskOrdinal } = await program.account.user.fetch(userPda);
 
     // If it (and the user) exists, compute the new asks PDA and submit the transaction.
     if (runningAskOrdinal) {
       const nextRunningOrdinal: number = runningAskOrdinal.toNumber();
+
       const [askPda] = anchor.web3.PublicKey.findProgramAddressSync(
         [
           wallet.publicKey.toBuffer(),
@@ -229,9 +240,22 @@ const Page = () => {
         program.programId
       );
 
+      const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('mint')],
+        program.programId
+      );
+      
+      const askAta = await getAssociatedTokenAddress(mint, askPda, true);
+  
       const tx = await program.methods
         .placeAsk(content)
-        .accounts({ userAccount: userPda, ask: askPda })
+        .accounts({
+          ask: askPda,
+          mint,
+          askTokenAccount: askAta,
+          userAccount: userPda,
+          user: wallet.publicKey
+        })
         .rpc();
 
       scheduleAskRefetch(r => !r);
@@ -256,7 +280,7 @@ const Page = () => {
     );
 
     const userAta = await getAssociatedTokenAddress(mint, wallet.publicKey);
-    const askAta = await getAssociatedTokenAddress(mint, askPda);
+    const askAta = await getAssociatedTokenAddress(mint, askPda, true);
 
     const tx = await program.methods
       .prioritizeAsk(index, addedStake)

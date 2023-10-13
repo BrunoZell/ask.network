@@ -174,7 +174,7 @@ pub struct PlaceAsk<'info> {
         init_if_needed,
         payer = user,
         associated_token::mint = mint,
-        associated_token::authority = user)]
+        associated_token::authority = ask)]
     pub ask_token_account: Account<'info, TokenAccount>,
 
     #[account(

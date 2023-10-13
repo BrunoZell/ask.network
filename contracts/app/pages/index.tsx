@@ -130,6 +130,31 @@ const Page = () => {
     })();
   }, [wallet, program, , refetchAsks]);
 
+  const initializeToken = async () => {
+    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from('mint')],
+      program.programId
+    );
+    
+    const [authority] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from('authority')],
+      program.programId
+    );
+
+    const tx = await program.methods
+      .initializeToken()
+      .accounts({
+        mint,
+        user: wallet.publicKey,
+        authority
+      })
+      .rpc();
+
+    console.log(
+      `https://explorer.solana.com/tx/${tx}?cluster=localnet&customUrl=http://localhost:8899`
+    );
+  };
+
   const initializeUser = async () => {
     const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from('mint')],
@@ -156,7 +181,7 @@ const Page = () => {
       .rpc();
 
     console.log(
-      `https://explorer.solana.com/tx/${tx}?cluster=devnet&customUrl=http://localhost:8899`
+      `https://explorer.solana.com/tx/${tx}?cluster=localnet&customUrl=http://localhost:8899`
     );
 
     setIsInitialized(true);
@@ -293,7 +318,10 @@ const Page = () => {
         {!wallet?.publicKey ? (
           <div>Connect your wallet 🧸</div>
         ) : !isInitialized ? (
-          <Button onClick={initializeUser}>Init user</Button>
+          <div>
+            <Button onClick={initializeToken}>Init contract</Button>
+            <Button onClick={initializeUser}>Init user</Button>
+          </div>
         ) : (
           <Stack
             w='700px'

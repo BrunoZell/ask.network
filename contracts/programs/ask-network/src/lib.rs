@@ -70,17 +70,17 @@ pub mod ask_network {
         Ok(())
     }
 
-    pub fn prioritize_ask(ctx: Context<PrioritizeAsk>, _ordinal: u64, _addedStake: u64) -> Result<()> {
+    pub fn prioritize_ask(ctx: Context<PrioritizeAsk>, _ordinal: u64, _added_stake: u64) -> Result<()> {
         msg!("User {} commits {} $ASK to ask {}: {}",
             ctx.accounts.user.key,
-            _addedStake,
+            _added_stake,
             _ordinal,
             ctx.accounts.ask.content);
         
         // Todo: Transfer $ASK from user account to ask account
 
-        ctx.accounts.user_account.total_staked += _addedStake;
-        ctx.accounts.ask.stake += _addedStake;
+        ctx.accounts.user_account.total_staked += _added_stake;
+        ctx.accounts.ask.stake += _added_stake;
 
         Ok(())
     }

@@ -6,9 +6,9 @@ import {
   useConnection,
   useWallet,
 } from '@solana/wallet-adapter-react';
-import idl from '../../target/idl/ask_network.json';
+import idl from '../../contracts/target/idl/ask_network.json';
 import { PublicKey } from '@solana/web3.js';
-import { AskNetwork as AskIdl } from '../../target/types/ask_network';
+import { AskNetwork as AskIdl } from '../../contracts/target/types/ask_network';
 import { IdlAccounts, Program } from '@project-serum/anchor';
 import { AppBar } from '../components/AppBar';
 import { createCloseAccountInstruction, getAccount, getAssociatedTokenAddress } from '@solana/spl-token';

@@ -14,6 +14,24 @@ declare_id!("4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE");
 pub mod ask_network {
     use super::*;
 
+    // Initialization
+    
+    pub fn initialize_token(ctx: Context<InitializeToken>) -> Result<()> {
+        msg!("Token mint initialized with supply of zero");
+
+        Ok(())
+    }
+
+    pub fn initialize_user(ctx: Context<InitializeUser>) -> Result<()> {
+        msg!("Initializing user: {}", ctx.accounts.user.key());
+
+        ctx.accounts.user_account.running_ask_ordinal = 0;
+
+        // Anchor creates user's token account if needed
+
+        Ok(())
+    }
+
     // Ask Management
     
     pub fn place_ask(ctx: Context<PlaceAsk>, content: String) -> Result<()> {
@@ -66,24 +84,70 @@ pub mod ask_network {
 
         Ok(())
     }
+}
 
-    // Initialization
-    
-    pub fn initialize_user(ctx: Context<InitializeUser>) -> Result<()> {
-        msg!("Initializing user: {}", ctx.accounts.user.key());
+/// ######################
+/// ### Initialization ###
+/// ######################
 
-        ctx.accounts.user_account.running_ask_ordinal = 0;
+#[derive(Accounts)]
+pub struct InitializeToken<'info> {
+    #[account(
+        init,
+        seeds = [b"mint"],
+        bump,
+        payer = user,
+        mint::decimals = 6,
+        mint::authority = authority)]
+    pub mint: Account<'info, Mint>,
 
-        // Anchor creates user's token account if needed
+    // The user who is paying for the creation of the mint account.
+    #[account(mut)]
+    pub user: Signer<'info>,
 
-        Ok(())
-    }
+    #[account(
+        init,
+        seeds = [b"authority"],
+        bump,
+        payer = user,
+        space = 8)]
+    pub authority: Account<'info, Authority>,
 
-    pub fn initialize_token(ctx: Context<InitializeToken>) -> Result<()> {
-        msg!("Token mint initialized with supply of zero");
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
+}
 
-        Ok(())
-    }
+#[derive(Accounts)]
+pub struct InitializeUser<'info> {
+    #[account(
+        init,
+        seeds= [user.key().as_ref()],
+        bump,
+        space = 8 + 8 + 8,
+        payer = user)]
+    pub user_account: Account<'info, User>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    #[account(
+        mut,
+        seeds = ["mint".as_bytes()],
+        bump)]
+    pub mint: Account<'info, Mint>,
+
+    #[account(
+        init_if_needed,
+        payer = user,
+        associated_token::mint = mint,
+        associated_token::authority = user)]
+    pub user_token_account: Account<'info, TokenAccount>,
+
+    pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
+    pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
 }
 
 /// ##################
@@ -215,70 +279,6 @@ pub struct PrioritizeAsk<'info> {
     pub ask_token_account: Account<'info, TokenAccount>,
 
     // Token program stuff
-    pub token_program: Program<'info, Token>,
-    pub associated_token_program: Program<'info, AssociatedToken>,
-    pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
-}
-
-/// ######################
-/// ### Initialization ###
-/// ######################
-
-#[derive(Accounts)]
-pub struct InitializeToken<'info> {
-    #[account(
-        init,
-        seeds = [b"mint"],
-        bump,
-        payer = user,
-        mint::decimals = 6,
-        mint::authority = authority)]
-    pub mint: Account<'info, Mint>,
-
-    // The user who is paying for the creation of the mint account.
-    #[account(mut)]
-    pub user: Signer<'info>,
-
-    #[account(
-        init,
-        seeds = [b"authority"],
-        bump,
-        payer = user,
-        space = 8)]
-    pub authority: Account<'info, Authority>,
-
-    pub token_program: Program<'info, Token>,
-    pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
-}
-
-#[derive(Accounts)]
-pub struct InitializeUser<'info> {
-    #[account(
-        init,
-        seeds= [user.key().as_ref()],
-        bump,
-        space = 8 + 8 + 8,
-        payer = user)]
-    pub user_account: Account<'info, User>,
-
-    #[account(mut)]
-    pub user: Signer<'info>,
-
-    #[account(
-        mut,
-        seeds = ["mint".as_bytes()],
-        bump)]
-    pub mint: Account<'info, Mint>,
-
-    #[account(
-        init_if_needed,
-        payer = user,
-        associated_token::mint = mint,
-        associated_token::authority = user)]
-    pub user_token_account: Account<'info, TokenAccount>,
-
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,

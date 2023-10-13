@@ -29,7 +29,6 @@ const Page = () => {
   const [program, setProgram] = useState<anchor.Program<AskIdl>>();
   const { connection } = useConnection();
   const wallet = useAnchorWallet();
-  const [userPda, setUserPda] = useState<PublicKey>();
 
   /**
    * Initialize wallet provider and onchain program
@@ -69,35 +68,6 @@ const Page = () => {
   }, [wallet]);
 
   /**
-   * Set User PDA
-   * 
-   * @dependency wallet - The effect re-runs whenever the wallet changes.
-   * 
-   * If the user's Program Derived Address (PDA) is not set:
-   * 1. It attempts to find the PDA using the user's wallet public key and the program's ID.
-   * 2. If successful, it sets the user's PDA in the component's state.
-   * 3. Any errors encountered during this process are logged to the console.
-   */
-  useEffect(() => {
-    if (userPda) return;
-    
-    console.log("Set user PDA...");
-
-    try {
-      const [pda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [wallet?.publicKey.toBuffer()],
-        program.programId
-      );
-      
-      console.log(pda);
-
-      setUserPda(pda);
-    } catch (error) {
-      console.warn(error);
-    }
-  }, [wallet]);
-
-  /**
    * Fetch user account from chain
    * 
    * @dependency wallet - The effect re-runs whenever the user's wallet changes
@@ -112,7 +82,11 @@ const Page = () => {
    */
   useEffect(() => {
     (async () => {
-      if (wallet?.publicKey && program && userPda) {
+      if (wallet?.publicKey && program) {
+        const [userPda] = anchor.web3.PublicKey.findProgramAddressSync(
+          [wallet?.publicKey.toBuffer()],
+          program.programId
+        );
         const userAccount = await program.account.user.fetchNullable(userPda);
 
         if (userAccount) {
@@ -127,7 +101,7 @@ const Page = () => {
         }
       }
     })();
-  }, [wallet, program, userPda, refetchAsks]);
+  }, [wallet, program, refetchAsks]);
 
   const initializeToken = async () => {
     const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -156,17 +130,18 @@ const Page = () => {
 
   const initializeUser = async () => {
     console.log("initialize user");
+    
+    const [userPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [wallet?.publicKey.toBuffer()],
+      program.programId
+    );
+
     const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from('mint')],
       program.programId
     );
     
-    const ATA = await getAssociatedTokenAddress(mint, wallet.publicKey);
-
-    if (!userPda) {
-      console.warn("user PDA not set. Reconnect the wallet and try again.");
-      return;
-    }
+    const userAta = await getAssociatedTokenAddress(mint, wallet.publicKey);
 
     const tx = await program.methods
       .initializeUser()
@@ -174,7 +149,7 @@ const Page = () => {
         userAccount: userPda,
         user: wallet.publicKey,
         mint,
-        userTokenAccount: ATA,
+        userTokenAccount: userAta,
       })
       .rpc();
 
@@ -211,19 +186,11 @@ const Page = () => {
 
   const placeAsk = async () => {
     console.log("place ask");
-    
-    if (!userPda) {
-      console.warn("User PDA not set. Compute just in time...");
 
-      const [pda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [wallet?.publicKey.toBuffer()],
-        program.programId
-      );
-      
-      console.log(pda);
-
-      setUserPda(pda);
-    }
+    const [userPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [wallet?.publicKey.toBuffer()],
+      program.programId
+    );
 
     // Fetch users current ask ordinal, which is the index used for his next placed ask.
     const { runningAskOrdinal } = await program.account.user.fetch(userPda);
@@ -266,6 +233,10 @@ const Page = () => {
   };
 
   const prioritizeAsk = async (index: anchor.BN, addedStake: anchor.BN) => {
+    const [userPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [wallet?.publicKey.toBuffer()],
+      program.programId
+    );
     const [askPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [wallet.publicKey.toBuffer(), index.toArrayLike(Buffer, 'le', 8)],
       program.programId
@@ -286,10 +257,13 @@ const Page = () => {
       .prioritizeAsk(index, addedStake)
       .accounts({
         ask: askPda,
+        user: wallet.publicKey,
+        userAccount: userPda,
+        authority,
         mint,
         userTokenAccount: userAta,
         askTokenAccount: askAta,
-        authority })
+      })
       .rpc();
 
     console.log(
@@ -308,14 +282,36 @@ const Page = () => {
    * to update the local state.
    */
   const cancelAsk = async (ordinal: anchor.BN) => {
+    const [userPda] = anchor.web3.PublicKey.findProgramAddressSync(
+      [wallet?.publicKey.toBuffer()],
+      program.programId
+    );
     const [askPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [wallet.publicKey.toBuffer(), ordinal.toArrayLike(Buffer, 'le', 8)],
       program.programId
     );
+    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from('mint')],
+      program.programId
+    );
+    const [authority] = anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from('authority')],
+      program.programId
+    );
+
+    const userAta = await getAssociatedTokenAddress(mint, wallet.publicKey);
+    const askAta = await getAssociatedTokenAddress(mint, askPda, true);
 
     const tx = await program.methods
       .cancelAsk(ordinal)
-      .accounts({ ask: askPda })
+      .accounts({
+        ask: askPda,
+        user: wallet.publicKey,
+        userAccount: userPda,
+        mint,
+        userTokenAccount: userAta,
+        askTokenAccount: askAta
+      })
       .rpc();
 
     console.log(

@@ -217,39 +217,6 @@ pub struct UpdateAsk<'info> {
 
 #[derive(Accounts)]
 #[instruction(ordinal: u64)]
-pub struct CancelAsk<'info> {
-    #[account(
-        mut, 
-        close = user, // after the instruction is executed, the 'ask' account will be closed, and any remaining lamports will be transferred to the 'user' account.
-        seeds = [user.key().as_ref(), &ordinal.to_le_bytes()],
-        bump)]
-    pub ask: Account<'info, Ask>,
-
-    #[account(mut)]
-    pub user: Signer<'info>,
-
-    #[account(
-        seeds = [user.key().as_ref()],
-        bump)]
-    pub user_account: Account<'info, User>,
-    
-    // $ASK global mint
-    #[account(mut, seeds=[b"mint"], bump)]
-    pub mint: Account<'info, Mint>,
-
-    // Asks's ATA
-    #[account(
-        mut,
-        close = user,
-        associated_token::mint = mint,
-        associated_token::authority = ask)]
-    pub ask_token_account: Account<'info, TokenAccount>,
-
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-#[instruction(ordinal: u64)]
 pub struct PrioritizeAsk<'info> {
     // Storage account
     #[account(mut, seeds= [user.key().as_ref(), &ordinal.to_le_bytes()], bump)]
@@ -283,6 +250,45 @@ pub struct PrioritizeAsk<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
     pub rent: Sysvar<'info, Rent>,
+}
+
+#[derive(Accounts)]
+#[instruction(ordinal: u64)]
+pub struct CancelAsk<'info> {
+    #[account(
+        mut, 
+        close = user, // after the instruction is executed, the 'ask' account will be closed, and any remaining lamports will be transferred to the 'user' account.
+        seeds = [user.key().as_ref(), &ordinal.to_le_bytes()],
+        bump)]
+    pub ask: Account<'info, Ask>,
+
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    #[account(
+        seeds = [user.key().as_ref()],
+        bump)]
+    pub user_account: Account<'info, User>,
+    
+    // $ASK global mint
+    // Required to reference this Asks token account to be deconstructed.
+    // Also for referencing the Users token account to receive staked tokens, if any.
+    #[account(mut, seeds=[b"mint"], bump)]
+    pub mint: Account<'info, Mint>,
+
+    // User's ATA
+    #[account(mut, associated_token::mint = mint, associated_token::authority = user)]
+    pub user_token_account: Account<'info, TokenAccount>,
+
+    // Asks's ATA
+    #[account(
+        mut,
+        close = user,
+        associated_token::mint = mint,
+        associated_token::authority = ask)]
+    pub ask_token_account: Account<'info, TokenAccount>,
+
+    pub system_program: Program<'info, System>,
 }
 
 /// #################

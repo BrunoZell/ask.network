@@ -133,7 +133,7 @@ pub struct InitializeUser<'info> {
 
     #[account(
         mut,
-        seeds = ["mint".as_bytes()],
+        seeds = [b"mint"],
         bump)]
     pub mint: Account<'info, Mint>,
 
@@ -219,7 +219,10 @@ pub struct UpdateAsk<'info> {
 #[instruction(ordinal: u64)]
 pub struct PrioritizeAsk<'info> {
     // Storage account
-    #[account(mut, seeds= [user.key().as_ref(), &ordinal.to_le_bytes()], bump)]
+    #[account(
+        mut,
+        seeds= [user.key().as_ref(), &ordinal.to_le_bytes()],
+        bump)]
     pub ask: Account<'info, Ask>,
 
     #[account(mut)]

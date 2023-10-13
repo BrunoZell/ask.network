@@ -31,32 +31,42 @@ const Page = () => {
   const wallet = useAnchorWallet();
   const [userPda, setUserPda] = useState<PublicKey>();
 
-  const placeAsk = async () => {
-    // Fetch users current ask ordinal, which is the index used for his next placed ask.
-    const { runningAskOrdinal } = await program.account.user.fetch(userPda);
+  /**
+   * Initialize wallet provider and onchain program
+   * 
+   * @dependency wallet - The effect re-runs whenever the user's wallet changes.
+   * 
+   * This effect sets up the Anchor program provider for interacting with the Solana blockchain.
+   * It first attempts to get the default provider. If that fails (e.g., when not in a browser environment),
+   * it creates a new provider using the current wallet and connection. Once the provider is obtained,
+   * it initializes the Anchor program with the Ask Network IDL and sets it in the local state.
+   */
+  useEffect(() => {
+    console.log("Updating provider, then program...");
 
-    // If it (and the user) exists, compute the new asks PDA and submit the transaction.
-    if (runningAskOrdinal) {
-      const nextRunningOrdinal: number = runningAskOrdinal.toNumber();
-      const [askPda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [
-          wallet.publicKey.toBuffer(),
-          new anchor.BN(nextRunningOrdinal).toArrayLike(Buffer, 'le', 8),
-        ],
-        program.programId
-      );
+    let provider: anchor.Provider;
 
-      const tx = await program.methods
-        .placeAsk(content)
-        .accounts({ userAccount: userPda, ask: askPda })
-        .rpc();
-
-      scheduleAskRefetch(r => !r);
-      console.log(
-        `https://explorer.solana.com/tx/${tx}?cluster=devnet&customUrl=http://localhost:8899`
-      );
+    try {
+      provider = anchor.getProvider();
+    } catch (error) {
+      if (wallet) {
+        provider = new anchor.AnchorProvider(connection, wallet, {});
+      }
     }
-  };
+
+    if (provider) {
+      try {
+        const program = new anchor.Program(
+          idl as anchor.Idl,
+          new PublicKey('4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE'),
+          provider
+        );
+        setProgram(program as Program<AskIdl>);
+      } catch (error) {
+        console.log("error updating program");
+      }
+    }
+  }, [wallet]);
 
   /**
    * Set User PDA
@@ -70,16 +80,55 @@ const Page = () => {
    */
   useEffect(() => {
     if (userPda) return;
+    
+    console.log("Set user PDA...");
+
     try {
       const [pda] = anchor.web3.PublicKey.findProgramAddressSync(
         [wallet?.publicKey.toBuffer()],
         program.programId
       );
+      
+      console.log(pda);
+
       setUserPda(pda);
     } catch (error) {
-      console.log('🚀 ~ file: index.tsx:68 ~ useEffect ~ error', error);
+      console.log(error);
     }
   }, [wallet]);
+
+  /**
+   * Fetch user account from chain
+   * 
+   * @dependency wallet - The effect re-runs whenever the user's wallet changes
+   * @dependency program - The effect re-runs whenever the program changes.
+   * @dependency refetchAsks - The effect re-runs whenever the user modifies his asks.
+   * 
+   * If the user's wallet is connected (i.e., wallet?.publicKey exists) and the program is defined:
+   * 1. It fetches the user's account data from the Solana program.
+   * 2. If the user account exists:
+   *    a. It retrieves the user's asks up to the current runningAskOrdinal.
+   *    b. It sets the component's state to indicate that the user's data has been initialized.
+   */
+  useEffect(() => {
+    (async () => {
+      if (wallet?.publicKey && program && userPda) {
+        const userAccount = await program.account.user.fetchNullable(userPda);
+
+
+        if (userAccount) {
+          console.log('Fetched existing user account:');
+          console.log(userAccount);
+
+          await getAsks(userAccount.runningAskOrdinal.toNumber());
+
+          setIsInitialized(true);
+        } else {
+          console.log('User account does not exist.');
+        }
+      }
+    })();
+  }, [wallet, program, , refetchAsks]);
 
   const initializeUser = async () => {
     const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -114,6 +163,8 @@ const Page = () => {
   };
 
   const getAsks = async (counter: number) => {
+    console.log("Fetch users asks...");
+
     const askAccountKeys = [];
     try {
       for (let i = 0; i < counter; i++) {
@@ -132,6 +183,33 @@ const Page = () => {
     } catch (error) {
       console.log('🚀 ~ file: index.tsx:118 ~ getAsks ~ error', error);
       setAsks([]);
+    }
+  };
+
+  const placeAsk = async () => {
+    // Fetch users current ask ordinal, which is the index used for his next placed ask.
+    const { runningAskOrdinal } = await program.account.user.fetch(userPda);
+
+    // If it (and the user) exists, compute the new asks PDA and submit the transaction.
+    if (runningAskOrdinal) {
+      const nextRunningOrdinal: number = runningAskOrdinal.toNumber();
+      const [askPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [
+          wallet.publicKey.toBuffer(),
+          new anchor.BN(nextRunningOrdinal).toArrayLike(Buffer, 'le', 8),
+        ],
+        program.programId
+      );
+
+      const tx = await program.methods
+        .placeAsk(content)
+        .accounts({ userAccount: userPda, ask: askPda })
+        .rpc();
+
+      scheduleAskRefetch(r => !r);
+      console.log(
+        `https://explorer.solana.com/tx/${tx}?cluster=devnet&customUrl=http://localhost:8899`
+      );
     }
   };
 
@@ -195,74 +273,17 @@ const Page = () => {
     scheduleAskRefetch(r => !r);
   };
 
-  const getUserBalance = async () => {
-    const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('mint')],
-      program.programId
-    );
-    const ata = await getAssociatedTokenAddress(mint, wallet.publicKey);
-    const userBalance = await getAccount(connection, ata);
-    // Todo: Also fetch user account to read current amount of tokens staked
+  // const getUserBalance = async () => {
+  //   const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+  //     [Buffer.from('mint')],
+  //     program.programId
+  //   );
+  //   const ata = await getAssociatedTokenAddress(mint, wallet.publicKey);
+  //   const userBalance = await getAccount(connection, ata);
+  //   // Todo: Also fetch user account to read current amount of tokens staked
 
-    setUserBalance(Number(userBalance.amount) / 10 ** 6);
-  };
-
-  /**
-   * Initialize wallet provider and onchain program
-   * 
-   * @dependency wallet - The effect re-runs whenever the user's wallet changes.
-   * 
-   * This effect sets up the Anchor program provider for interacting with the Solana blockchain.
-   * It first attempts to get the default provider. If that fails (e.g., when not in a browser environment),
-   * it creates a new provider using the current wallet and connection. Once the provider is obtained,
-   * it initializes the Anchor program with the Ask Network IDL and sets it in the local state.
-   */
-  useEffect(() => {
-    let provider: anchor.Provider;
-
-    try {
-      provider = anchor.getProvider();
-    } catch (error) {
-      if (wallet) {
-        provider = new anchor.AnchorProvider(connection, wallet, {});
-      }
-    }
-
-    if (provider) {
-      const program = new anchor.Program(
-        idl as anchor.Idl,
-        new PublicKey('4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE'),
-        provider
-      );
-      setProgram(program as Program<AskIdl>);
-    }
-  }, [wallet]);
-
-  /**
-   * Initialize user data
-   * 
-   * @dependency wallet - The effect re-runs whenever the user's wallet changes
-   * @dependency program - The effect re-runs whenever the program changes.
-   * @dependency refetchAsks - The effect re-runs whenever the user modifies his asks.
-   * 
-   * If the user's wallet is connected (i.e., wallet?.publicKey exists) and the program is defined:
-   * 1. It fetches the user's account data from the Solana program.
-   * 2. If the user account exists:
-   *    a. It retrieves the user's asks up to the current runningAskOrdinal.
-   *    b. It sets the component's state to indicate that the user's data has been initialized.
-   */
-  useEffect(() => {
-    (async () => {
-      if (wallet?.publicKey && program) {
-        const userAccount = await program.account.user.fetchNullable(userPda);
-        if (userAccount) {
-          await getAsks(userAccount.runningAskOrdinal.toNumber());
-
-          setIsInitialized(true);
-        }
-      }
-    })();
-  }, [wallet, program, refetchAsks]);
+  //   setUserBalance(Number(userBalance.amount) / 10 ** 6);
+  // };
 
   return (
     <div className=''>
@@ -313,7 +334,7 @@ const Page = () => {
                         Cancel
                       </Button>
 
-                      <Button onClick={() => prioritizeAsk(ask.ordinal, 1)}>
+                      <Button onClick={() => prioritizeAsk(ask.ordinal, new anchor.BN(1))}>
                         Stake 1 $ASK
                       </Button>
                     </div>

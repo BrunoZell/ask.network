@@ -1,7 +1,16 @@
 {
     "cSpell.words": [
+        "askbot",
+        "askfi",
+        "backtest",
+        "Backtester",
+        "backtests",
+        "CRDT",
+        "Ipfs",
+        "istio",
         "lamports",
         "litepaper",
+        "permissioned",
         "Solana"
     ]
 }

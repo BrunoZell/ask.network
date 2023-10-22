@@ -1,0 +1,86 @@
+asyncapi: '2.0.0'
+info:
+  title: User WebSocket API
+  version: '1.0.0'
+  description: WebSocket API for real-time analysis results
+
+channels:
+  /api/query/{name}/stream:
+    parameters:
+      name:
+        description: Name of the query
+        schema:
+          type: string
+    subscribe:
+      message:
+        name: QueryResult
+        payload:
+          type: object
+          properties:
+            result:
+              type: string
+              description: Result of the query
+
+  /api/visualization/{name}/stream:
+    parameters:
+      name:
+        description: Name of the visualization
+        schema:
+          type: string
+    subscribe:
+      message:
+        name: VisualizationCanvas
+        payload:
+          type: object
+          properties:
+            canvas:
+              type: string
+              description: Canvas data for the visualization
+
+  /api/backtest/{backtestId}/monitor:
+    parameters:
+      backtestId:
+        description: ID of the backtest
+        schema:
+          type: string
+    subscribe:
+      message:
+        name: BacktestMonitor
+        payload:
+          type: object
+          properties:
+            status:
+              type: string
+              description: Status of the backtest
+
+  /api/simulation/{simulationId}/monitor:
+    parameters:
+      simulationId:
+        description: ID of the simulation
+        schema:
+          type: string
+    subscribe:
+      message:
+        name: SimulationMonitor
+        payload:
+          type: object
+          properties:
+            status:
+              type: string
+              description: Status of the simulation
+
+  /api/execution/{executionId}/stream:
+    parameters:
+      executionId:
+        description: ID of the execution
+        schema:
+          type: string
+    subscribe:
+      message:
+        name: ExecutionResult
+        payload:
+          type: object
+          properties:
+            result:
+              type: string
+              description: Result of the execution based on the result query

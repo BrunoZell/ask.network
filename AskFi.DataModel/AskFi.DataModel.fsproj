@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Runtime.Persistence.fs" />
+    <Compile Include="Runtime.Platform.fs" />
+    <Compile Include="Runtime.DataModel.fs" />
+    <Compile Include="Runtime.Messages.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\sdk\source\AskFi.Sdk.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="readme.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Threading.Channels" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>

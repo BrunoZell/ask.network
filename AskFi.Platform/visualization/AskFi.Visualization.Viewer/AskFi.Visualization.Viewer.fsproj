@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include=".config\dotnet-tools.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="public\fable.ico" />
+    <Content Include="public\index.html" />
+    <Content Include="public\scene.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\domains\Rabot.Market.Visualization\PriceTimeGrid.fs" Link="src\PriceTimeGrid.fs" />
+    <Compile Include="..\..\domains\Rabot.Market.Visualization\Canvas.fs" Link="src\Canvas.fs" />
+    <Compile Include="..\..\domains\Rabot.Market.Visualization\Api.fs" Link="src\Api.fs" />
+    <Compile Include="src\Serialization.fs" />
+    <Compile Include="src\Fable.Browser.SVG.fs" />
+    <Compile Include="src\D3.fs" />
+    <Compile Include="src\App.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="global.json" />
+    <None Include="Nuget.Config" />
+    <None Include="package-lock.json" />
+    <None Include="package.json" />
+    <None Include="paket.dependencies" />
+    <None Include="paket.references" />
+    <None Include="paket.lock" />
+    <None Include="README.md" />
+    <None Include="webpack.config.js" />
+  </ItemGroup>
+
+  <Import Project=".paket\Paket.Restore.targets" />
+
+</Project>

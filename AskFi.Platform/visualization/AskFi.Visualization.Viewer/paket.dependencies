@@ -1,0 +1,7 @@
+source https://api.nuget.org/v3/index.json
+storage: none
+
+nuget Fable.Core
+nuget Fable.Browser.Dom
+nuget Fable.SimpleHttp
+nuget Thoth.Json

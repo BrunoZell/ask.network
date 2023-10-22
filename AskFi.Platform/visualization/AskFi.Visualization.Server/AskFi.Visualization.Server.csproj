@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>b5484707-4500-44b2-b30a-cd2e0a73d08c</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\snippets\Base32.cs" Link="Base32.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.Interactive.Async" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\runtime\sdk\source\AskFi.Sdk.fsproj" />
+    <ProjectReference Include="..\..\..\runtime\source\AskFi.Runtime.DataModel\AskFi.Runtime.DataModel.fsproj" />
+    <ProjectReference Include="..\..\..\runtime\source\AskFi.Runtime.Persistence\AskFi.Runtime.Persistence.csproj" />
+    <ProjectReference Include="..\..\..\runtime\source\AskFi.Runtime\AskFi.Runtime.csproj" />
+    <ProjectReference Include="..\..\domains\bybit\Rabot.Bybit\Rabot.Bybit.fsproj" />
+    <ProjectReference Include="..\..\domains\Rabot.Market.Visualization\Rabot.Market.Visualization.fsproj" />
+    <ProjectReference Include="..\..\domains\smc\Rabot.SmartMoneyConcepts.fsproj" />
+  </ItemGroup>
+
+</Project>

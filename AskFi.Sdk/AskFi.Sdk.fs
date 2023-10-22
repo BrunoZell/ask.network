@@ -118,4 +118,4 @@ type Strategy =
 // ###################
 
 type IBroker<'Action> =
-    abstract member Execute : 'Action -> Task
+    abstract member Execute : 'Action -> Task<byte[] option>

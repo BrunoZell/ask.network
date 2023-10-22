@@ -70,6 +70,9 @@ type ActionExecutionTrace =
     | Error of ``exception``: string option
 
 type ActionExecutionResult = {
+    /// What action has been executed.
+    Executed: Action
+
     /// Trace output from broker.
     Trace: ActionExecutionTrace
 
@@ -88,9 +91,6 @@ type ActionSequenceHead =
 and ActionSequenceNode = {
     /// Links previous decision.
     Previous: ContentId // ActionSequenceHead
-
-    /// What action has been executed.
-    Executed: Action
 
     /// Holds timestamps and information obtained through the broker.
     Result: ActionExecutionResult
@@ -136,7 +136,7 @@ type KnowledgeBase = {
 
 type Happening =
     | Observation of CapturedObservation
-    | Action of ActionSequenceHead
+    | Action of ActionExecutionResult
 
 type ContextSequenceHead =
     | Identity of Nonce:uint64

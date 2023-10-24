@@ -6,6 +6,7 @@ RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
     curl \
+    wget \
     git \
     gnupg2 \
     jq \
@@ -61,3 +62,10 @@ RUN npm --version
 RUN yarn --version
 RUN solana --version
 RUN anchor --version
+
+# Installs zsh with some plugins
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
+    -p git \
+    -p ssh-agent \
+    -p https://github.com/zsh-users/zsh-autosuggestions \
+    -p https://github.com/zsh-users/zsh-completions

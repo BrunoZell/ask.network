@@ -5,18 +5,18 @@ WORKDIR /home/
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
-        curl \
-        git \
-        gnupg2 \
-        jq \
-        sudo \
-        zsh \
-        vim \
-        build-essential \
-        openssl \
-        libssl-dev \
-        pkg-config \
-        libudev-dev
+    curl \
+    git \
+    gnupg2 \
+    jq \
+    sudo \
+    zsh \
+    vim \
+    build-essential \
+    openssl \
+    libssl-dev \
+    pkg-config \
+    libudev-dev
 
 # Install rustup and common components
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y

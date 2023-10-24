@@ -105,7 +105,7 @@ const Page = () => {
 
   const initializeUser = async () => {
     console.log("initialize user");
-    
+
     const [userPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [wallet?.publicKey.toBuffer()],
       program.programId
@@ -206,7 +206,7 @@ const Page = () => {
       [wallet.publicKey.toBuffer(), ordinal.toArrayLike(Buffer, 'le', 8)],
       program.programId
     );
-    
+
     const tx = await program.methods
       .cancelAsk(ordinal)
       .accounts({
@@ -242,7 +242,7 @@ const Page = () => {
             justify='center'
             align='center'
             padding-top='80px'>
-            
+
             <div>
               <h2>What do you want?</h2>
             </div>

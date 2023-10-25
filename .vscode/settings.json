@@ -3,5 +3,8 @@
         "lamports",
         "litepaper",
         "Solana"
+    ],
+    "rust-analyzer.linkedProjects": [
+        "/workspaces/ask.network/Ask.Network/contracts/Cargo.toml"
     ]
 }

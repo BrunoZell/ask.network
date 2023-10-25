@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
 
-use super::state::User;
+use crate::state::*;
 
 pub fn initialize_user(ctx: Context<InitializeUser>) -> ProgramResult {
     msg!("Initializing user: {}", ctx.accounts.user.key());

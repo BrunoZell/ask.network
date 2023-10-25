@@ -10,3 +10,10 @@ pub struct Ask {
     /// uniquely addresses an Ask. Keep in mind that Asks are mutable.
     pub ordinal: u64, // 8
 }
+
+#[account]
+pub struct User {
+    /// Total amount of asks the user has placed until now.
+    /// Used as an ever increasing identifier for asks.
+    pub running_ask_ordinal: u64,
+}

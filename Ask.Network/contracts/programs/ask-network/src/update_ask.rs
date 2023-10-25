@@ -1,8 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
 
-use super::state::Ask;
-use crate::users::state::User;
+use crate::state::*;
 
 pub fn update_ask(ctx: Context<UpdateAsk>, content: String, ordinal: u64) -> ProgramResult {
     msg!(

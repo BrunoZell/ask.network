@@ -1,8 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
 
-use super::state::Ask;
-use crate::users::state::User;
+use crate::state::*;
 
 pub fn cancel_ask(ctx: Context<CancelAsk>, ordinal: u64) -> ProgramResult {
     msg!("User {} cancelled ask: {}", ctx.accounts.user.key, &ctx.accounts.ask.content);

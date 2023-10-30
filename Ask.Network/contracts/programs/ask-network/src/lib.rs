@@ -1,6 +1,10 @@
 use account::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
+use anchor_spl::{
+    associated_token::AssociatedToken,
+    token::{Mint, Token, TokenAccount},
+};
 
 mod account;
 mod state;
@@ -18,6 +22,27 @@ pub mod ask_network {
 
         // Anchor creates user's token account if needed
 
+        Ok(())
+    }
+
+    pub fn initialize_token(_ctx: Context<InitializeMint>) -> Result<()> {
+        msg!("Token mint initialized");
+        Ok(())
+    }
+
+    pub fn acquire_token(ctx: Context<AcquireToken>, ask_amount: u64) -> Result<()> {
+        anchor_spl::token::mint_to(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                anchor_spl::token::MintTo {
+                    authority: ctx.accounts.token_authority.to_account_info(),
+                    to: ctx.accounts.user_token_account.to_account_info(),
+                    mint: ctx.accounts.token_mint.to_account_info(),
+                },
+                &[&[b"authority", &[*ctx.bumps.get("authority").unwrap()]]],
+            ),
+            ask_amount,
+        )?;
         Ok(())
     }
 

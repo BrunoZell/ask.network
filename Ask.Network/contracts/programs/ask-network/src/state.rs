@@ -1,6 +1,9 @@
 use anchor_lang::prelude::*;
 
 #[account]
+pub struct TokenAuthority {}
+
+#[account]
 pub struct Ask {
     /// Plain-text payload of this Ask, freely definable by the user.
     /// This is to be translated into a causal query for matching with offers.

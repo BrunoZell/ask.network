@@ -5,8 +5,10 @@ use anchor_spl::{
     associated_token::AssociatedToken,
     token::{Mint, Token, TokenAccount},
 };
+use errors::*;
 
 mod account;
+mod errors;
 mod state;
 
 declare_id!("4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE");
@@ -14,6 +16,8 @@ declare_id!("4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE");
 #[program]
 pub mod ask_network {
     use super::*;
+
+    const COMMUNITY_TREASURY_ADDRESS: &str = "CommunityAddressHere";
 
     pub fn initialize_user(ctx: Context<InitializeUser>) -> ProgramResult {
         msg!("Initializing user: {}", ctx.accounts.user.key());
@@ -31,6 +35,32 @@ pub mod ask_network {
     }
 
     pub fn acquire_token(ctx: Context<AcquireToken>, ask_amount: u64) -> Result<()> {
+        // Calculate total cost of this purchase in SOL
+        let lamport_amount = ask_amount / 1; // assume a 1:1 SOL/ASK purchase price for now
+
+        // Ensure the signing user has enough SOL
+        if ctx.accounts.user.lamports() < lamport_amount {
+            return err!(errors::ErrorCode::InsufficientFunds);
+        }
+
+        // Unsure the SOL destination address is the community treasury
+        if ctx.accounts.community_treasury.key.to_string() != COMMUNITY_TREASURY_ADDRESS {
+            return err!(errors::ErrorCode::InvalidCommunityTreasuryAddress);
+        }
+
+        // Transfer SOL from purchaser to community treasury
+        anchor_lang::system_program::transfer(
+            CpiContext::new(
+                ctx.accounts.system_program.to_account_info(),
+                anchor_lang::system_program::Transfer {
+                    from: ctx.accounts.user.to_account_info().clone(),
+                    to: ctx.accounts.community_treasury.clone(),
+                },
+            ),
+            lamport_amount,
+        )?;
+
+        // Mint new $ASK tokens
         anchor_spl::token::mint_to(
             CpiContext::new_with_signer(
                 ctx.accounts.token_program.to_account_info(),

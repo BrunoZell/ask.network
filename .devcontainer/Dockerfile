@@ -15,6 +15,7 @@ RUN apt-get update && \
     vim \
     build-essential \
     openssl \
+    libclang-dev \
     libssl-dev \
     pkg-config \
     libudev-dev
@@ -23,17 +24,24 @@ RUN apt-get update && \
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-RUN rustup install nightly && \
+RUN rustup install stable && \
     rustup component add rustfmt && \
-    rustup component add rustfmt --toolchain nightly && \
+    rustup component add rustfmt --toolchain stable && \
     rustup component add clippy && \
-    rustup component add clippy --toolchain nightly
+    rustup component add clippy --toolchain stable
 
 RUN cargo install cargo-expand && \
     cargo install cargo-edit
 
-# install solana
-RUN sh -c "$(curl -sSfL https://release.solana.com/v1.17.3/install)"
+# build and install solana (from source)
+RUN git clone https://github.com/solana-labs/solana
+WORKDIR /home/solana
+ENV RUST_REED_SOLOMON_ERASURE_ARCH=native
+ENV RUSTFLAGS="-C target-feature=-avx2"
+RUN git checkout v1.16.18
+RUN ./scripts/cargo-install-all.sh .
+RUN export PATH="/home/solana"/bin:"$PATH" && \
+    solana-install init v1.16.18
 ENV PATH="/root/.local/share/solana/install/active_release/bin:$PATH"
 
 # install anchor via avm

@@ -5,6 +5,8 @@
         "Solana"
     ],
     "rust-analyzer.linkedProjects": [
-        "${workspaceFolder}/Ask.Network/contracts/Cargo.toml"
-    ]
+        "./Ask.Network/contracts/Cargo.toml",
+        "./Ask.Network/contracts/programs/ask-network/Cargo.toml"
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false
 }

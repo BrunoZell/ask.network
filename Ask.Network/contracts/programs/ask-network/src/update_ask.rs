@@ -1,5 +1,8 @@
-use anchor_lang::prelude::*;
-use anchor_lang::solana_program::entrypoint::*;
+use anchor_lang::{
+    prelude::*,
+    solana_program::instruction,
+    solana_program::entrypoint::*
+};
 
 use crate::state::*;
 

@@ -1,38 +1,63 @@
+use account::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
 
-pub mod cancel_ask;
-pub mod initialize_user;
-pub mod place_ask;
-pub mod state;
-pub mod update_ask;
+mod account;
+mod state;
 
 declare_id!("4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE");
 
 #[program]
 pub mod ask_network {
     use super::*;
-    // Users
 
-    pub fn initialize_user(ctx: Context<initialize_user::InitializeUser>) -> ProgramResult {
-        initialize_user::initialize_user(ctx)
+    pub fn initialize_user(ctx: Context<InitializeUser>) -> ProgramResult {
+        msg!("Initializing user: {}", ctx.accounts.user.key());
+
+        ctx.accounts.user_account.running_ask_ordinal = 0;
+
+        // Anchor creates user's token account if needed
+
+        Ok(())
     }
 
-    // Asks
+    pub fn place_ask(ctx: Context<PlaceAsk>, content: String) -> Result<()> {
+        msg!(
+            "User {} placed new ask: {}",
+            ctx.accounts.user.key,
+            &content
+        );
 
-    pub fn place_ask(ctx: Context<place_ask::PlaceAsk>, content: String) -> ProgramResult {
-        place_ask::place_ask(ctx, content)
+        // Fill new ask with its content and index number
+        ctx.accounts.ask.content = content;
+        ctx.accounts.ask.ordinal = ctx.accounts.user_account.running_ask_ordinal;
+
+        // Increment users ever-increasing ask counter
+        ctx.accounts.user_account.running_ask_ordinal += 1;
+
+        Ok(())
     }
 
-    pub fn update_ask(
-        ctx: Context<update_ask::UpdateAsk>,
-        content: String,
-        ordinal: u64,
-    ) -> ProgramResult {
-        update_ask::update_ask(ctx, content, ordinal)
+    pub fn update_ask(ctx: Context<UpdateAsk>, content: String, ordinal: u64) -> ProgramResult {
+        msg!(
+            "User {} updates ask from: {}",
+            ctx.accounts.user.key,
+            &ctx.accounts.ask.content
+        );
+
+        ctx.accounts.ask.content = content;
+
+        msg!("New ask: {}", &ctx.accounts.ask.content);
+        Ok(())
     }
 
-    pub fn cancel_ask(ctx: Context<cancel_ask::CancelAsk>, ordinal: u64) -> ProgramResult {
-        cancel_ask::cancel_ask(ctx, ordinal)
+    pub fn cancel_ask(ctx: Context<CancelAsk>, ordinal: u64) -> ProgramResult {
+        msg!(
+            "User {} cancelled ask: {}",
+            ctx.accounts.user.key,
+            &ctx.accounts.ask.content
+        );
+
+        Ok(())
     }
 }

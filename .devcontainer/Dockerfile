@@ -45,7 +45,8 @@ RUN export PATH="/home/solana"/bin:"$PATH" && \
 ENV PATH="/root/.local/share/solana/install/active_release/bin:$PATH"
 
 # install anchor via avm
-RUN cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+RUN rustup update && \
+    cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
 
 RUN avm install latest && \
     avm use latest
@@ -65,6 +66,7 @@ ENV PATH $NODE_PATH:$PATH
 RUN npm install -g yarn
 
 # print version
+RUN rustc --version
 RUN node --version
 RUN npm --version
 RUN yarn --version

@@ -28,25 +28,14 @@ RUN rustup install stable && \
     rustup component add rustfmt && \
     rustup component add rustfmt --toolchain stable && \
     rustup component add clippy && \
-    rustup component add clippy --toolchain stable
+    rustup component add clippy --toolchain stable && \
+    rustup default stable
 
 RUN cargo install cargo-expand && \
     cargo install cargo-edit
 
-# build and install solana (from source)
-RUN git clone https://github.com/solana-labs/solana
-WORKDIR /home/solana
-ENV RUST_REED_SOLOMON_ERASURE_ARCH=native
-ENV RUSTFLAGS="-C target-feature=-avx2"
-RUN git checkout v1.16.18
-RUN ./scripts/cargo-install-all.sh .
-RUN export PATH="/home/solana"/bin:"$PATH" && \
-    solana-install init v1.16.18
-ENV PATH="/root/.local/share/solana/install/active_release/bin:$PATH"
-
 # install anchor via avm
-RUN rustup update && \
-    cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+RUN cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
 
 RUN avm install latest && \
     avm use latest
@@ -65,8 +54,22 @@ ENV PATH $NODE_PATH:$PATH
 # install yarn
 RUN npm install -g yarn
 
+# build and install solana CLI (from source)
+RUN git clone https://github.com/solana-labs/solana
+WORKDIR /home/solana
+ENV RUST_REED_SOLOMON_ERASURE_ARCH=native
+ENV RUSTFLAGS="-C target-feature=-avx2"
+RUN git checkout v1.16.18
+RUN ./scripts/cargo-install-all.sh .
+RUN export PATH="/home/solana"/bin:"$PATH" && \
+    solana-install init v1.16.18
+ENV PATH="/root/.local/share/solana/install/active_release/bin:$PATH"
+
 # print version
 RUN rustc --version
+RUN cargo --version
+RUN rustup --version
+RUN rustup override list
 RUN node --version
 RUN npm --version
 RUN yarn --version

@@ -35,9 +35,8 @@ RUN cargo install cargo-expand && \
     cargo install cargo-edit
 
 # install anchor via avm
-RUN cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
-
-RUN avm install latest && \
+RUN cargo install --git https://github.com/coral-xyz/anchor avm --locked --force && \
+    avm install latest && \
     avm use latest
 
 # install nvm
@@ -57,13 +56,12 @@ RUN npm install -g yarn
 # build and install solana CLI (from source)
 RUN git clone https://github.com/solana-labs/solana
 WORKDIR /home/solana
-ENV RUST_REED_SOLOMON_ERASURE_ARCH=native
-ENV RUSTFLAGS="-C target-feature=-avx2"
-RUN git checkout v1.16.18
-RUN ./scripts/cargo-install-all.sh .
-RUN export PATH="/home/solana"/bin:"$PATH" && \
-    solana-install init v1.16.18
-ENV PATH="/root/.local/share/solana/install/active_release/bin:$PATH"
+RUN git checkout v1.16.18 && \
+    export RUST_REED_SOLOMON_ERASURE_ARCH=native && \
+    export RUSTFLAGS="-C target-feature=-avx2" && \
+    ./scripts/cargo-install-all.sh .
+ENV PATH "/home/solana"/bin:"$PATH"
+WORKDIR /home/
 
 # print version
 RUN rustc --version

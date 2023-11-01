@@ -73,7 +73,7 @@ pub struct AcquireToken<'info> {
     #[account(mut, seeds=[b"mint"], bump)]
     pub token_mint: Account<'info, Mint>,
 
-    #[account(mut)]
+    #[account()]
     pub community_treasury: AccountInfo<'info>,
 
     pub token_program: Program<'info, Token>,

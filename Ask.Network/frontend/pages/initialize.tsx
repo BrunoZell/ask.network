@@ -77,7 +77,7 @@ const Page = () => {
           program.programId
         );
 
-        const mintAccount = await program.account.user.fetchNullable(mintPda);
+        const mintAccount = await program.provider.connection.getAccountInfo(mintPda);
 
         if (mintAccount) {
           console.log('Mint account already exists:');

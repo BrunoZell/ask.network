@@ -17,7 +17,7 @@ declare_id!("4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE");
 pub mod ask_network {
     use super::*;
 
-    const COMMUNITY_TREASURY_ADDRESS: &str = "CommunityAddressHere";
+    const COMMUNITY_TREASURY_ADDRESS: &str = "DsXqkMYq54AdNoqjHg1f8R7JxPbzcssZSnXm11DDiwa6";
 
     pub fn initialize_user(ctx: Context<InitializeUser>) -> ProgramResult {
         msg!("Initializing user: {}", ctx.accounts.user.key());

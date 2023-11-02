@@ -73,7 +73,7 @@ pub struct AcquireToken<'info> {
     #[account(mut, seeds=[b"mint"], bump)]
     pub token_mint: Account<'info, Mint>,
 
-    #[account()]
+    #[account()] /// CHECK: Address is checked within instruction. I don't know how to encode a const PubKey.
     pub community_treasury: AccountInfo<'info>,
 
     pub token_program: Program<'info, Token>,

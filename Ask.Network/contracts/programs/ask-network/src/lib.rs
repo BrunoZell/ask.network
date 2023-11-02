@@ -29,7 +29,7 @@ pub mod ask_network {
         Ok(())
     }
 
-    pub fn initialize_token(_ctx: Context<InitializeMint>) -> Result<()> {
+    pub fn initialize_token(_ctx: Context<InitializeToken>) -> Result<()> {
         msg!("Token mint initialized");
         Ok(())
     }

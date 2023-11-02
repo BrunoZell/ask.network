@@ -24,7 +24,7 @@ pub struct InitializeUser<'info> {
 }
 
 #[derive(Accounts)]
-pub struct InitializeMint<'info> {
+pub struct InitializeToken<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 

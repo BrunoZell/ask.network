@@ -8,7 +8,7 @@ import {
 } from '@solana/wallet-adapter-react';
 import idl from '../../contracts/target/idl/ask_network.json';
 import { PublicKey } from '@solana/web3.js';
-import { AskNetwork as AskIdl } from '../../contracts/target/types/ask_network';
+import { AskNetwork as AskNetworkIdl } from '../../contracts/target/types/ask_network';
 import { IdlAccounts, Program } from '@project-serum/anchor';
 import { AppBar } from '../components/AppBar';
 import { createCloseAccountInstruction, getAccount, getAssociatedTokenAddress } from '@solana/spl-token';
@@ -18,7 +18,7 @@ import {
   IdlEnumVariant,
 } from '@project-serum/anchor/dist/cjs/idl';
 
-type Ask = IdlAccounts<AskIdl>['ask'];
+type Ask = IdlAccounts<AskNetworkIdl>['ask'];
 
 const Page = () => {
   const [content, setContent] = useState('');
@@ -26,7 +26,7 @@ const Page = () => {
   const [asks, setAsks] = useState<Ask[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const [refetchAsks, scheduleAskRefetch] = useState(false);
-  const [program, setProgram] = useState<anchor.Program<AskIdl>>();
+  const [program, setProgram] = useState<anchor.Program<AskNetworkIdl>>();
   const { connection } = useConnection();
   const wallet = useAnchorWallet();
 
@@ -60,7 +60,7 @@ const Page = () => {
           new PublicKey('4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE'),
           provider
         );
-        setProgram(program as Program<AskIdl>);
+        setProgram(program as Program<AskNetworkIdl>);
       } catch (error) {
         console.log("error updating program");
       }

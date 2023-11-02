@@ -1,11 +1,8 @@
 use account::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
-use anchor_spl::{
-    associated_token::AssociatedToken,
-    token::{Mint, Token, TokenAccount},
-};
-use errors::*;
+
+
 
 mod account;
 mod errors;
@@ -93,7 +90,7 @@ pub mod ask_network {
         Ok(())
     }
 
-    pub fn update_ask(ctx: Context<UpdateAsk>, content: String, ordinal: u64) -> ProgramResult {
+    pub fn update_ask(ctx: Context<UpdateAsk>, content: String, _ordinal: u64) -> ProgramResult {
         msg!(
             "User {} updates ask from: {}",
             ctx.accounts.user.key,
@@ -106,7 +103,7 @@ pub mod ask_network {
         Ok(())
     }
 
-    pub fn cancel_ask(ctx: Context<CancelAsk>, ordinal: u64) -> ProgramResult {
+    pub fn cancel_ask(ctx: Context<CancelAsk>, _ordinal: u64) -> ProgramResult {
         msg!(
             "User {} cancelled ask: {}",
             ctx.accounts.user.key,

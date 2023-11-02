@@ -2,13 +2,11 @@ use account::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
 
-
-
 mod account;
 mod errors;
 mod state;
 
-declare_id!("4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE");
+declare_id!("EarWDrZeaMyMRuiWXVuFH2XKJ96Mg6W6h9rv51BCHgRD");
 
 #[program]
 pub mod ask_network {

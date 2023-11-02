@@ -57,7 +57,7 @@ const Page = () => {
       try {
         const program = new anchor.Program(
           idl as anchor.Idl,
-          new PublicKey('4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE'),
+          new PublicKey('EarWDrZeaMyMRuiWXVuFH2XKJ96Mg6W6h9rv51BCHgRD'),
           provider
         );
         setProgram(program as Program<AskNetworkIdl>);

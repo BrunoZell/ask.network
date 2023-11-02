@@ -43,7 +43,7 @@ const Page = () => {
       try {
         const program = new anchor.Program<AskNetworkIdl>(
           idl as unknown as AskNetworkIdl,
-          new PublicKey('4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE'),
+          new PublicKey('EarWDrZeaMyMRuiWXVuFH2XKJ96Mg6W6h9rv51BCHgRD'),
           provider
         );
         setProgram(program);

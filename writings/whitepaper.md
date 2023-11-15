@@ -14,7 +14,9 @@ Such a domain model interface is already implemented as part of the [Ask Finance
 
 Let's consider $N$ users $U_i$ indexed by $i$, each with:
 
-- a domain model $D_i$, implying the users observation space $O_i$ and action space $A_i$
+- a domain model $D_i$, implying:
+  - the users observation space $O_i$
+  - and action space $A_i$
 - an environment state $s_i \in S$, containing all historic observations and actions sorted by time of occurrence.
 - a policy $\pi_i$ the user declared to follow
 
@@ -115,6 +117,12 @@ Where:
 - $q$ is any user-defined binary query on a state. The user takes care of this transformation being a semantically accurate representation of his values.
 - $a_{ij}(s)$ returns 1 if the ask is fulfilled and 0 otherwise.
 
+### Composite Asks
+
+Composite asks are constructed using logical operations on binary asks. For example, a composite ask using exclusive-or to represent "I want either A or B, but not both" looks like:
+
+$$ a_{ij}(s) = a_{ik}(s) \oplus a_{il}(s) $$
+
 ### Weighted Preference Score
 
 Preference ordering is a way to express how different outcomes (or states) are valued relative to each other based on the user's subjective criteria.
@@ -138,20 +146,6 @@ where:
 - $w_{ij}$ is the weight assigned to the $j$-th ask by user $i$,
 - $n_i$ is the number of asks for user $i$.
 
-### Composite Asks
-
-Composite asks are constructed using logical operations on binary asks. For example, a composite ask using exclusive-or to represent "I want either A or B, but not both" looks like:
-
-$$ a_{ij}(s) = a_{ik}(s) \oplus a_{il}(s) $$
-
-where $\oplus$ represents the XOR operation.
-
-This function will have a value of 1 if either $a_{ik}(s)$ or $a_{il}(s)$ is true, but not both, and a value of 0 otherwise. The users preference score $P(s)$ could be modified to include this new feature:
-
-$$ P(s) = w_1 \cdot a_1 + w_2 \cdot a_2 + w_{XOR} \cdot a_{XOR} $$
-
-where $w_{XOR}$ is the weight representing the importance of the XOR condition being satisfied.
-
 ### Cumulative Utility over a Trajectory
 
 We'll define a cumulative utility function $Q_i$ for user $i$ that captures the fulfillment of asks over a trajectory $\tau$:
@@ -173,18 +167,6 @@ Let $d = \tau$ represent the disagreement point, which is the outcome if no user
 
 $$ d_i \in \pi_i $$
 
-#### Conditional Actions:
-Users commit to actions based on conditions that relate to their perspective (state) of the environment. These are conditional policies:
+### Todo: Formalize policy gradient via Nash bargaining
 
-$$ \pi_i^c(s) = \{ a_i | a_i \text{ is executed if condition } c(s) \text{ is true} \} $$
-
-#### Agreement and Execution:
-The trajectory of state-action pairs $\tau$ agreed upon by the users can be defined as a sequence of state-action pairs $(s_0, a_0), (s_1, a_1), ..., (s_T, a_T)$, where each $a_t$ is derived from the conditional policies $\pi_i^c(s)$.
-
-#### Execution Verification:
-Each action's effects are measured and verified against the commitment:
-
-$$ V(s_{t+1}, a_t) \to \{ \text{True, False} \} $$
-Where $V$is a verification function that checks if the action $a_t$ at state $s_t$ led to the expected state $s_{t+1}$.
-
-This mathematical structure allows for the formal analysis and simulation of the bargaining process within a structured, causal environment. Users learn and adapt their policies through both reinforcement learning and causal inference, continually refining their strategies to achieve the best possible outcomes according to their individual utility functions.
+## Todo: Formalize surprise minimization via distributed monte carlo Kullback–Leibler divergence

@@ -52,6 +52,24 @@ pub struct InitializeToken<'info> {
 }
 
 #[derive(Accounts)]
+pub struct InitializeTreasuryClaims<'info> {
+    #[account(mut)]
+    pub signer: Signer<'info>,
+
+    #[account(
+        init,
+        payer = signer,
+        space = 8 + TreasuryClaimsOrdinal::SIZE,
+        seeds = [b"treasury_claims_ordinal"],
+        bump)]
+    pub treasury_claims_ordinal: Account<'info, TreasuryClaimsOrdinal>,
+
+    pub token_program: Program<'info, Token>,
+    pub rent: Sysvar<'info, Rent>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
 #[instruction(lamport_amount: u64)]
 pub struct DepositSol<'info> {
     #[account(mut)]
@@ -59,10 +77,18 @@ pub struct DepositSol<'info> {
 
     #[account()] /// CHECK: Address is checked within instruction. I don't know how to encode a const PubKey.
     pub community_treasury: AccountInfo<'info>,
+    
+    #[account(mut, seeds = [b"treasury_claims_ordinal"], bump)]
+    pub treasury_claims_ordinal: Account<'info, TreasuryClaimsOrdinal>,
 
-    // Treasury claim SPL token mint
-    #[account(mut, seeds=[b"mint"], bump)]
-    pub token_mint: Account<'info, Mint>,
+    /// SPL token mint account of the new treasury claim NFT
+    #[account(
+        init,
+        payer = depositor,
+        space = Mint::LEN,
+        seeds = [b"treasury_claim_" as &[u8], &(treasury_claims_ordinal.claims_issued + 1).to_le_bytes()],
+        bump)]
+    pub treasury_claim_mint: Account<'info, Mint>,
 
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,

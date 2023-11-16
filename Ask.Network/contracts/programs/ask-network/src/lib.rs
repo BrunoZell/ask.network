@@ -34,6 +34,14 @@ pub mod ask_network {
         Ok(())
     }
 
+    pub fn initialize_treasury_claims(ctx: Context<InitializeTreasuryClaims>) -> Result<()> {
+        msg!("Treasury claims initialized");
+
+        ctx.accounts.treasury_claims_ordinal.claims_issued = 0;
+
+        Ok(())
+    }
+
     pub fn acquire_token(ctx: Context<AcquireToken>, ask_amount: u64) -> Result<()> {
         // Calculate total cost of this purchase in SOL
         let lamport_amount = ask_amount / 1; // assume a 1:1 SOL/ASK purchase price for now
@@ -138,6 +146,8 @@ pub mod ask_network {
             ),
             lamport_amount,
         )?;
+
+        ctx.accounts.treasury_claims_ordinal.claims_issued += 1;
 
         let clock = Clock::get()?;
         let claim = TreasuryClaim {

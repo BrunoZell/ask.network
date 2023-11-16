@@ -38,3 +38,16 @@ pub enum TreasuryCurrency {
     USDC,
     ETH,
 }
+
+#[account]
+pub struct TreasuryClaimsOrdinal {
+    /// The amount of treasury claim NFTs minted.
+    /// Each treasury claim NFT gets a unique ordinal assigned, sequencing all claims.
+    /// This is used to derive the token mints PDA and for the NFT to have an additional trait of deposit precedence.
+    /// On each deposit, this counter is incremented by 1.
+    pub claims_issued: u64,
+}
+
+impl TreasuryClaimsOrdinal {
+    pub const SIZE: usize = 8;
+}

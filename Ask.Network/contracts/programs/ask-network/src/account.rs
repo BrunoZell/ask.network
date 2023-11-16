@@ -64,6 +64,14 @@ pub struct InitializeTreasuryClaims<'info> {
         bump)]
     pub treasury_claims_ordinal: Account<'info, TreasuryClaimsOrdinal>,
 
+    #[account(
+        init,
+        payer = signer,
+        space = 8,
+        seeds = [b"treasury_claims_authority"],
+        bump)]
+    pub treasury_claims_authority: Account<'info, TreasuryClaimsAuthority>,
+    
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,
     pub system_program: Program<'info, System>,
@@ -78,19 +86,39 @@ pub struct DepositSol<'info> {
     #[account()] /// CHECK: Address is checked within instruction. I don't know how to encode a const PubKey.
     pub community_treasury: AccountInfo<'info>,
     
-    #[account(mut, seeds = [b"treasury_claims_ordinal"], bump)]
+    #[account(
+        mut,
+        seeds = [b"treasury_claims_ordinal"],
+        bump)]
     pub treasury_claims_ordinal: Account<'info, TreasuryClaimsOrdinal>,
 
-    /// SPL token mint account of the new treasury claim NFT
+    /// Global singleton treasury claims authority.
+    /// Each SPL treasury claim NFT has this PDA as authority.
+    #[account(
+        seeds = [b"treasury_claims_authority"],
+        bump)]
+    pub treasury_claims_authority: Account<'info, TreasuryClaimsAuthority>,
+
+    /// SPL token mint account of the new treasury claim NFT, uniquely addressed by the claim ordinal.
     #[account(
         init,
         payer = depositor,
-        space = Mint::LEN,
         seeds = [b"treasury_claim_" as &[u8], &(treasury_claims_ordinal.claims_issued + 1).to_le_bytes()],
+        mint::decimals = 0,
+        mint::authority = treasury_claims_authority,
         bump)]
     pub treasury_claim_mint: Account<'info, Mint>,
+    
+    /// Associated token account for the depositor holding the newly minted treasury claim NFT.
+    #[account(
+        init,
+        payer = depositor,
+        associated_token::mint = treasury_claim_mint,
+        associated_token::authority = depositor)]
+    pub treasury_claim_ata: Account<'info, TokenAccount>,
 
     pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
     pub rent: Sysvar<'info, Rent>,
     pub system_program: Program<'info, System>,
 }

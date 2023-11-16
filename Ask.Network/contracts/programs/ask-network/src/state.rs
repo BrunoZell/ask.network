@@ -2,9 +2,6 @@ use anchor_lang::prelude::*;
 use borsh::{BorshDeserialize, BorshSerialize};
 
 #[account]
-pub struct TokenAuthority {}
-
-#[account]
 pub struct Ask {
     /// Plain-text payload of this Ask, freely definable by the user.
     /// This is to be translated into a causal query for matching with offers.
@@ -21,6 +18,12 @@ pub struct User {
     /// Used as an ever increasing identifier for asks.
     pub running_ask_ordinal: u64,
 }
+
+#[account]
+pub struct TokenAuthority {}
+
+#[account]
+pub struct TreasuryClaimsAuthority {}
 
 /// Data payload of each minted treasury claim NFT
 #[account]

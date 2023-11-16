@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use borsh::{BorshDeserialize, BorshSerialize};
 
 #[account]
 pub struct TokenAuthority {}
@@ -19,4 +20,21 @@ pub struct User {
     /// Total amount of asks the user has placed until now.
     /// Used as an ever increasing identifier for asks.
     pub running_ask_ordinal: u64,
+}
+
+/// Data payload of each minted treasury claim NFT
+#[account]
+pub struct TreasuryClaim {
+    pub unit_of_value: TreasuryCurrency,
+
+    pub deposit_amount: u64,
+
+    pub deposit_timestamp: i64, // Unix timestamp of mint
+}
+
+#[derive(BorshSerialize, BorshDeserialize, Clone)]
+pub enum TreasuryCurrency {
+    SOL, // Solana, in Lamports
+    USDC,
+    ETH,
 }

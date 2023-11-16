@@ -1,6 +1,9 @@
 use account::*;
-use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
+use anchor_lang::solana_program::program_pack::Pack;
+use anchor_lang::{prelude::*, system_program};
+use anchor_spl::token::{self, InitializeMint, Mint, MintTo};
+use state::*;
 
 mod account;
 mod errors;
@@ -10,6 +13,8 @@ declare_id!("EarWDrZeaMyMRuiWXVuFH2XKJ96Mg6W6h9rv51BCHgRD");
 
 #[program]
 pub mod ask_network {
+    use anchor_spl::token::TokenAccount;
+
     use super::*;
 
     const COMMUNITY_TREASURY_ADDRESS: &str = "DsXqkMYq54AdNoqjHg1f8R7JxPbzcssZSnXm11DDiwa6";
@@ -107,6 +112,75 @@ pub mod ask_network {
             ctx.accounts.user.key,
             &ctx.accounts.ask.content
         );
+
+        Ok(())
+    }
+
+    pub fn deposit_sol(ctx: Context<DepositSol>, lamport_amount: u64) -> Result<()> {
+        // Ensure the signing user has enough SOL
+        if ctx.accounts.depositor.lamports() < lamport_amount {
+            return err!(errors::ErrorCode::InsufficientFunds);
+        }
+
+        // Unsure the SOL destination address is the community treasury
+        if ctx.accounts.community_treasury.key.to_string() != COMMUNITY_TREASURY_ADDRESS {
+            return err!(errors::ErrorCode::InvalidCommunityTreasuryAddress);
+        }
+
+        // Transfer SOL from purchaser to community treasury
+        anchor_lang::system_program::transfer(
+            CpiContext::new(
+                ctx.accounts.system_program.to_account_info(),
+                anchor_lang::system_program::Transfer {
+                    from: ctx.accounts.depositor.to_account_info().clone(),
+                    to: ctx.accounts.community_treasury.clone(),
+                },
+            ),
+            lamport_amount,
+        )?;
+
+        let clock = Clock::get()?;
+        let claim = TreasuryClaim {
+            unit_of_value: TreasuryCurrency::SOL,
+            deposit_amount: lamport_amount,
+            deposit_timestamp: clock.unix_timestamp,
+        };
+
+        let mint_key = Pubkey::new_unique();
+        let mint_account =
+            Account::<Mint>::create(ctx.accounts.token_program.to_account_info(), mint_key)?;
+        let mint_authority = ctx.accounts.depositor.key();
+
+        token::initialize_mint(
+            CpiContext::new(
+                ctx.accounts.token_program.to_account_info(),
+                InitializeMint {
+                    mint: mint_account.to_account_info(),
+                    rent: ctx.accounts.rent.to_account_info(),
+                },
+            ),
+            0, // 0 decimals for NFTs
+            &mint_authority,
+            None, // Freeze authority
+        )?;
+
+        let token_account_key = Pubkey::new_unique();
+        let token_account = Account::<TokenAccount>::create(
+            ctx.accounts.token_program.to_account_info(),
+            token_account_key,
+        )?;
+
+        token::mint_to(
+            CpiContext::new(
+                ctx.accounts.token_program.to_account_info(),
+                MintTo {
+                    mint: mint_account.to_account_info(),
+                    to: token_account.to_account_info(),
+                    authority: mint_account.to_account_info(),
+                },
+            ),
+            1, // Amount of 1 for NFTs
+        )?;
 
         Ok(())
     }

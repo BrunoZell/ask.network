@@ -1,4 +1,4 @@
-use anchor_lang::prelude::*;
+use anchor_lang::{prelude::*, system_program};
 use anchor_spl::{
     associated_token::AssociatedToken,
     token::{Mint, Token, TokenAccount},
@@ -46,6 +46,24 @@ pub struct InitializeToken<'info> {
         space = 8)]
     pub authority: Account<'info, TokenAuthority>,
     
+    pub token_program: Program<'info, Token>,
+    pub rent: Sysvar<'info, Rent>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(lamport_amount: u64)]
+pub struct DepositSol<'info> {
+    #[account(mut)]
+    pub depositor: Signer<'info>,
+
+    #[account()] /// CHECK: Address is checked within instruction. I don't know how to encode a const PubKey.
+    pub community_treasury: AccountInfo<'info>,
+
+    // Treasury claim SPL token mint
+    #[account(mut, seeds=[b"mint"], bump)]
+    pub token_mint: Account<'info, Mint>,
+
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,
     pub system_program: Program<'info, System>,

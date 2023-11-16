@@ -147,50 +147,35 @@ pub mod ask_network {
             lamport_amount,
         )?;
 
+        // Mint new treasury claim NFT to the newly created associated token account of the depositor
+        // ATA is initialized automatically by Anchor.
+        // Also the mint unique to this treasury claim NFT is automatically initialized by Anchor
+        anchor_spl::token::mint_to(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                anchor_spl::token::MintTo {
+                    authority: ctx.accounts.treasury_claims_authority.to_account_info(),
+                    to: ctx.accounts.treasury_claim_ata.to_account_info(),
+                    mint: ctx.accounts.treasury_claim_mint.to_account_info(),
+                },
+                &[&[
+                    b"treasury_claims_authority",
+                    &[*ctx.bumps.get("treasury_claims_authority").unwrap()],
+                ]],
+            ),
+            1, // Amount of 1 for NFTs
+        )?;
+
+        // Increment the singleton claims counter, for the next mind to have another unique ordinal.
         ctx.accounts.treasury_claims_ordinal.claims_issued += 1;
 
         let clock = Clock::get()?;
         let claim = TreasuryClaim {
+            ordinal: ctx.accounts.treasury_claims_ordinal.claims_issued, // After increment, to make this 1-based.
             unit_of_value: TreasuryCurrency::SOL,
             deposit_amount: lamport_amount,
             deposit_timestamp: clock.unix_timestamp,
         };
-
-        let mint_key = Pubkey::new_unique();
-        let mint_account =
-            Account::<Mint>::create(ctx.accounts.token_program.to_account_info(), mint_key)?;
-        let mint_authority = ctx.accounts.depositor.key();
-
-        token::initialize_mint(
-            CpiContext::new(
-                ctx.accounts.token_program.to_account_info(),
-                InitializeMint {
-                    mint: mint_account.to_account_info(),
-                    rent: ctx.accounts.rent.to_account_info(),
-                },
-            ),
-            0, // 0 decimals for NFTs
-            &mint_authority,
-            None, // Freeze authority
-        )?;
-
-        let token_account_key = Pubkey::new_unique();
-        let token_account = Account::<TokenAccount>::create(
-            ctx.accounts.token_program.to_account_info(),
-            token_account_key,
-        )?;
-
-        token::mint_to(
-            CpiContext::new(
-                ctx.accounts.token_program.to_account_info(),
-                MintTo {
-                    mint: mint_account.to_account_info(),
-                    to: token_account.to_account_info(),
-                    authority: mint_account.to_account_info(),
-                },
-            ),
-            1, // Amount of 1 for NFTs
-        )?;
 
         Ok(())
     }

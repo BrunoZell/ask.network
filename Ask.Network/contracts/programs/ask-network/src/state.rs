@@ -28,6 +28,8 @@ pub struct TreasuryClaimsAuthority {}
 /// Data payload of each minted treasury claim NFT
 #[account]
 pub struct TreasuryClaim {
+    pub ordinal: u64,
+
     pub unit_of_value: TreasuryCurrency,
 
     pub deposit_amount: u64,

@@ -163,9 +163,9 @@ pub mod ask_network {
             // It's often the same as the mint authority, but it can be different.
             // It must also be a signer to authorize this role.
             ctx.accounts.treasury_claim_mint.key(), // Update authority account
-            "ask.network Treasury Claim #1".to_string(), // Name
+            name,                                   // Name
             "ASK-T".to_string(),                    // Symbol
-            "https://claims.ask.network/1.json".to_string(), // URI
+            uri,                                    // URI
             None,                                   // Creators
             0,                                      // Seller fee basis points
             true,                                   // Whether the primary sale happened

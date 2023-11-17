@@ -3,6 +3,8 @@ use anchor_lang::solana_program::entrypoint::*;
 use anchor_lang::solana_program::program_pack::Pack;
 use anchor_lang::{prelude::*, system_program};
 use anchor_spl::token::{self, InitializeMint, Mint, MintTo};
+use mpl_token_metadata::state::AssetData;
+use mpl_token_metadata::state::PrintSupply::Zero;
 use state::*;
 
 mod account;
@@ -14,6 +16,7 @@ declare_id!("EarWDrZeaMyMRuiWXVuFH2XKJ96Mg6W6h9rv51BCHgRD");
 #[program]
 pub mod ask_network {
     use anchor_spl::token::TokenAccount;
+    use mpl_token_metadata::state::TokenStandard;
 
     use super::*;
 
@@ -176,6 +179,45 @@ pub mod ask_network {
             deposit_amount: lamport_amount,
             deposit_timestamp: clock.unix_timestamp,
         };
+
+        let args = mpl_token_metadata::instruction::CreateArgs::V1 {
+            asset_data: AssetData {
+                name: "ask.network Treasury Claim #1".to_string(),
+                symbol: "ASK-T".to_string(),
+                uri: "https://claims.ask.network/1.json".to_string(),
+                seller_fee_basis_points: 0,
+                primary_sale_happened: true,
+                creators: None,
+                is_mutable: true,
+                token_standard: TokenStandard::NonFungible,
+                collection: None,
+                uses: None,
+                collection_details: None,
+                rule_set: None,
+            },
+            decimals: 0,
+            print_supply: Some(Zero),
+        };
+
+        let accounts = mpl_token_metadata::instruction::Create {
+            metadata_info: &ctx.accounts.metadata,
+            master_edition_info: None,
+            mint_info: &ctx.accounts.mint,
+            authority_info: &ctx.accounts.mint_authority,
+            payer_info: &ctx.accounts.payer,
+            update_authority_info: &ctx.accounts.update_authority,
+            system_program_info: &ctx.accounts.system_program,
+            sysvar_instructions_info: &ctx.accounts.sysvar_instructions,
+            spl_token_program_info: &ctx.accounts.spl_token_program,
+        };
+
+        let cpi_program = ctx.accounts.metadata_program.to_account_info();
+        let cpi_ctx = CpiContext::new(cpi_program, accounts);
+
+        // Make the CPI call
+        mpl_token_metadata::instruction::create_metadata_accounts_v3(
+            cpi_ctx, args, // Assuming 'args' matches the expected arguments for the function
+        )?;
 
         Ok(())
     }

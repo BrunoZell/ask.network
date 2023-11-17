@@ -117,10 +117,43 @@ pub struct DepositSol<'info> {
         associated_token::authority = depositor)]
     pub treasury_claim_ata: Account<'info, TokenAccount>,
 
+    /// Metaplex Metadata (PDA derived from ['metadata', program ID, mint ID])
+    #[account(
+        seeds = [b"metadata", mpl_token_metadata::id().as_ref(), mint.key().as_ref()],
+        bump)]
+    pub metadata: AccountInfo<'info>,
+    
+    #[account(
+        mut,
+        seeds = [b"treasury_claim_" as &[u8], &(treasury_claims_ordinal.claims_issued + 1).to_le_bytes()],
+        bump)]
+    pub mint: Account<'info>,
+
+    /// Mint authority of the NFT
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+
+    /// Payer for the transaction
+    #[account(signer, mut)]
+    pub payer: AccountInfo<'info>,
+
+    /// Update authority for the metadata
+    #[account(mut)]
+    pub update_authority: AccountInfo<'info>,
+
+    /// System program
+    pub system_program: Program<'info, System>,
+
+    /// Sysvar instructions
+    pub sysvar_instructions: AccountInfo<'info>,
+
+    /// SPL Token program
+    pub spl_token_program: Program<'info, Token>,
+
+    // For SPL token mint
+    pub rent: Sysvar<'info, Rent>,
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
-    pub rent: Sysvar<'info, Rent>,
-    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]

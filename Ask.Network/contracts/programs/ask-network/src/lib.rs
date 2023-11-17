@@ -138,6 +138,7 @@ pub mod ask_network {
         let name = format!("ask.network Treasury Claim #{}", claim_number);
         let uri = format!("https://claims.ask.network/{}.json", claim_number);
 
+        // Populate Treasury Claim account values. This is the main account of what makes a treasury claim.
         let clock = Clock::get()?;
         ctx.accounts.this_treasury_claim.ordinal =
             ctx.accounts.treasury_claims_ordinal.claims_issued;

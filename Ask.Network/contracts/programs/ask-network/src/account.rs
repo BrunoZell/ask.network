@@ -127,7 +127,7 @@ pub struct DepositSol<'info> {
         mut,
         seeds = [b"treasury_claim_" as &[u8], &(treasury_claims_ordinal.claims_issued + 1).to_le_bytes()],
         bump)]
-    pub mint: Account<'info>,
+    pub mint: AccountInfo<'info>,
 
     /// Mint authority of the NFT
     #[account(signer)]

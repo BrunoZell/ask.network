@@ -134,7 +134,7 @@ pub struct DepositSol<'info> {
     #[account(
         seeds = [b"metadata", mpl_token_metadata::id().as_ref(), treasury_claim_mint.key().as_ref()],
         bump)]
-    pub metadata: Account<'info, Metadata<TreasuryClaim>>,
+    pub metadata: AccountInfo<'info>,
 
     // For SPL token mint
     pub rent: Sysvar<'info, Rent>,

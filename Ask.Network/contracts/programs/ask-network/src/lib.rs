@@ -127,6 +127,24 @@ pub mod ask_network {
             1, // Amount of 1 for NFTs
         )?;
 
+        // Increment the singleton claims counter, for the next mind to have another unique ordinal.
+        ctx.accounts.treasury_claims_ordinal.claims_issued += 1;
+
+        // Retrieve the ordinal (claim number) for dynamic naming and URI
+        // Assign claim ordinal only after increment. To make trasury claim IDs start at #1.
+        let claim_number = ctx.accounts.treasury_claims_ordinal.claims_issued;
+
+        // Generate dynamic name and URI based on the claim number
+        let name = format!("ask.network Treasury Claim #{}", claim_number);
+        let uri = format!("https://claims.ask.network/{}.json", claim_number);
+
+        let clock = Clock::get()?;
+        ctx.accounts.this_treasury_claim.ordinal =
+            ctx.accounts.treasury_claims_ordinal.claims_issued;
+        ctx.accounts.this_treasury_claim.unit_of_value = TreasuryCurrency::SOL;
+        ctx.accounts.this_treasury_claim.deposit_amount = lamport_amount;
+        ctx.accounts.this_treasury_claim.deposit_timestamp = clock.unix_timestamp;
+
         // Mint NFT Metadata
         mpl_token_metadata::instruction::create_metadata_accounts_v3(
             ctx.accounts.metadata_program.key(), // Program ID of the Metaplex Token Metadata program
@@ -156,17 +174,6 @@ pub mod ask_network {
             None,                                   // Uses
             None,
         );
-
-        // Increment the singleton claims counter, for the next mind to have another unique ordinal.
-        ctx.accounts.treasury_claims_ordinal.claims_issued += 1;
-
-        let clock = Clock::get()?;
-        // Assign claim ordinal only after increment. To make trasury claim IDs start at #1.
-        ctx.accounts.this_treasury_claim.ordinal =
-            ctx.accounts.treasury_claims_ordinal.claims_issued;
-        ctx.accounts.this_treasury_claim.unit_of_value = TreasuryCurrency::SOL;
-        ctx.accounts.this_treasury_claim.deposit_amount = lamport_amount;
-        ctx.accounts.this_treasury_claim.deposit_timestamp = clock.unix_timestamp;
 
         Ok(())
     }

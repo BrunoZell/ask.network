@@ -3,6 +3,7 @@ use anchor_spl::{
     associated_token::AssociatedToken,
     token::{Mint, Token, TokenAccount},
 };
+use mpl_token_metadata::state::Metadata;
 
 use crate::state::*;
 
@@ -80,6 +81,14 @@ pub struct InitializeTreasuryClaims<'info> {
 #[derive(Accounts)]
 #[instruction(lamport_amount: u64)]
 pub struct DepositSol<'info> {
+    #[account(
+        init,
+        payer = depositor,
+        space = 8 + TreasuryClaim::SIZE,
+        seeds = [b"treasury_claims_ordinal"],
+        bump)]
+    pub this_treasury_claim: Account<'info, TreasuryClaim>,
+
     #[account(mut)]
     pub depositor: Signer<'info>,
 
@@ -121,10 +130,11 @@ pub struct DepositSol<'info> {
     pub system_program: Program<'info, System>,
     pub sysvar_instructions: AccountInfo<'info>,
     pub spl_token_program: Program<'info, Token>,
+    pub metadata_program: Program<'info, System>,
     #[account(
         seeds = [b"metadata", mpl_token_metadata::id().as_ref(), treasury_claim_mint.key().as_ref()],
         bump)]
-    pub metadata: AccountInfo<'info>,
+    pub metadata: Account<'info, Metadata<TreasuryClaim>>,
 
     // For SPL token mint
     pub rent: Sysvar<'info, Rent>,

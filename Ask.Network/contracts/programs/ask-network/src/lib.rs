@@ -169,78 +169,46 @@ pub mod ask_network {
             1, // Amount of 1 for NFTs
         )?;
 
+        // Mint NFT Metadata
+        mpl_token_metadata::instruction::create_metadata_accounts_v3(
+            ctx.accounts.metadata_program.key(), // Program ID of the Metaplex Token Metadata program
+            // Metadata Account: This is the account where the metadata for the token will be stored.
+            // It must be writable because the function will initialize or modify this account with the metadata details.
+            ctx.accounts.metadata.key(), // Metadata account (PDA)
+            // Mint Account: This is the mint account of the token (NFT) for which you're creating the metadata.
+            ctx.accounts.treasury_claim_mint.key(), // Mint account
+            // Mint Authority: This account has the authority to mint new tokens.
+            // It's required to sign the transaction as it's a critical operation involving the token properties.
+            ctx.accounts.treasury_claims_authority.key(), // Mint authority
+            // Payer: This account pays for the transaction fees and any additional SOL needed to fund the new metadata account.
+            // It must be a signer because it is responsible for covering the costs of the transaction.
+            ctx.accounts.depositor.key(), // Payer account
+            // Update Authority: This account has the authority to update the metadata in the future.
+            // It's often the same as the mint authority, but it can be different.
+            // It must also be a signer to authorize this role.
+            ctx.accounts.treasury_claim_mint.key(), // Update authority account
+            "ask.network Treasury Claim #1".to_string(), // Name
+            "ASK-T".to_string(),                    // Symbol
+            "https://claims.ask.network/1.json".to_string(), // URI
+            None,                                   // Creators
+            0,                                      // Seller fee basis points
+            true,                                   // Whether the primary sale happened
+            true,                                   // Is mutable
+            None,                                   // Collection
+            None,                                   // Uses
+            None,
+        );
+
         // Increment the singleton claims counter, for the next mind to have another unique ordinal.
         ctx.accounts.treasury_claims_ordinal.claims_issued += 1;
 
         let clock = Clock::get()?;
-        let claim = TreasuryClaim {
-            ordinal: ctx.accounts.treasury_claims_ordinal.claims_issued, // After increment, to make this 1-based.
-            unit_of_value: TreasuryCurrency::SOL,
-            deposit_amount: lamport_amount,
-            deposit_timestamp: clock.unix_timestamp,
-        };
-
-        let args = mpl_token_metadata::instruction::CreateArgs::V1 {
-            asset_data: AssetData {
-                name: "ask.network Treasury Claim #1".to_string(),
-                symbol: "ASK-T".to_string(),
-                uri: "https://claims.ask.network/1.json".to_string(),
-                seller_fee_basis_points: 0,
-                primary_sale_happened: true,
-                creators: None,
-                is_mutable: true,
-                token_standard: TokenStandard::NonFungible,
-                collection: None,
-                uses: None,
-                collection_details: None,
-                rule_set: None,
-            },
-            decimals: None,
-            print_supply: Some(Zero),
-        };
-
-        let accounts = mpl_token_metadata::instruction::Create {
-            // Metadata Account: This is the account where the metadata for the token will be stored.
-            // It must be writable because the function will initialize or modify this account with the metadata details.
-            metadata_info: &ctx.accounts.metadata,
-
-            // Master Edition Info: This is optional and used if you're also creating a master edition for the NFT.
-            // It represents the account that will hold the master edition information.
-            master_edition_info: None,
-
-            // Mint Account: This is the mint account of the token (NFT) for which you're creating the metadata.
-            mint_info: &ctx.accounts.treasury_claim_mint.to_account_info(),
-
-            // Mint Authority: This account has the authority to mint new tokens.
-            // It's required to sign the transaction as it's a critical operation involving the token properties.
-            authority_info: &ctx.accounts.treasury_claims_authority.to_account_info(),
-
-            // Payer: This account pays for the transaction fees and any additional SOL needed to fund the new metadata account.
-            // It must be a signer because it is responsible for covering the costs of the transaction.
-            payer_info: &ctx.accounts.depositor,
-
-            // Update Authority: This account has the authority to update the metadata in the future.
-            // It's often the same as the mint authority, but it can be different.
-            // It must also be a signer to authorize this role.
-            update_authority_info: &ctx.accounts.treasury_claim_mint.to_account_info(),
-
-            // System Program: A reference to the Solana System Program for account creation and management.
-            system_program_info: &ctx.accounts.system_program,
-
-            // Sysvar Instructions: Provides information about the current transaction's instructions, if needed.
-            sysvar_instructions_info: &ctx.accounts.sysvar_instructions,
-
-            // SPL Token Program: A reference to the SPL Token Program, used for handling token-related operations.
-            spl_token_program_info: &ctx.accounts.spl_token_program,
-        };
-
-        let cpi_program = ctx.accounts.metadata_program.to_account_info();
-        let cpi_ctx = CpiContext::new(cpi_program, accounts);
-
-        // Make the CPI call
-        mpl_token_metadata::instruction::create_metadata_accounts_v3(
-            cpi_ctx, args, // Assuming 'args' matches the expected arguments for the function
-        )?;
+        // Assign claim ordinal only after increment. To make trasury claim IDs start at #1.
+        ctx.accounts.this_treasury_claim.ordinal =
+            ctx.accounts.treasury_claims_ordinal.claims_issued;
+        ctx.accounts.this_treasury_claim.unit_of_value = TreasuryCurrency::SOL;
+        ctx.accounts.this_treasury_claim.deposit_amount = lamport_amount;
+        ctx.accounts.this_treasury_claim.deposit_timestamp = clock.unix_timestamp;
 
         Ok(())
     }

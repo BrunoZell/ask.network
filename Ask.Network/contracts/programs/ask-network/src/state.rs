@@ -37,6 +37,14 @@ pub struct TreasuryClaim {
     pub deposit_timestamp: i64, // Unix timestamp of mint
 }
 
+impl TreasuryClaim {
+    // ordinal: u64: As per the chart, u64 occupies 8 bytes.
+    // unit_of_value: TreasuryCurrency: This is an enum. The space it occupies will be 1 byte for the enum discriminator plus the size of its largest variant. Without knowing the exact definition of TreasuryCurrency, I'll assume it's the size of a u8, which is 1 byte, making the total size 2 bytes (1 for the enum discriminator + 1 for the largest variant). If TreasuryCurrency has larger variants, this needs to be adjusted accordingly.
+    // deposit_amount: u64: Occupies 8 bytes.
+    // deposit_timestamp: i64: Occupies 8 bytes.
+    pub const SIZE: usize = 8 + 2 + 8 + 8; // Adjust if the largest variant of TreasuryCurrency is larger than u8
+}
+
 #[derive(BorshSerialize, BorshDeserialize, Clone)]
 pub enum TreasuryCurrency {
     SOL, // Solana, in Lamports

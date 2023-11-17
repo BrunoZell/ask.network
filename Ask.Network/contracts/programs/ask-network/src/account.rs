@@ -31,7 +31,7 @@ pub struct InitializeToken<'info> {
 
     #[account(
         init,
-        seeds = [b"mint"],
+        seeds = [b"token_mint"],
         bump,
         payer = signer,
         mint::decimals = 6,
@@ -41,7 +41,7 @@ pub struct InitializeToken<'info> {
 
     #[account(
         init,
-        seeds = [b"authority"],
+        seeds = [b"token_authority"],
         bump,
         payer = signer,
         space = 8)]
@@ -140,37 +140,6 @@ pub struct DepositSol<'info> {
     pub rent: Sysvar<'info, Rent>,
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
-}
-
-#[derive(Accounts)]
-#[instruction(ask_amount: u64)]
-pub struct AcquireToken<'info> {
-    #[account(mut)]
-    pub user: Signer<'info>,
-
-    // User's ATA, the benefitiary
-    #[account(
-        mut,
-        associated_token::mint = token_mint,
-        associated_token::authority = user)]
-    pub user_token_account: Account<'info, TokenAccount>,
-
-    // Token authority as PDA, meaning the instruction code
-    // decides what mint is allowed.
-    #[account(mut, seeds=[b"authority"], bump)]
-    pub token_authority: Account<'info, TokenAuthority>,
-
-    // Program's global mint
-    #[account(mut, seeds=[b"mint"], bump)]
-    pub token_mint: Account<'info, Mint>,
-
-    #[account()] /// CHECK: Address is checked within instruction. I don't know how to encode a const PubKey.
-    pub community_treasury: AccountInfo<'info>,
-
-    pub token_program: Program<'info, Token>,
-    pub associated_token_program: Program<'info, AssociatedToken>,
-    pub rent: Sysvar<'info, Rent>,
-    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]

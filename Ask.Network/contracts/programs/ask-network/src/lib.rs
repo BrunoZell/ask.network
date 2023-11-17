@@ -176,17 +176,47 @@ pub mod ask_network {
                 None,
             );
 
+        let accounts = &[
+            // From metadata.rs: mpl_token_metadata::instruction::create_metadata_accounts_v3
+            //   0. `[writable]` Metadata account
+            ctx.accounts.metadata.to_account_info(),
+            //   1. `[]` Mint account
+            ctx.accounts.treasury_claim_mint.to_account_info(),
+            //   2. `[signer]` Mint authority
+            ctx.accounts.treasury_claims_authority.to_account_info(),
+            //   3. `[signer]` payer
+            ctx.accounts.depositor.to_account_info(),
+            //   4. `[signer]` Update authority
+            ctx.accounts.treasury_claim_mint.to_account_info(),
+            //   5. `[]` System program
+            ctx.accounts.system_program.to_account_info(),
+            //   6. Optional `[]` Rent sysvar
+        ];
+
         invoke_signed(
             &metadata_create_instruction,
+            accounts,
             &[
-                ctx.accounts.metadata,
-                ctx.accounts.treasury_claim_mint.to_account_info(),
-                ctx.accounts.config.to_account_info(),
-                ctx.accounts.treasury_claim_mint.to_account_info(),
-                ctx.accounts.config.to_account_info(),
-                ctx.accounts.system_program.to_account_info(),
+                &[
+                    //   2. `[signer]` Mint authority
+                    b"treasury_claims_authority",
+                    &[*ctx.bumps.get("treasury_claims_authority").unwrap()],
+                ],
+                &[
+                    //   1. `[]` Mint account
+                    //   4. `[signer]` Update authority
+                    b"treasury_claim_",
+                    &(ctx.accounts.treasury_claims_ordinal.claims_issued).to_le_bytes(),
+                    &[*ctx.bumps.get("treasury_claim_mint").unwrap()],
+                ],
+                &[
+                    //   0. `[writable]` Metadata account
+                    b"metadata",
+                    mpl_token_metadata::id().as_ref(),
+                    ctx.accounts.treasury_claim_mint.key().as_ref(),
+                    &[*ctx.bumps.get("metadata").unwrap()],
+                ],
             ],
-            &[seeds],
         )?;
 
         Ok(())

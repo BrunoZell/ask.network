@@ -85,7 +85,7 @@ pub struct DepositSol<'info> {
         init,
         payer = depositor,
         space = 8 + TreasuryClaim::SIZE,
-        seeds = [b"treasury_claims_ordinal"],
+        seeds = [b"treasury_claim_" as &[u8], &(treasury_claims_ordinal.claims_issued + 1).to_le_bytes()],
         bump)]
     pub this_treasury_claim: Account<'info, TreasuryClaim>,
 
@@ -112,7 +112,7 @@ pub struct DepositSol<'info> {
     #[account(
         init,
         payer = depositor,
-        seeds = [b"treasury_claim_" as &[u8], &(treasury_claims_ordinal.claims_issued + 1).to_le_bytes()],
+        seeds = [b"treasury_claim_mint_" as &[u8], &(treasury_claims_ordinal.claims_issued + 1).to_le_bytes()],
         mint::decimals = 0,
         mint::authority = treasury_claims_authority,
         bump)]
@@ -132,6 +132,7 @@ pub struct DepositSol<'info> {
     pub spl_token_program: Program<'info, Token>,
     pub metadata_program: Program<'info, System>,
     #[account(
+        mut, // must be writable to create metadata
         seeds = [b"metadata", mpl_token_metadata::id().as_ref(), treasury_claim_mint.key().as_ref()],
         bump)]
     pub metadata: AccountInfo<'info>,

@@ -195,19 +195,42 @@ pub mod ask_network {
                 collection_details: None,
                 rule_set: None,
             },
-            decimals: 0,
+            decimals: None,
             print_supply: Some(Zero),
         };
 
         let accounts = mpl_token_metadata::instruction::Create {
+            // Metadata Account: This is the account where the metadata for the token will be stored.
+            // It must be writable because the function will initialize or modify this account with the metadata details.
             metadata_info: &ctx.accounts.metadata,
+
+            // Master Edition Info: This is optional and used if you're also creating a master edition for the NFT.
+            // It represents the account that will hold the master edition information.
             master_edition_info: None,
-            mint_info: &ctx.accounts.mint,
-            authority_info: &ctx.accounts.mint_authority,
-            payer_info: &ctx.accounts.payer,
-            update_authority_info: &ctx.accounts.update_authority,
+
+            // Mint Account: This is the mint account of the token (NFT) for which you're creating the metadata.
+            mint_info: &ctx.accounts.treasury_claim_mint.to_account_info(),
+
+            // Mint Authority: This account has the authority to mint new tokens.
+            // It's required to sign the transaction as it's a critical operation involving the token properties.
+            authority_info: &ctx.accounts.treasury_claims_authority.to_account_info(),
+
+            // Payer: This account pays for the transaction fees and any additional SOL needed to fund the new metadata account.
+            // It must be a signer because it is responsible for covering the costs of the transaction.
+            payer_info: &ctx.accounts.depositor,
+
+            // Update Authority: This account has the authority to update the metadata in the future.
+            // It's often the same as the mint authority, but it can be different.
+            // It must also be a signer to authorize this role.
+            update_authority_info: &ctx.accounts.treasury_claim_mint.to_account_info(),
+
+            // System Program: A reference to the Solana System Program for account creation and management.
             system_program_info: &ctx.accounts.system_program,
+
+            // Sysvar Instructions: Provides information about the current transaction's instructions, if needed.
             sysvar_instructions_info: &ctx.accounts.sysvar_instructions,
+
+            // SPL Token Program: A reference to the SPL Token Program, used for handling token-related operations.
             spl_token_program_info: &ctx.accounts.spl_token_program,
         };
 

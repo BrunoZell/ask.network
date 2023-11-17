@@ -1,10 +1,8 @@
-use anchor_lang::{prelude::*, system_program};
+use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
     token::{Mint, Token, TokenAccount},
 };
-use mpl_token_metadata::state::Metadata;
-
 use crate::state::*;
 
 #[derive(Accounts)]

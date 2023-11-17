@@ -1,12 +1,7 @@
 use account::*;
+use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
 use anchor_lang::solana_program::program::*;
-use anchor_lang::{prelude::*, system_program};
-use anchor_spl::token::TokenAccount;
-use anchor_spl::token::{self, InitializeMint, Mint, MintTo};
-use mpl_token_metadata::state::AssetData;
-use mpl_token_metadata::state::PrintSupply::Zero;
-use mpl_token_metadata::state::TokenStandard;
 
 use state::*;
 

@@ -2,6 +2,7 @@ use account::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
 use anchor_lang::solana_program::program::*;
+use anchor_spl::metadata::mpl_token_metadata;
 
 use state::*;
 
@@ -115,7 +116,7 @@ pub mod ask_network {
                 },
                 &[&[
                     b"treasury_claims_authority",
-                    &[*ctx.bumps.get("treasury_claims_authority").unwrap()],
+                    &[*ctx.bumps.treasury_claims_authority],
                 ]],
             ),
             1, // Amount of 1 for NFTs
@@ -195,21 +196,21 @@ pub mod ask_network {
                 &[
                     //   2. `[signer]` Mint authority
                     b"treasury_claims_authority",
-                    &[*ctx.bumps.get("treasury_claims_authority").unwrap()],
+                    &[*ctx.bumps.treasury_claims_authority],
                 ],
                 &[
                     //   1. `[]` Mint account
                     //   4. `[signer]` Update authority
                     b"treasury_claim_",
                     &(ctx.accounts.treasury_claims_ordinal.claims_issued).to_le_bytes(),
-                    &[*ctx.bumps.get("treasury_claim_mint").unwrap()],
+                    &[*ctx.bumps.treasury_claim_mint],
                 ],
                 &[
                     //   0. `[writable]` Metadata account
                     b"metadata",
                     mpl_token_metadata::id().as_ref(),
                     ctx.accounts.treasury_claim_mint.key().as_ref(),
-                    &[*ctx.bumps.get("metadata").unwrap()],
+                    &[*ctx.bumps.metadata],
                 ],
             ],
         )?;

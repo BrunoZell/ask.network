@@ -131,8 +131,7 @@ pub struct DepositSol<'info> {
     pub metadata_program: Program<'info, System>,
     #[account(
         mut, // must be writable to create metadata
-        seeds = [b"metadata", mpl_token_metadata::id().as_ref(), treasury_claim_mint.key().as_ref()],
-        bump)]
+        address = mpl_token_metadata::accounts::Metadata::find_pda(&treasury_claim_mint.key()).0)]
     pub metadata: AccountInfo<'info>,
 
     // For SPL token mint

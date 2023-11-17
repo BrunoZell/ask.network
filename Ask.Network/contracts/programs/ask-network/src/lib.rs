@@ -1,7 +1,6 @@
 use account::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::*;
-use anchor_lang::solana_program::program::*;
 use anchor_spl::metadata::mpl_token_metadata;
 
 use state::*;
@@ -116,7 +115,7 @@ pub mod ask_network {
                 },
                 &[&[
                     b"treasury_claims_authority",
-                    &[*ctx.bumps.treasury_claims_authority],
+                    &[ctx.bumps.treasury_claims_authority],
                 ]],
             ),
             1, // Amount of 1 for NFTs
@@ -131,7 +130,7 @@ pub mod ask_network {
 
         // Generate dynamic name and URI based on the claim number
         let name = format!("ask.network Treasury Claim #{}", claim_number);
-        let uri = format!("https://claims.ask.network/{}.json", claim_number);
+        let uri: String = format!("https://claims.ask.network/{}.json", claim_number);
 
         // Populate Treasury Claim account values. This is the main account of what makes a treasury claim.
         let clock = Clock::get()?;
@@ -141,78 +140,41 @@ pub mod ask_network {
         ctx.accounts.this_treasury_claim.deposit_amount = lamport_amount;
         ctx.accounts.this_treasury_claim.deposit_timestamp = clock.unix_timestamp;
 
-        // Mint NFT Metadata
-        let metadata_create_instruction =
-            mpl_token_metadata::instruction::create_metadata_accounts_v3(
-                ctx.accounts.metadata_program.key(), // Program ID of the Metaplex Token Metadata program
-                // Metadata Account: This is the account where the metadata for the token will be stored.
-                // It must be writable because the function will initialize or modify this account with the metadata details.
-                ctx.accounts.metadata.key(), // Metadata account (PDA)
-                // Mint Account: This is the mint account of the token (NFT) for which you're creating the metadata.
-                ctx.accounts.treasury_claim_mint.key(), // Mint account
-                // Mint Authority: This account has the authority to mint new tokens.
-                // It's required to sign the transaction as it's a critical operation involving the token properties.
-                ctx.accounts.treasury_claims_authority.key(), // Mint authority
-                // Payer: This account pays for the transaction fees and any additional SOL needed to fund the new metadata account.
-                // It must be a signer because it is responsible for covering the costs of the transaction.
-                ctx.accounts.depositor.key(), // Payer account
-                // Update Authority: This account has the authority to update the metadata in the future.
-                // It's often the same as the mint authority, but it can be different.
-                // It must also be a signer to authorize this role.
-                ctx.accounts.treasury_claim_mint.key(), // Update authority account
-                name,                                   // Name
-                "ASK-T".to_string(),                    // Symbol
-                uri,                                    // URI
-                None,                                   // Creators
-                0,                                      // Seller fee basis points
-                true,                                   // Whether the primary sale happened
-                true,                                   // Is mutable
-                None,                                   // Collection
-                None,                                   // Uses
-                None,
-            );
-
-        let accounts = &[
-            // From metadata.rs: mpl_token_metadata::instruction::create_metadata_accounts_v3
-            //   0. `[writable]` Metadata account
-            ctx.accounts.metadata.to_account_info(),
-            //   1. `[]` Mint account
-            ctx.accounts.treasury_claim_mint.to_account_info(),
-            //   2. `[signer]` Mint authority
-            ctx.accounts.treasury_claims_authority.to_account_info(),
-            //   3. `[signer]` payer
-            ctx.accounts.depositor.to_account_info(),
-            //   4. `[signer]` Update authority
-            ctx.accounts.treasury_claim_mint.to_account_info(),
-            //   5. `[]` System program
-            ctx.accounts.system_program.to_account_info(),
-            //   6. Optional `[]` Rent sysvar
-        ];
-
-        invoke_signed(
-            &metadata_create_instruction,
-            accounts,
-            &[
-                &[
-                    //   2. `[signer]` Mint authority
-                    b"treasury_claims_authority",
-                    &[*ctx.bumps.treasury_claims_authority],
-                ],
-                &[
-                    //   1. `[]` Mint account
-                    //   4. `[signer]` Update authority
-                    b"treasury_claim_",
-                    &(ctx.accounts.treasury_claims_ordinal.claims_issued).to_le_bytes(),
-                    &[*ctx.bumps.treasury_claim_mint],
-                ],
-                &[
-                    //   0. `[writable]` Metadata account
-                    b"metadata",
-                    mpl_token_metadata::id().as_ref(),
-                    ctx.accounts.treasury_claim_mint.key().as_ref(),
-                    &[*ctx.bumps.metadata],
-                ],
-            ],
+        anchor_spl::metadata::create_metadata_accounts_v3(
+            CpiContext::new(
+                ctx.accounts.metadata_program.to_account_info(),
+                anchor_spl::metadata::CreateMetadataAccountsV3 {
+                    // Metadata Account: This is the account where the metadata for the token will be stored.
+                    // It must be writable because the function will initialize or modify this account with the metadata details.
+                    metadata: ctx.accounts.metadata.to_account_info(),
+                    // Mint Account: This is the mint account of the token (NFT) for which you're creating the metadata.
+                    mint: ctx.accounts.treasury_claim_mint.to_account_info(),
+                    // Mint Authority: This account has the authority to mint new tokens.
+                    // It's required to sign the transaction as it's a critical operation involving the token properties.
+                    mint_authority: ctx.accounts.treasury_claims_authority.to_account_info(),
+                    // Update Authority: This account has the authority to update the metadata in the future.
+                    // It's often the same as the mint authority, but it can be different.
+                    // It must also be a signer to authorize this role.
+                    update_authority: ctx.accounts.treasury_claim_mint.to_account_info(),
+                    // Payer: This account pays for the transaction fees and any additional SOL needed to fund the new metadata account.
+                    // It must be a signer because it is responsible for covering the costs of the transaction.
+                    payer: ctx.accounts.depositor.to_account_info(),
+                    system_program: ctx.accounts.system_program.to_account_info(),
+                    rent: ctx.accounts.rent.to_account_info(),
+                },
+            ),
+            mpl_token_metadata::types::DataV2 {
+                name: name,
+                symbol: "ASK-T".to_string(),
+                uri: uri,
+                seller_fee_basis_points: 0,
+                creators: None,
+                collection: None,
+                uses: None,
+            },
+            false, // Is mutable
+            true,  // Update authority is signer
+            None,  // Collection details
         )?;
 
         Ok(())

@@ -18,8 +18,15 @@ app.UseHttpsRedirection();
 
 app.MapGet("/collection.json", () =>
 {
-    // Implement logic to return the entire collection as JSON
-    return Results.Ok(/* collection data */);
+    return Results.Ok(new NftMetadata(
+        name: "ask.network Treasury Claims",
+        symbol: "ASK-T",
+        description: "Certificate of deposit into ask.network treasury",
+        image: "https://claims.ask.network/collection.svg",
+        animation_url: "https://claims.ask.network/collection.glb",
+        external_url: "https://claims.ask.network",
+        attributes: Array.Empty<NftAttribute>()
+    ));
 })
 .WithName("CollectionJson")
 .WithOpenApi();
@@ -29,20 +36,36 @@ app.MapGet("/{id}.json", (int id) =>
     // Implement logic to return a specific item's metadata as JSON
     return Results.Ok(new NftMetadata(
         name: "ask.network Treasury Claim #" + id,
-        symbol: "ASK-T", // Provide appropriate symbol
+        symbol: "ASK-T",
         description: "3.5 SOL deposit certificate in ask.network treasury from 2023-11-16 22:12",
         image: "https://claims.ask.network/" + id + ".svg",
         animation_url: "https://claims.ask.network/" + id + ".glb",
         external_url: "https://claims.ask.network/" + id,
-        attributes: new Attribute[]
+        attributes: new NftAttribute[]
         {
-            new Attribute("unit_of_value", "SOL"),
-            new Attribute("deposit_amount", "3.5"),
-            new Attribute("time_of_deposit", "1700168939")
+            new NftAttribute("unit_of_value", "SOL"),
+            new NftAttribute("deposit_amount", "3.5"),
+            new NftAttribute("time_of_deposit", "1700168939")
         }
     ));
 })
 .WithName("ClaimJson")
+.WithOpenApi();
+
+app.MapGet("/collection.svg", () =>
+{
+    // Implement logic to return the entire collection as SVG
+    return Results.Ok(/* SVG data */);
+})
+.WithName("CollectionSvg")
+.WithOpenApi();
+
+app.MapGet("/{id}.svg", (int id) =>
+{
+    // Implement logic to return a specific item's SVG
+    return Results.Ok(/* SVG data for item id */);
+})
+.WithName("ClaimSvg")
 .WithOpenApi();
 
 app.Run();

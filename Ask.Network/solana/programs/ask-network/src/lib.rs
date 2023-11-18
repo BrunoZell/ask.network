@@ -9,7 +9,7 @@ mod account;
 mod errors;
 mod state;
 
-declare_id!("EarWDrZeaMyMRuiWXVuFH2XKJ96Mg6W6h9rv51BCHgRD");
+declare_id!("AKVXMk2HpyozBHvMc66jDNRdKMbq2oCzdWBNx64mZsc1");
 
 #[program]
 pub mod ask_network {

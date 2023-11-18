@@ -49,7 +49,7 @@ app.MapGet("/{id}.json", (int id) =>
     };
 
     // Fetch the accounts
-    var accounts = await client.GetProgramAccountsAsync("EarWDrZeaMyMRuiWXVuFH2XKJ96Mg6W6h9rv51BCHgRD", filters);
+    var accounts = await client.GetProgramAccountsAsync("AKVXMk2HpyozBHvMc66jDNRdKMbq2oCzdWBNx64mZsc1", filters);
     var account = accounts.Result.FirstOrDefault();
 
     if (accounts.WasSuccessful && account is not null)

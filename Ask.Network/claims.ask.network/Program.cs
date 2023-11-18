@@ -28,15 +28,16 @@ app.MapGet("/{id}.json", (int id) =>
 {
     // Implement logic to return a specific item's metadata as JSON
     return Results.Ok(new NftMetadata(
-        Name: "ask.network Treasury Claim #" + id,
-        Description: "3.5 SOL deposit certificate in ask.network treasury from 2023-11-16 22:12",
-        Image: "https://claims.ask.network/" + id + ".svg",
-        AnimationUrl: "https://claims.ask.network/" + id + ".glb",
-        ExternalUrl: "https://claims.ask.network/" + id,
-        Attributes: new Attribute[]
+        name: "ask.network Treasury Claim #" + id,
+        symbol: "ASK-T", // Provide appropriate symbol
+        description: "3.5 SOL deposit certificate in ask.network treasury from 2023-11-16 22:12",
+        image: "https://claims.ask.network/" + id + ".svg",
+        animation_url: "https://claims.ask.network/" + id + ".glb",
+        external_url: "https://claims.ask.network/" + id,
+        attributes: new Attribute[]
         {
             new Attribute("unit_of_value", "SOL"),
-            new Attribute("deposit_amount", 3.5),
+            new Attribute("deposit_amount", "3.5"),
             new Attribute("time_of_deposit", "1700168939")
         }
     ));
@@ -46,12 +47,30 @@ app.MapGet("/{id}.json", (int id) =>
 
 app.Run();
 
+/// <summary>
+/// Represents the metadata of an NFT asset.
+/// </summary>
 record NftMetadata(
-    string Name,
-    string Description,
-    string Image,
-    string AnimationUrl,
-    string ExternalUrl,
-    Attribute[] Attributes);
+    // Name of the asset.
+    string name,
+    // Symbol of the asset.
+    string symbol,
+    // Description of the asset.
+    string description,
+    // URI pointing to the asset's logo.
+    string image,
+    // URI pointing to the asset's animation.
+    string animation_url,
+    // URI pointing to an external URL defining the asset.
+    string external_url,
+    // Array of attributes defining the characteristics of the asset.
+    NftAttribute[] attributes);
 
-record Attribute(string TraitType, object Value);
+/// <summary>
+/// Represents an attribute of an NFT asset.
+/// </summary>
+record NftAttribute(
+    // The type of attribute.
+    string trait_type,
+    // The value for that attribute.
+    string value);

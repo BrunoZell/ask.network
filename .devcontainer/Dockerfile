@@ -63,7 +63,11 @@ RUN git checkout v1.16.18 && \
 ENV PATH "/home/solana"/bin:"$PATH"
 WORKDIR /home/
 
-# print version
+# install .NET 8 SDK
+RUN apt-get update && \
+    apt-get install -y dotnet-sdk-8.0
+
+# print versions
 RUN rustc --version
 RUN cargo --version
 RUN rustup --version
@@ -73,6 +77,9 @@ RUN npm --version
 RUN yarn --version
 RUN solana --version
 RUN anchor --version
+RUN dotnet --version
+RUN dotnet --list-sdks
+RUN dotnet --list-runtimes
 
 # Installs zsh with some plugins
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \

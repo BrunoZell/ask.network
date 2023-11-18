@@ -1,3 +1,6 @@
+using Hexarc.Borsh;
+using Solnet.Rpc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -33,19 +36,40 @@ app.MapGet("/collection.json", () =>
 
 app.MapGet("/{id}.json", (int id) =>
 {
-    // Implement logic to return a specific item's metadata as JSON
+    var client = new RpcClient("https://api.mainnet-beta.solana.com"); // Adjust to your Solana RPC endpoint
+
+    // Replace `TreasuryClaimAccountAddress` with the address of the TreasuryClaim account
+    var accountInfo = await client.GetAccountInfoAsync("TreasuryClaimAccountAddress");
+    if (!accountInfo.WasSuccessful)
+    {
+        // Handle error, account not found or other issues
+        return Results.NotFound();
+    }
+
+    // Decode the base64-encoded data from the accountInfo
+    byte[] decodedData = Convert.FromBase64String(accountInfo.Result.Value.Data[0]);
+
+    // Deserialize the data into the TreasuryClaim structure
+    var treasuryClaim = BorshSerializer.Deserialize<TreasuryClaim>(decodedData);
+
+    // Validate if the claim ID exists
+    if (treasuryClaim.Ordinal != id)
+    {
+        return Results.NotFound("Claim ID not found");
+    }
+
     return Results.Ok(new NftMetadata(
-        name: "ask.network Treasury Claim #" + id,
+        name: "ask.network Treasury Claim #" + treasuryClaim.Ordinal,
         symbol: "ASK-T",
-        description: "3.5 SOL deposit certificate in ask.network treasury from 2023-11-16 22:12",
-        image: "https://claims.ask.network/" + id + ".svg",
-        animation_url: "https://claims.ask.network/" + id + ".glb",
-        external_url: "https://claims.ask.network/" + id,
+        description: $"SOL deposit certificate in ask.network treasury from {UnixTimeStampToDateTime(treasuryClaim.DepositTimestamp)}",
+        image: $"https://claims.ask.network/{id}.svg",
+        animation_url: $"https://claims.ask.network/{id}.glb",
+        external_url: $"https://claims.ask.network/{id}",
         attributes: new NftAttribute[]
         {
-            new NftAttribute("unit_of_value", "SOL"),
-            new NftAttribute("deposit_amount", "3.5"),
-            new NftAttribute("time_of_deposit", "1700168939")
+            new NftAttribute("unit_of_value", treasuryClaim.UnitOfValue.ToString()),
+            new NftAttribute("deposit_amount", treasuryClaim.DepositAmount.ToString()),
+            new NftAttribute("time_of_deposit", treasuryClaim.DepositTimestamp.ToString())
         }
     ));
 })
@@ -97,3 +121,41 @@ record NftAttribute(
     string trait_type,
     // The value for that attribute.
     string value);
+
+[BorshObject]
+public class TreasuryClaim
+{
+    [BorshPropertyOrder(0)]
+    public ulong Ordinal { get; set; }
+
+    [BorshPropertyOrder(1)]
+    public TreasuryCurrency UnitOfValue { get; set; }
+
+    [BorshPropertyOrder(2)]
+    public ulong DepositAmount { get; set; }
+
+    [BorshPropertyOrder(3)]
+    public long DepositTimestamp { get; set; }
+}
+
+[BorshObject]
+public enum TreasuryCurrency
+{
+    [BorshPropertyOrder(0)]
+    SOL, // Solana, in Lamports
+
+    [BorshPropertyOrder(1)]
+    USDC,
+
+    [BorshPropertyOrder(2)]
+    ETH
+}
+
+// Helper method to convert Unix timestamp to DateTime
+DateTime UnixTimeStampToDateTime(long unixTimeStamp)
+{
+    // Unix timestamp is seconds past epoch
+    System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+    dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+    return dtDateTime;
+}

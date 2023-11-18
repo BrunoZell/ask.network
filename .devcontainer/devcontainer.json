@@ -1,21 +1,17 @@
 {
 	"name": "Ask Network",
 	"extensions": [
-		"cschleiden.vscode-github-actions",
 		"DavidAnson.vscode-markdownlint",
 		"fernandoescolar.vscode-solution-explorer",
 		"formulahendry.dotnet-test-explorer",
 		"jmrog.vscode-nuget-package-manager",
 		"matklad.rust-analyzer",
-		"mikestead.dotenv",
 		"ms-dotnettools.csharp",
 		"ms-dotnettools.vscode-dotnet-runtime",
 		"ms-vsliveshare.vsliveshare",
 		"patcx.vscode-nuget-gallery",
-		"pkief.material-icon-theme",
 		"rust-lang.rust-analyzer",
 		"serayuzgur.crates",
-		"shardulm94.trailing-spaces",
 		"vadimcn.vscode-lldb"
 	],
 	"dockerFile": "Dockerfile",

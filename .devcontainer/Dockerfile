@@ -63,9 +63,13 @@ RUN git checkout v1.16.18 && \
 ENV PATH "/home/solana"/bin:"$PATH"
 WORKDIR /home/
 
-# install .NET 8 SDK
-RUN apt-get update && \
-    apt-get install -y dotnet-sdk-8.0
+# install .NET 8.0.100 SDK
+RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
+    chmod +x ./dotnet-install.sh && \
+    ./dotnet-install.sh --version 8.0.100 --install-dir /home/.dotnet && \
+    rm ./dotnet-install.sh
+ENV DOTNET_ROOT /home/.dotnet
+ENV PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools"
 
 # print versions
 RUN rustc --version

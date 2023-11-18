@@ -1,0 +1,21 @@
+@claims.ask.network_HostAddress = http://localhost:5294
+
+GET {{claims.ask.network_HostAddress}}/collection.json/
+Accept: application/json
+
+###
+
+GET {{claims.ask.network_HostAddress}}/1.json/
+Accept: application/json
+
+###
+
+GET {{claims.ask.network_HostAddress}}/collection.svg/
+Accept: image/svg+xml
+
+###
+
+GET {{claims.ask.network_HostAddress}}/1.svg/
+Accept: image/svg+xml
+
+###

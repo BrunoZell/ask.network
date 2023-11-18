@@ -4,6 +4,7 @@
 		"DavidAnson.vscode-markdownlint",
 		"fernandoescolar.vscode-solution-explorer",
 		"formulahendry.dotnet-test-explorer",
+		"humao.rest-client",
 		"jmrog.vscode-nuget-package-manager",
 		"matklad.rust-analyzer",
 		"ms-dotnettools.csdevkit",

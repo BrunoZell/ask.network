@@ -38,40 +38,53 @@ app.MapGet("/{id}.json", (int id) =>
 {
     var client = new RpcClient("https://api.mainnet-beta.solana.com"); // Adjust to your Solana RPC endpoint
 
-    // Replace `TreasuryClaimAccountAddress` with the address of the TreasuryClaim account
-    var accountInfo = await client.GetAccountInfoAsync("TreasuryClaimAccountAddress");
-    if (!accountInfo.WasSuccessful)
+    // Calculate the anchor discriminator for TreasuryClaim
+    byte[] discriminator = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes("TreasuryClaim"))[0..8];
+
+    // Set up the filters
+    var filters = new List<MemCmp>
     {
-        // Handle error, account not found or other issues
-        return Results.NotFound();
-    }
+        new MemCmp { Offset = 0, Bytes = Convert.ToBase64String(discriminator) }, // Filter for Anchor discriminator (all accounts of type 'TreasuryClaim')
+        new MemCmp { Offset = 8, Bytes = Convert.ToBase64String(BitConverter.GetBytes(id)) } // Filter for ordinal
+    };
 
-    // Decode the base64-encoded data from the accountInfo
-    byte[] decodedData = Convert.FromBase64String(accountInfo.Result.Value.Data[0]);
+    // Fetch the accounts
+    var accounts = await client.GetProgramAccountsAsync("EarWDrZeaMyMRuiWXVuFH2XKJ96Mg6W6h9rv51BCHgRD", filters);
+    var account = accounts.Result.FirstOrDefault();
 
-    // Deserialize the data into the TreasuryClaim structure
-    var treasuryClaim = BorshSerializer.Deserialize<TreasuryClaim>(decodedData);
-
-    // Validate if the claim ID exists
-    if (treasuryClaim.Ordinal != id)
+    if (accounts.WasSuccessful && account is not null)
     {
-        return Results.NotFound("Claim ID not found");
-    }
+        // Decode the base64-encoded data from the accountInfo
+        byte[] decodedData = Convert.FromBase64String(account.Value.Data[0]);
 
-    return Results.Ok(new NftMetadata(
-        name: "ask.network Treasury Claim #" + treasuryClaim.Ordinal,
-        symbol: "ASK-T",
-        description: $"SOL deposit certificate in ask.network treasury from {UnixTimeStampToDateTime(treasuryClaim.DepositTimestamp)}",
-        image: $"https://claims.ask.network/{id}.svg",
-        animation_url: $"https://claims.ask.network/{id}.glb",
-        external_url: $"https://claims.ask.network/{id}",
-        attributes: new NftAttribute[]
+        // Deserialize the data into the TreasuryClaim structure
+        var treasuryClaim = BorshSerializer.Deserialize<TreasuryClaim>(decodedData);
+
+        // Validate if the claim ID exists
+        if (treasuryClaim.Ordinal != id)
         {
-            new NftAttribute("unit_of_value", treasuryClaim.UnitOfValue.ToString()),
-            new NftAttribute("deposit_amount", treasuryClaim.DepositAmount.ToString()),
-            new NftAttribute("time_of_deposit", treasuryClaim.DepositTimestamp.ToString())
+            return Results.NotFound("Claim ID not found");
         }
-    ));
+
+        return Results.Ok(new NftMetadata(
+            name: "ask.network Treasury Claim #" + treasuryClaim.Ordinal,
+            symbol: "ASK-T",
+            description: $"SOL deposit certificate in ask.network treasury from {UnixTimeStampToDateTime(treasuryClaim.DepositTimestamp)}",
+            image: $"https://claims.ask.network/{id}.svg",
+            animation_url: $"https://claims.ask.network/{id}.glb",
+            external_url: $"https://claims.ask.network/{id}",
+            attributes: new NftAttribute[]
+            {
+                new NftAttribute("unit_of_value", treasuryClaim.UnitOfValue.ToString()),
+                new NftAttribute("deposit_amount", treasuryClaim.DepositAmount.ToString()),
+                new NftAttribute("time_of_deposit", treasuryClaim.DepositTimestamp.ToString())
+            }
+        ));
+    }
+    else
+    {
+        return Results.NotFound("No matching TreasuryClaim account found.");
+    }
 })
 .WithName("ClaimJson")
 .WithOpenApi();

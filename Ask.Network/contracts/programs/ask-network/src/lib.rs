@@ -37,6 +37,82 @@ pub mod ask_network {
 
         ctx.accounts.treasury_claims_ordinal.claims_issued = 0;
 
+        // Initialize Treasury Claim NFT Collection.
+        // There only is a single collection NFT for all treasury claims.
+        // This mints the singleton treasury claim SPL NFT to a program-owned ATA.
+        anchor_spl::token::mint_to(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                anchor_spl::token::MintTo {
+                    authority: ctx
+                        .accounts
+                        .treasury_claims_collection_authority
+                        .to_account_info(),
+                    to: ctx
+                        .accounts
+                        .treasury_claims_collection_ata
+                        .to_account_info(),
+                    mint: ctx
+                        .accounts
+                        .treasury_claims_collection_mint
+                        .to_account_info(),
+                },
+                &[&[
+                    b"treasury_claims_collection_authority",
+                    &[ctx.bumps.treasury_claims_collection_authority],
+                ]],
+            ),
+            1, // Amount of 1 for NFTs
+        )?;
+
+        // Create Treasury Claim Collection NFT Metadata
+        anchor_spl::metadata::create_metadata_accounts_v3(
+            CpiContext::new(
+                ctx.accounts.metadata_program.to_account_info(),
+                anchor_spl::metadata::CreateMetadataAccountsV3 {
+                    // Metadata Account: This is the account where the metadata for the token will be stored.
+                    // It must be writable because the function will initialize or modify this account with the metadata details.
+                    metadata: ctx.accounts.metadata.to_account_info(),
+                    // Mint Account: This is the mint account of the token (NFT) for which you're creating the metadata.
+                    mint: ctx
+                        .accounts
+                        .treasury_claims_collection_mint
+                        .to_account_info(),
+                    // Mint Authority: This account has the authority to mint new tokens.
+                    // It's required to sign the transaction as it's a critical operation involving the token properties.
+                    mint_authority: ctx
+                        .accounts
+                        .treasury_claims_collection_authority
+                        .to_account_info(),
+                    // Update Authority: This account has the authority to update the metadata in the future.
+                    // It's often the same as the mint authority, but it can be different.
+                    // It must also be a signer to authorize this role.
+                    update_authority: ctx
+                        .accounts
+                        .treasury_claims_collection_authority
+                        .to_account_info(),
+                    // Payer: This account pays for the transaction fees and any additional SOL needed to fund the new metadata account.
+                    // It must be a signer because it is responsible for covering the costs of the transaction.
+                    payer: ctx.accounts.signer.to_account_info(),
+                    system_program: ctx.accounts.system_program.to_account_info(),
+                    rent: ctx.accounts.rent.to_account_info(),
+                },
+            ),
+            mpl_token_metadata::types::DataV2 {
+                name: "ask.network Treasury Claims".to_string(),
+                symbol: "ASK-T".to_string(),
+                uri: "https://claims.ask.network/collection.json".to_string(),
+                seller_fee_basis_points: 0,
+                creators: None,
+                collection: None, // This instruction defines the singleton Collection NFT, which is not part of any collection.
+                uses: None,
+            },
+            false,
+            true,
+            // Setting the CollectionDetails field on this NFT makes it a Collection NFT.
+            Some(mpl_token_metadata::types::CollectionDetails::V1 { size: 0 }),
+        )?;
+
         Ok(())
     }
 
@@ -155,7 +231,7 @@ pub mod ask_network {
                     // Update Authority: This account has the authority to update the metadata in the future.
                     // It's often the same as the mint authority, but it can be different.
                     // It must also be a signer to authorize this role.
-                    update_authority: ctx.accounts.treasury_claim_mint.to_account_info(),
+                    update_authority: ctx.accounts.treasury_claims_authority.to_account_info(),
                     // Payer: This account pays for the transaction fees and any additional SOL needed to fund the new metadata account.
                     // It must be a signer because it is responsible for covering the costs of the transaction.
                     payer: ctx.accounts.depositor.to_account_info(),

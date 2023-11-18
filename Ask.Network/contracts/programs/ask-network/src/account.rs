@@ -55,6 +55,7 @@ pub struct InitializeTreasuryClaims<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
 
+    // Treasury claims issuance counter to assign sequential IDs to each minted treasury claim.
     #[account(
         init,
         payer = signer,
@@ -63,17 +64,47 @@ pub struct InitializeTreasuryClaims<'info> {
         bump)]
     pub treasury_claims_ordinal: Account<'info, TreasuryClaimsOrdinal>,
 
+    /// SPL token authority account of the singleton treasury claim collection NFT.
     #[account(
         init,
         payer = signer,
         space = 8,
-        seeds = [b"treasury_claims_authority"],
+        seeds = [b"treasury_claims_collection_authority"],
         bump)]
-    pub treasury_claims_authority: Account<'info, TreasuryClaimsAuthority>,
+    pub treasury_claims_collection_authority: Account<'info, TreasuryClaimsAuthority>,
     
+    /// SPL token mint account of the singleton treasury claim collection NFT.
+    #[account(
+        init,
+        payer = signer,
+        seeds = [b"treasury_claims_collection_mint"],
+        mint::decimals = 0,
+        mint::authority = treasury_claims_collection_authority,
+        bump)]
+    pub treasury_claims_collection_mint: Account<'info, Mint>,
+
+    /// Associated token account owned by the PDA treasury claims authority holding the newly minted treasury claim NFT.
+    #[account(
+        init,
+        payer = signer,
+        associated_token::mint = treasury_claims_collection_mint,
+        associated_token::authority = treasury_claims_collection_authority)]
+    pub treasury_claims_collection_ata: Account<'info, TokenAccount>,
+
+    /// Metaplex Metadata (PDA derived from ['metadata', program ID, mint ID])
+    pub system_program: Program<'info, System>,
+    pub sysvar_instructions: AccountInfo<'info>,
+    pub spl_token_program: Program<'info, Token>,
+    pub metadata_program: Program<'info, System>,
+    #[account(
+        mut, // must be writable to create metadata
+        address = mpl_token_metadata::accounts::Metadata::find_pda(&treasury_claims_collection_mint.key()).0)]
+    pub metadata: AccountInfo<'info>,
+    
+    // For SPL token mint
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,
-    pub system_program: Program<'info, System>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
 #[derive(Accounts)]

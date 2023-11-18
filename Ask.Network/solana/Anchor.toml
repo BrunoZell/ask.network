@@ -1,14 +1,18 @@
 [features]
 seeds = false
 skip-lint = false
+
 [programs.localnet]
 ask_network = "AKVXMk2HpyozBHvMc66jDNRdKMbq2oCzdWBNx64mZsc1"
+
+[programs.devnet]
+ask_network = "wvQ95noxaE62kWjsMmsNRpUXmHoHVwcPxhtes1rnA8V"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Devnet"
 wallet = "/root/.config/solana/id.json"
 
 [scripts]

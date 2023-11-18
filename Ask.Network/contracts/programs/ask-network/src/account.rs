@@ -93,7 +93,6 @@ pub struct InitializeTreasuryClaims<'info> {
 
     /// Metaplex Metadata (PDA derived from ['metadata', program ID, mint ID])
     pub system_program: Program<'info, System>,
-    pub sysvar_instructions: AccountInfo<'info>,
     pub spl_token_program: Program<'info, Token>,
     pub metadata_program: Program<'info, System>,
     #[account(
@@ -157,7 +156,6 @@ pub struct DepositSol<'info> {
 
     /// Metaplex Metadata (PDA derived from ['metadata', program ID, mint ID])
     pub system_program: Program<'info, System>,
-    pub sysvar_instructions: AccountInfo<'info>,
     pub spl_token_program: Program<'info, Token>,
     pub metadata_program: Program<'info, System>,
     #[account(

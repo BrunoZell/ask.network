@@ -1,9 +1,9 @@
+use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
     token::{Mint, Token, TokenAccount},
 };
-use crate::state::*;
 
 #[derive(Accounts)]
 pub struct InitializeUser<'info> {
@@ -44,7 +44,7 @@ pub struct InitializeToken<'info> {
         payer = signer,
         space = 8)]
     pub authority: Account<'info, TokenAuthority>,
-    
+
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,
     pub system_program: Program<'info, System>,
@@ -72,7 +72,7 @@ pub struct InitializeTreasuryClaims<'info> {
         seeds = [b"treasury_claims_collection_authority"],
         bump)]
     pub treasury_claims_collection_authority: Account<'info, TreasuryClaimsAuthority>,
-    
+
     /// SPL token mint account of the singleton treasury claim collection NFT.
     #[account(
         init,
@@ -99,7 +99,7 @@ pub struct InitializeTreasuryClaims<'info> {
         mut, // must be writable to create metadata
         address = mpl_token_metadata::accounts::Metadata::find_pda(&treasury_claims_collection_mint.key()).0)]
     pub metadata: AccountInfo<'info>,
-    
+
     // For SPL token mint
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,
@@ -120,9 +120,10 @@ pub struct DepositSol<'info> {
     #[account(mut)]
     pub depositor: Signer<'info>,
 
-    #[account()] /// CHECK: Address is checked within instruction. I don't know how to encode a const PubKey.
+    #[account()]
+    /// CHECK: Address is checked within instruction. I don't know how to encode a const PubKey.
     pub community_treasury: AccountInfo<'info>,
-    
+
     #[account(
         mut,
         seeds = [b"treasury_claims_ordinal"],
@@ -145,7 +146,7 @@ pub struct DepositSol<'info> {
         mint::authority = treasury_claims_authority,
         bump)]
     pub treasury_claim_mint: Account<'info, Mint>,
-    
+
     /// Associated token account for the depositor holding the newly minted treasury claim NFT.
     #[account(
         init,
@@ -220,7 +221,7 @@ pub struct UpdateAsk<'info> {
 #[instruction(ordinal: u64)]
 pub struct CancelAsk<'info> {
     #[account(
-        mut, 
+        mut,
         close = user, // after the instruction is executed, the 'ask' account will be closed, and any remaining lamports will be transferred to the 'user' account.
         seeds = [user.key().as_ref(), &ordinal.to_le_bytes()],
         bump)]

@@ -1,11 +1,16 @@
 FROM node:18
 
-WORKDIR /home/
+# This Dockerfile assumes the build context to be .., expecting folders "ask.network" and "solana/target/idl"
+
+WORKDIR /home/workspace/ask.network
 
 # First copy package.json and yarn.lock to leverage Docker's layer caching. 
 # Docker will rebuild this layer only if these files change, which means 
 # it will skip reinstalling node modules unless dependencies change.
-COPY package.json yarn.lock ./
+COPY ask.network/package.json ask.network/yarn.lock ./
+
+RUN ls ..
+RUN ls .
 
 # Install dependencies. This layer is cached and only re-run if the previous 
 # layer (package.json and yarn.lock) changes, saving time on builds where
@@ -15,7 +20,11 @@ RUN yarn install
 # Copy the rest of the project files. This step is separated from the copying 
 # of package.json and yarn.lock so that changes to the project files do not 
 # cause Docker to reinstall all node modules.
-COPY . .
+COPY ask.network/ ../ask.network
+COPY solana/ ../solana
+
+RUN ls ..
+RUN ls .
 
 # Build the application. This is done after copying all project files, ensuring 
 # that any changes in your source code will trigger a new build.

@@ -22,8 +22,8 @@ services:
     ports:
     - "3000:3000"
     build:
-      context: ./ask.network
-      dockerfile: ./Dockerfile
+      context: . # this folder to copy solana/target/idl
+      dockerfile: ./ask.network/Dockerfile
     networks:
     - docker-network
 

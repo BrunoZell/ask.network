@@ -5,7 +5,7 @@ import {
   useAnchorWallet,
   useConnection,
 } from '@solana/wallet-adapter-react';
-import { METAPLEX_METADATA_PROGRAM_ID } from '../program-ids';
+import { ASK_NETWORK_PROGRAM_ID, METAPLEX_METADATA_PROGRAM_ID } from '../program-ids';
 import idl from '../../solana/target/idl/ask_network.json';
 import { PublicKey } from '@solana/web3.js';
 import { AskNetwork as AskNetworkIdl } from '../../solana/target/types/ask_network';
@@ -44,7 +44,7 @@ const Page = () => {
       try {
         const program = new anchor.Program<AskNetworkIdl>(
           idl as unknown as AskNetworkIdl,
-          new PublicKey('AKVXMk2HpyozBHvMc66jDNRdKMbq2oCzdWBNx64mZsc1'),
+          ASK_NETWORK_PROGRAM_ID,
           provider
         );
         setProgram(program);

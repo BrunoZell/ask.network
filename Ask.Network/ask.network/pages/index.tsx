@@ -8,6 +8,7 @@ import {
 } from '@solana/wallet-adapter-react';
 import idl from '../../solana/target/idl/ask_network.json';
 import { PublicKey } from '@solana/web3.js';
+import { ASK_NETWORK_PROGRAM_ID } from '../program-ids';
 import { AskNetwork as AskNetworkIdl } from '../../solana/target/types/ask_network';
 import { IdlAccounts, Program } from '@project-serum/anchor';
 import { AppBar } from '../components/AppBar';
@@ -57,7 +58,7 @@ const Page = () => {
       try {
         const program = new anchor.Program(
           idl as anchor.Idl,
-          new PublicKey('AKVXMk2HpyozBHvMc66jDNRdKMbq2oCzdWBNx64mZsc1'),
+          ASK_NETWORK_PROGRAM_ID,
           provider
         );
         setProgram(program as Program<AskNetworkIdl>);

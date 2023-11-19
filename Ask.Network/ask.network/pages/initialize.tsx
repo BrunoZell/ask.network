@@ -116,12 +116,70 @@ const Page = () => {
         .rpc();
 
       console.log(
-        `https://explorer.solana.com/tx/${tx}?cluster=localnet&customUrl=http://localhost:8899`
+        `https://explorer.solana.com/tx/${tx}?cluster=devnet`
       );
 
       setIsInitialized(true);
     }
   };
+
+  const initializeTreasuryClaims = async () => {
+    console.log("Initializing Treasury Claims");
+
+    if (wallet?.publicKey && program) {
+      // Construct the accounts needed for the InitializeTreasuryClaims instruction
+      const [treasuryClaimsOrdinalPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("treasury_claims_ordinal")],
+        program.programId
+      );
+
+      const [treasuryClaimsCollectionAuthorityPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("treasury_claims_collection_authority")],
+        program.programId
+      );
+
+      const [treasuryClaimsCollectionMintPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("treasury_claims_collection_mint")],
+        program.programId
+      );
+
+      const [treasuryClaimsCollectionAtaPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from("treasury_claims_collection_ata")],
+        program.programId
+      );
+
+      const METAPLEX_METADATA_PROGRAM_ID = new PublicKey("SjAo...8y5");
+      const [metadataPda] = await PublicKey.findProgramAddress(
+        [
+          Buffer.from("metadata"),
+          METAPLEX_METADATA_PROGRAM_ID.toBuffer(),
+          treasuryClaimsCollectionMintPda.toBuffer()
+        ],
+        METAPLEX_METADATA_PROGRAM_ID
+      );
+
+      // Call the initializeTreasuryClaims method
+      const tx = await program.methods
+        .initializeTreasuryClaims()
+        .accounts({
+          accounts: {
+            signer: wallet.publicKey,
+            treasuryClaimsOrdinal: treasuryClaimsOrdinalPda,
+            treasuryClaimsCollectionAuthority: treasuryClaimsCollectionAuthorityPda,
+            treasuryClaimsCollectionMint: treasuryClaimsCollectionMintPda,
+            treasuryClaimsCollectionAta: treasuryClaimsCollectionAtaPda,
+            metadataProgram: METAPLEX_METADATA_PROGRAM_ID,
+            metadata: metadataPda,
+          }
+        })
+        .rpc();
+
+      console.log(
+        `https://explorer.solana.com/tx/${tx}?cluster=devnet`
+      );
+
+    }
+  }
 
   return (
     <div className=''>
@@ -137,6 +195,8 @@ const Page = () => {
             <Button onClick={initializeToken}>Initialize Token</Button>
           </div>
         )}
+
+        <Button onClick={initializeTreasuryClaims}>Initialize Treasury Claims</Button>
       </Box>
     </div>
   );

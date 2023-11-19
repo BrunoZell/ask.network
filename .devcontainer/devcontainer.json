@@ -1,26 +1,32 @@
 {
 	"name": "Ask Network",
-	"extensions": [
-		"DavidAnson.vscode-markdownlint",
-		"fernandoescolar.vscode-solution-explorer",
-		"formulahendry.dotnet-test-explorer",
-		"humao.rest-client",
-		"jmrog.vscode-nuget-package-manager",
-		"matklad.rust-analyzer",
-		"ms-dotnettools.csdevkit",
-		"ms-vsliveshare.vsliveshare",
-		"patcx.vscode-nuget-gallery",
-		"rust-lang.rust-analyzer",
-		"serayuzgur.crates",
-		"vadimcn.vscode-lldb"
-	],
 	"dockerFile": "Dockerfile",
-	"settings": {
-		"editor.formatOnSave": true,
-		"terminal.integrated.shell.linux": "/usr/bin/zsh",
-		"files.exclude": {
-			"**/CODE_OF_CONDUCT.md": true,
-			"**/LICENSE": true
+	"workspaceMount": "type=bind,src=${localWorkspaceFolder},dst=/ask.network",
+	"workspaceFolder": "/ask.network",
+	"mounts": [
+		"type=bind,source=${localWorkspaceFolder},dst=/ask.network",
+		"type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/solana/asknetwork-deploy.json,target=/root/.config/solana/asknetwork-deploy.json,readonly"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"DavidAnson.vscode-markdownlint",
+				"fernandoescolar.vscode-solution-explorer",
+				"formulahendry.dotnet-test-explorer",
+				"humao.rest-client",
+				"jmrog.vscode-nuget-package-manager",
+				"matklad.rust-analyzer",
+				"ms-dotnettools.csdevkit",
+				"ms-dotnettools.csharp",
+				"ms-vsliveshare.vsliveshare",
+				"patcx.vscode-nuget-gallery",
+				"rust-lang.rust-analyzer",
+				"serayuzgur.crates",
+				"vadimcn.vscode-lldb"
+			],
+			"settings": {
+				"terminal.integrated.shell.linux": "/usr/bin/zsh"
+			}
 		}
 	}
 }

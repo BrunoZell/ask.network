@@ -160,15 +160,13 @@ const Page = () => {
       const tx = await program.methods
         .initializeTreasuryClaims()
         .accounts({
-          accounts: {
-            signer: wallet.publicKey,
-            treasuryClaimsOrdinal: treasuryClaimsOrdinalPda,
-            treasuryClaimsCollectionAuthority: treasuryClaimsCollectionAuthorityPda,
-            treasuryClaimsCollectionMint: treasuryClaimsCollectionMintPda,
-            treasuryClaimsCollectionAta: treasuryClaimsCollectionAtaPda,
-            metadataProgram: METAPLEX_METADATA_PROGRAM_ID,
-            metadata: metadataPda,
-          }
+          signer: wallet.publicKey,
+          treasuryClaimsOrdinal: treasuryClaimsOrdinalPda,
+          treasuryClaimsCollectionAuthority: treasuryClaimsCollectionAuthorityPda,
+          treasuryClaimsCollectionMint: treasuryClaimsCollectionMintPda,
+          treasuryClaimsCollectionAta: treasuryClaimsCollectionAtaPda,
+          metadataProgram: METAPLEX_METADATA_PROGRAM_ID,
+          metadata: metadataPda
         })
         .rpc();
 

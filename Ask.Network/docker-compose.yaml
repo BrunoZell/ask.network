@@ -1,0 +1,42 @@
+version: '3.1'
+
+services:
+
+  nginx-production:
+    container_name: nginx-production
+    image: nginx:1.14.0
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    - /docker-volumes/etc/letsencrypt/live/ask.network/fullchain.pem:/etc/letsencrypt/live/ask.network/fullchain.pem
+    - /docker-volumes/etc/letsencrypt/live/ask.network/privkey.pem:/etc/letsencrypt/live/ask.network/privkey.pem
+    # for certbot challenges
+    - /docker-volumes/data/letsencrypt:/data/letsencrypt
+    networks:
+    - docker-network
+
+  ask.network:
+    container_name: ask-network
+    ports:
+    - "3000:3000"
+    build:
+      context: ./ask.network
+      dockerfile: ./Dockerfile
+    networks:
+    - docker-network
+
+  claims.ask.network:
+    container_name: ask-network-claims
+    ports:
+    - "80:80"
+    build:
+      context: ./claims.ask.network
+      dockerfile: ./Dockerfile
+    networks:
+    - docker-network
+
+networks:
+  docker-network:
+    driver: bridge

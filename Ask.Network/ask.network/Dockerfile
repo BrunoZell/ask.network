@@ -4,13 +4,20 @@ FROM node:18
 
 WORKDIR /home/workspace/ask.network
 
+# Expected folder structure at this point:
+# /home/workspace/
+# └── ask.network/ (current working directory)
+
 # First copy package.json and yarn.lock to leverage Docker's layer caching. 
 # Docker will rebuild this layer only if these files change, which means 
 # it will skip reinstalling node modules unless dependencies change.
 COPY ask.network/package.json ask.network/yarn.lock ./
 
-RUN ls ..
-RUN ls .
+# Expected folder structure after copying package.json and yarn.lock:
+# /home/workspace/
+# └── ask.network/
+#     ├── package.json
+#     └── yarn.lock
 
 # Install dependencies. This layer is cached and only re-run if the previous 
 # layer (package.json and yarn.lock) changes, saving time on builds where
@@ -23,8 +30,10 @@ RUN yarn install
 COPY ask.network/ ../ask.network
 COPY solana/ ../solana
 
-RUN ls ..
-RUN ls .
+# Expected folder structure after copying the rest of the project files:
+# /home/workspace/
+# ├── ask.network/ (all files and directories from ask.network)
+# └── solana/ (all files and directories from solana)
 
 # Build the application. This is done after copying all project files, ensuring 
 # that any changes in your source code will trigger a new build.

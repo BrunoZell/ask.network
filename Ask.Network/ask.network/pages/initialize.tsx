@@ -5,6 +5,7 @@ import {
   useAnchorWallet,
   useConnection,
 } from '@solana/wallet-adapter-react';
+import { METAPLEX_METADATA_PROGRAM_ID } from '../program-ids';
 import idl from '../../solana/target/idl/ask_network.json';
 import { PublicKey } from '@solana/web3.js';
 import { AskNetwork as AskNetworkIdl } from '../../solana/target/types/ask_network';
@@ -115,9 +116,7 @@ const Page = () => {
         })
         .rpc();
 
-      console.log(
-        `https://explorer.solana.com/tx/${tx}?cluster=devnet`
-      );
+      console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
 
       setIsInitialized(true);
     }
@@ -148,8 +147,7 @@ const Page = () => {
         program.programId
       );
 
-      const METAPLEX_METADATA_PROGRAM_ID = new PublicKey("SjAo...8y5");
-      const [metadataPda] = await PublicKey.findProgramAddress(
+      const [metadataPda] = await anchor.web3.PublicKey.findProgramAddressSync(
         [
           Buffer.from("metadata"),
           METAPLEX_METADATA_PROGRAM_ID.toBuffer(),
@@ -174,10 +172,7 @@ const Page = () => {
         })
         .rpc();
 
-      console.log(
-        `https://explorer.solana.com/tx/${tx}?cluster=devnet`
-      );
-
+      console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
     }
   }
 

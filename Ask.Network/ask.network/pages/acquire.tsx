@@ -7,7 +7,7 @@ import {
 } from '@solana/wallet-adapter-react';
 import idl from '../../solana/target/idl/ask_network.json';
 import { AskNetwork as AskNetworkIdl } from '../../solana/target/idl/ask_network';
-import { ASK_NETWORK_PROGRAM_ID, METAPLEX_METADATA_PROGRAM_ID } from '../program-ids';
+import { ASK_NETWORK_PROGRAM_ID } from '../program-ids';
 import { PublicKey } from '@solana/web3.js';
 import { AppBar } from '../components/AppBar';
 
@@ -19,9 +19,9 @@ const Page = () => {
 
   /**
    * Initialize wallet provider and onchain program
-   *
+   * 
    * @dependency wallet - The effect re-runs whenever the user's wallet changes.
-   *
+   * 
    * This effect sets up the Anchor program provider for interacting with the Solana blockchain.
    * It first attempts to get the default provider. If that fails (e.g., when not in a browser environment),
    * it creates a new provider using the current wallet and connection. Once the provider is obtained,
@@ -56,10 +56,10 @@ const Page = () => {
 
   /**
    * Fetch mint account data from the chain to enable or disable the init button accordingly.
-   *
+   * 
    * @dependency wallet - The effect re-runs whenever the user's wallet changes
    * @dependency program - The effect re-runs whenever the program changes.
-   *
+   * 
    * If the user's wallet is connected (i.e., wallet?.publicKey exists) and the program is defined:
    * 1. It calculates the PDA for the mint account using the program's ID and a static seed.
    * 2. It attempts to fetch the mint account data from the Solana program.
@@ -116,65 +116,13 @@ const Page = () => {
         })
         .rpc();
 
-      console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+      console.log(
+        `https://explorer.solana.com/tx/${tx}?cluster=localnet&customUrl=http://localhost:8899`
+      );
 
       setIsInitialized(true);
     }
   };
-
-  const initializeTreasuryClaims = async () => {
-    console.log("Initializing Treasury Claims");
-
-    if (wallet?.publicKey && program) {
-      // Construct the accounts needed for the InitializeTreasuryClaims instruction
-      const [treasuryClaimsOrdinalPda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("treasury_claims_ordinal")],
-        program.programId
-      );
-
-      const [treasuryClaimsCollectionAuthorityPda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("treasury_claims_collection_authority")],
-        program.programId
-      );
-
-      const [treasuryClaimsCollectionMintPda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("treasury_claims_collection_mint")],
-        program.programId
-      );
-
-      const [treasuryClaimsCollectionAtaPda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("treasury_claims_collection_ata")],
-        program.programId
-      );
-
-      const [metadataPda] = await anchor.web3.PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("metadata"),
-          METAPLEX_METADATA_PROGRAM_ID.toBuffer(),
-          treasuryClaimsCollectionMintPda.toBuffer()
-        ],
-        METAPLEX_METADATA_PROGRAM_ID
-      );
-
-      // Call the initializeTreasuryClaims method
-      const tx = await program.methods
-        .initializeTreasuryClaims()
-        .accounts({
-          accounts: {
-            signer: wallet.publicKey,
-            treasuryClaimsOrdinal: treasuryClaimsOrdinalPda,
-            treasuryClaimsCollectionAuthority: treasuryClaimsCollectionAuthorityPda,
-            treasuryClaimsCollectionMint: treasuryClaimsCollectionMintPda,
-            treasuryClaimsCollectionAta: treasuryClaimsCollectionAtaPda,
-            metadataProgram: METAPLEX_METADATA_PROGRAM_ID,
-            metadata: metadataPda,
-          }
-        })
-        .rpc();
-
-      console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
-    }
-  }
 
   return (
     <div className=''>
@@ -183,15 +131,11 @@ const Page = () => {
 
         {!wallet?.publicKey ? (
           <div>Connect your wallet 🧸</div>
-        ) : isInitialized ? (
-          <div>Token mint already initialized 🌻</div>
         ) : (
           <div>
-            <Button onClick={initializeToken}>Initialize Token</Button>
+            <Button onClick={initializeToken}>Buy $ASK</Button>
           </div>
         )}
-
-        <Button onClick={initializeTreasuryClaims}>Initialize Treasury Claims</Button>
       </Box>
     </div>
   );

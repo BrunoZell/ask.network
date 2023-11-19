@@ -15,5 +15,8 @@ url = "https://api.apr.dev"
 cluster = "Devnet"
 wallet = "/root/.config/solana/asknetwork-deploy.json"
 
+[workspace]
+types = "target/idl/"
+
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

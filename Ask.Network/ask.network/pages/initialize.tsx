@@ -5,9 +5,9 @@ import {
   useAnchorWallet,
   useConnection,
 } from '@solana/wallet-adapter-react';
-import idl from '../../contracts/target/idl/ask_network.json';
+import idl from '../../solana/target/idl/ask_network.json';
 import { PublicKey } from '@solana/web3.js';
-import { AskNetwork as AskNetworkIdl } from '../../contracts/target/types/ask_network';
+import { AskNetwork as AskNetworkIdl } from '../../solana/target/types/ask_network';
 import { AppBar } from '../components/AppBar';
 
 const Page = () => {
@@ -18,9 +18,9 @@ const Page = () => {
 
   /**
    * Initialize wallet provider and onchain program
-   * 
+   *
    * @dependency wallet - The effect re-runs whenever the user's wallet changes.
-   * 
+   *
    * This effect sets up the Anchor program provider for interacting with the Solana blockchain.
    * It first attempts to get the default provider. If that fails (e.g., when not in a browser environment),
    * it creates a new provider using the current wallet and connection. Once the provider is obtained,
@@ -55,10 +55,10 @@ const Page = () => {
 
   /**
    * Fetch mint account data from the chain to enable or disable the init button accordingly.
-   * 
+   *
    * @dependency wallet - The effect re-runs whenever the user's wallet changes
    * @dependency program - The effect re-runs whenever the program changes.
-   * 
+   *
    * If the user's wallet is connected (i.e., wallet?.publicKey exists) and the program is defined:
    * 1. It calculates the PDA for the mint account using the program's ID and a static seed.
    * 2. It attempts to fetch the mint account data from the Solana program.

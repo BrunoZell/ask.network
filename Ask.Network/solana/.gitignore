@@ -7,3 +7,6 @@ node_modules
 test-ledger
 .yarn
 .next
+
+# Check IDL.json and IDL.ts into source control so frontends can be built without Anchor deployment
+!target/idl/

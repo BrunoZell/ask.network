@@ -1,5 +1,9 @@
+using System.Security.Cryptography;
+using System.Text;
 using Hexarc.Borsh;
+using Hexarc.Borsh.Serialization;
 using Solnet.Rpc;
+using Solnet.Rpc.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,9 +38,9 @@ app.MapGet("/collection.json", () =>
 .WithName("CollectionJson")
 .WithOpenApi();
 
-app.MapGet("/{id}.json", (int id) =>
+app.MapGet("/{id}.json", async (ulong id) =>
 {
-    var client = new RpcClient("https://api.mainnet-beta.solana.com"); // Adjust to your Solana RPC endpoint
+    var client = ClientFactory.GetClient(Cluster.DevNet, logger: null);
 
     // Calculate the anchor discriminator for TreasuryClaim
     byte[] discriminator = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes("TreasuryClaim"))[0..8];
@@ -44,18 +48,18 @@ app.MapGet("/{id}.json", (int id) =>
     // Set up the filters
     var filters = new List<MemCmp>
     {
-        new MemCmp { Offset = 0, Bytes = Convert.ToBase64String(discriminator) }, // Filter for Anchor discriminator (all accounts of type 'TreasuryClaim')
-        new MemCmp { Offset = 8, Bytes = Convert.ToBase64String(BitConverter.GetBytes(id)) } // Filter for ordinal
+        new() { Offset = 0, Bytes = Convert.ToBase64String(discriminator) }, // Filter for Anchor discriminator (all accounts of type 'TreasuryClaim')
+        new() { Offset = 8, Bytes = Convert.ToBase64String(BitConverter.GetBytes(id)) } // Filter for ordinal
     };
 
     // Fetch the accounts
-    var accounts = await client.GetProgramAccountsAsync("AKVXMk2HpyozBHvMc66jDNRdKMbq2oCzdWBNx64mZsc1", filters);
-    var account = accounts.Result.FirstOrDefault();
+    var matchingAccounts = await client.GetProgramAccountsAsync("AKVXMk2HpyozBHvMc66jDNRdKMbq2oCzdWBNx64mZsc1", memCmpList: filters);
+    var treasuryClaimAccountKey = matchingAccounts.Result.FirstOrDefault();
 
-    if (accounts.WasSuccessful && account is not null)
+    if (matchingAccounts.WasSuccessful && treasuryClaimAccountKey is not null)
     {
         // Decode the base64-encoded data from the accountInfo
-        byte[] decodedData = Convert.FromBase64String(account.Value.Data[0]);
+        byte[] decodedData = Convert.FromBase64String(treasuryClaimAccountKey.Account.Data[0]);
 
         // Deserialize the data into the TreasuryClaim structure
         var treasuryClaim = BorshSerializer.Deserialize<TreasuryClaim>(decodedData);
@@ -73,12 +77,12 @@ app.MapGet("/{id}.json", (int id) =>
             image: $"https://claims.ask.network/{id}.svg",
             animation_url: $"https://claims.ask.network/{id}.glb",
             external_url: $"https://claims.ask.network/{id}",
-            attributes: new NftAttribute[]
-            {
-                new NftAttribute("unit_of_value", treasuryClaim.UnitOfValue.ToString()),
-                new NftAttribute("deposit_amount", treasuryClaim.DepositAmount.ToString()),
-                new NftAttribute("time_of_deposit", treasuryClaim.DepositTimestamp.ToString())
-            }
+            attributes:
+            [
+                new("unit_of_value", treasuryClaim.UnitOfValue.ToString()),
+                new("deposit_amount", treasuryClaim.DepositAmount.ToString()),
+                new("time_of_deposit", treasuryClaim.DepositTimestamp.ToString())
+            ]
         ));
     }
     else
@@ -106,6 +110,15 @@ app.MapGet("/{id}.svg", (int id) =>
 .WithOpenApi();
 
 app.Run();
+
+// Helper method to convert Unix timestamp to DateTime
+static DateTime UnixTimeStampToDateTime(long unixTimeStamp)
+{
+    // Unix timestamp is seconds past epoch
+    DateTime dtDateTime = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+    dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+    return dtDateTime;
+}
 
 /// <summary>
 /// Represents the metadata of an NFT asset.
@@ -151,24 +164,9 @@ public class TreasuryClaim
     public long DepositTimestamp { get; set; }
 }
 
-[BorshObject]
 public enum TreasuryCurrency
 {
-    [BorshPropertyOrder(0)]
     SOL, // Solana, in Lamports
-
-    [BorshPropertyOrder(1)]
     USDC,
-
-    [BorshPropertyOrder(2)]
     ETH
-}
-
-// Helper method to convert Unix timestamp to DateTime
-DateTime UnixTimeStampToDateTime(long unixTimeStamp)
-{
-    // Unix timestamp is seconds past epoch
-    System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-    dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-    return dtDateTime;
 }

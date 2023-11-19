@@ -98,6 +98,7 @@ pub struct InitializeTreasuryClaims<'info> {
     #[account(
         mut, // must be writable to create metadata
         address = mpl_token_metadata::accounts::Metadata::find_pda(&treasury_claims_collection_mint.key()).0)]
+    /// CHECK: Checked by Token Metadata Program
     pub metadata: AccountInfo<'info>,
 
     // For SPL token mint
@@ -162,6 +163,7 @@ pub struct DepositSol<'info> {
     #[account(
         mut, // must be writable to create metadata
         address = mpl_token_metadata::accounts::Metadata::find_pda(&treasury_claim_mint.key()).0)]
+    /// CHECK: Checked by Token Metadata Program
     pub metadata: AccountInfo<'info>,
 
     // For SPL token mint

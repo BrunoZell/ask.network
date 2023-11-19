@@ -2,14 +2,6 @@ FROM node:18
 
 WORKDIR /home/
 
-# install yarn
-RUN npm install -g yarn
-
-# print version
-RUN node --version
-RUN npm --version
-RUN yarn --version
-
 # First copy package.json and yarn.lock to leverage Docker's layer caching. 
 # Docker will rebuild this layer only if these files change, which means 
 # it will skip reinstalling node modules unless dependencies change.

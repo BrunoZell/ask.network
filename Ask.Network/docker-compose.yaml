@@ -12,6 +12,8 @@ services:
     - ./nginx.conf:/etc/nginx/conf.d/default.conf
     - /docker-volumes/etc/letsencrypt/live/ask.network/fullchain.pem:/etc/letsencrypt/live/ask.network/fullchain.pem
     - /docker-volumes/etc/letsencrypt/live/ask.network/privkey.pem:/etc/letsencrypt/live/ask.network/privkey.pem
+    - /docker-volumes/etc/letsencrypt/live/claims.ask.network/fullchain.pem:/etc/letsencrypt/live/claims.ask.network/fullchain.pem
+    - /docker-volumes/etc/letsencrypt/live/claims.ask.network/privkey.pem:/etc/letsencrypt/live/claims.ask.network/privkey.pem
     # for certbot challenges
     - /docker-volumes/data/letsencrypt:/data/letsencrypt
     networks:

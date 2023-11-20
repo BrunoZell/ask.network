@@ -116,9 +116,7 @@ const Page = () => {
         })
         .rpc();
 
-      console.log(
-        `https://explorer.solana.com/tx/${tx}?cluster=localnet&customUrl=http://localhost:8899`
-      );
+      console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
 
       setIsInitialized(true);
     }

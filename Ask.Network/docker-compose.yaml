@@ -15,28 +15,24 @@ services:
     # for certbot challenges
     - /docker-volumes/data/letsencrypt:/data/letsencrypt
     networks:
-    - docker-network
+    - internal-network
 
   ask.network:
     container_name: ask-network
-    ports:
-    - "3000:3000"
     build:
       context: . # this folder to copy solana/target/idl
       dockerfile: ./ask.network/Dockerfile
     networks:
-    - docker-network
+    - internal-network
 
   claims.ask.network:
     container_name: ask-network-claims
-    ports:
-    - "80:80"
     build:
       context: ./claims.ask.network
       dockerfile: ./Dockerfile
     networks:
-    - docker-network
+    - internal-network
 
 networks:
-  docker-network:
+  internal-network:
     driver: bridge

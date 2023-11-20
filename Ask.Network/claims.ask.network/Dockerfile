@@ -15,5 +15,5 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0.0-bookworm-slim-amd64 AS final
 
 WORKDIR /app
 COPY --from=build /app/publish .
-EXPOSE 80
+EXPOSE 3100
 ENTRYPOINT ["dotnet", "claims.ask.network.dll"]

@@ -54,7 +54,7 @@ app.MapGet("/{id}.json", async (ulong id) =>
 
     // Fetch the accounts
     var matchingAccounts = await client.GetProgramAccountsAsync("AKVXMk2HpyozBHvMc66jDNRdKMbq2oCzdWBNx64mZsc1", memCmpList: filters);
-    var treasuryClaimAccountKey = matchingAccounts.Result.FirstOrDefault();
+    var treasuryClaimAccountKey = matchingAccounts.Result?.FirstOrDefault();
 
     if (matchingAccounts.WasSuccessful && treasuryClaimAccountKey is not null)
     {

@@ -23,6 +23,9 @@ pub struct User {
 pub struct TokenAuthority {}
 
 #[account]
+pub struct TreasuryClaimsCollectionAuthority {}
+
+#[account]
 pub struct TreasuryClaimsAuthority {}
 
 /// Data payload of each minted treasury claim NFT

@@ -71,7 +71,7 @@ pub struct InitializeTreasuryClaims<'info> {
         space = 8,
         seeds = [b"treasury_claims_collection_authority"],
         bump)]
-    pub treasury_claims_collection_authority: Account<'info, TreasuryClaimsAuthority>,
+    pub treasury_claims_collection_authority: Account<'info, TreasuryClaimsCollectionAuthority>,
 
     /// SPL token mint account of the singleton treasury claim collection NFT.
     #[account(

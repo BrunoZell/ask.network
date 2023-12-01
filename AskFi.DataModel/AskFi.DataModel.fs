@@ -145,8 +145,8 @@ and ContextSequenceNode = {
     /// Links previous context sequence head
     Previous: ContentId // ContextSequenceHead
 
-    /// What new observation got appended to this context sequence.
-    Observation: CapturedObservation
+    /// The latest happening of this context sequence.
+    Happening: Happening
 }
 
 /// Output type produced by a wrapped sequencer, referencing all context sequence heads it every produced,
@@ -181,8 +181,8 @@ and DecisionSequenceStart = {
     FirstContext:ContentId // ContextSequenceHead
 }
 and DecisionSequenceNode = {
-    /// Links previous backtest evaluation.
-    Previous: ContentId // BacktestEvaluationStart
+    /// Links previous decision head of this decision sequence.
+    Previous: ContentId // DecisionSequenceHead
 
     /// What actions have been decided on by the evaluated strategy.
     ActionSet: ContentId // ActionSet

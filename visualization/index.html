@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Force-Directed Graph with Bounding Box</title>
-    <style>
+        <style>
         .links line {
             stroke: #999;
             stroke-opacity: 0.6;
@@ -42,19 +42,24 @@
     </style>
 </head>
 <body>
+    <!-- Button to trigger the updateData function -->
     <button class="update-btn" onclick="updateData()">update</button>
+    <!-- Container for the SVG that will hold the graph -->
     <div id="chart-container"></div>
 
+    <!-- Including the D3.js library from a CDN -->
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
+        // Set the width and height of the SVG element to the window's dimensions
         var width = window.innerWidth;
         var height = window.innerHeight;
 
+        // Create an SVG element within the chart container and set its dimensions
         var svg = d3.select('#chart-container').append('svg')
             .attr('width', width)
             .attr('height', height);
 
-        // Define node data
+        // Define an array of node objects for the graph
         var nodes = [
             { id: 'Percept', group: 'datamodel' },
             { id: 'Observation', group: 'datamodel' },
@@ -82,13 +87,8 @@
             { id: 'Option', group: 'primitive' },
         ];
 
-        // Initialize node positions
-        nodes.forEach(function(d) {
-            d.x = width / 2; // Center x-coordinate
-            d.y = height / 2; // Center y-coordinate
-        });
 
-        // Define link data
+        // Define an array of link objects for the graph
         var links = [
             { source: 'Percept', target: 'ObservationSpace' },
             { source: 'Observation', target: 'Percept' },
@@ -111,14 +111,14 @@
             { source: 'IBroker', target: 'Action' },
         ];
 
-        // Add the links
+        // Select all 'line' elements for links and bind the link data to them
         var link = svg.append('g')
             .attr('class', 'links')
             .selectAll('line')
             .data(links)
             .enter().append('line');
 
-        // Add the nodes
+        // Select all 'circle' elements for nodes and bind the node data to them
         var node = svg.append('g')
             .attr('class', 'nodes')
             .selectAll('circle')
@@ -131,7 +131,7 @@
                 .on('drag', dragged)
                 .on('end', dragended));
 
-        // Add labels to the nodes
+        // Add text labels to the nodes
         var label = svg.append('g')
             .attr('class', 'labels')
             .selectAll('text')
@@ -141,29 +141,17 @@
             .attr('x', 6)
             .attr('y', 3);
 
+        // Attach a title element to each node with its id as the content
         node.append('title')
             .text(function(d) { return d.id; });
 
-        // Setup the force simulation
-        var simulation = d3.forceSimulation(nodes) // Initialize with nodes
-          .force('link', d3.forceLink(links).id(function(d) { return d.id; })) // Initialize with links
+        // Initialize the force simulation with nodes and define the forces
+        var simulation = d3.forceSimulation(nodes)
+          .force('link', d3.forceLink(links).id(function(d) { return d.id; }).distance(100))
           .force('charge', d3.forceManyBody())
           .force('center', d3.forceCenter(width / 2, height / 2));
 
-
-        simulation
-            .nodes(nodes)
-            .on('tick', ticked);
-
-        simulation.force('link')
-            .links(links);
-
-        // Add three force centers for the clusters
-        var center1 = d3.forceCenter(width / 4, height / 2); // Center for primitives
-        var center2 = d3.forceCenter(width / 2, height / 2); // Center for SDK types
-        var center3 = d3.forceCenter((width * 3) / 4, height / 2); // Center for domain type parameters
-
-        // Update the ticked function to apply the force center for each cluster
+        // Define the ticked function which updates node and link positions on each simulation tick
         function ticked() {
             // Apply constraints to the nodes to keep them within a bounding box
             var padding = 20, // Padding from the edge of the SVG
@@ -174,20 +162,6 @@
                 d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y));
             });
 
-            // Apply force center based on node group
-            nodes.forEach(function (d) {
-                if (d.group === 'primitive') {
-                    d.fx = center1.x;
-                    d.fy = center1.y;
-                } else if (d.group === 'sdk') {
-                    d.fx = center2.x;
-                    d.fy = center2.y;
-                } else if (d.group === 'domain') {
-                    d.fx = center3.x;
-                    d.fy = center3.y;
-                }
-            });
-
             // Update link positions
             link
                 .attr('x1', function(d) { return d.source.x; })
@@ -196,36 +170,35 @@
                 .attr('y2', function(d) { return d.target.y; });
 
             node
-                .attr('cx', function(d) {
-                    return d.x = Math.max(10, Math.min(width - 10, d.x));
-                })
-                .attr('cy', function(d) {
-                    return d.y = Math.max(10, Math.min(height - 10, d.y));
-                });
+                .attr('cx', function(d) { return d.x; })
+                .attr('cy', function(d) { return d.y; });
 
             label
                 .attr('x', function(d) { return d.x; })
                 .attr('y', function(d) { return d.y + 5; }); // Adjust label position relative to the node
         }
 
-        // Define the drag event functions
+        // Start the simulation
+        simulation
+            .on('tick', ticked);
+
+        // Define the drag event functions for dragging nodes
         function dragstarted(d) {
             if (!d3.event.active) simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
             d.fy = d.y;
         }
-
         function dragged(d) {
             d.fx = d3.event.x;
             d.fy = d3.event.y;
         }
-
         function dragended(d) {
             if (!d3.event.active) simulation.alphaTarget(0);
             d.fx = null;
             d.fy = null;
         }
 
+        // A utility function to get the color based on the node group
         function getColor(group) {
             switch(group) {
                 case 'datamodel': return '#D5E8D4';
@@ -236,16 +209,11 @@
             }
         }
 
-        simulation
-                .nodes(nodes)
-                .on('tick', ticked);
 
-        simulation.force('link')
-                .links(links);
-
-        // Update data function
+        // The updateData function to restart the simulation
         function updateData() {
-            // Restart the simulation
+            // This should be updated to actually bind and update the data
+            // Currently, it just restarts the simulation
             simulation.alpha(1).restart();
         }
     </script>

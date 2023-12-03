@@ -57,8 +57,8 @@ type Context =
     abstract member inTimeRange<'ObservationSpace> : from: DateTime * ``to``: DateTime -> Measurement<'ObservationSpace> seq
 
 /// A query really is just a parameterized transformer mapping a context to an instance of some type 'Result.
-type Query<'Parameters, 'Result> =
-    'Parameters -> Context -> 'Result
+type Query<'Query, 'Result> =
+    'Query -> Context -> 'Result
 
 // ##################
 // #### STRATEGY ####

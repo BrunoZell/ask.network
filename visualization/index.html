@@ -33,7 +33,7 @@
             fill: #DAE8FC;
             stroke: #6C8EBF;
         }
-        .update-btn {
+        .restart {
             position: absolute;
             top: 20px;
             left: 20px;
@@ -42,8 +42,8 @@
     </style>
 </head>
 <body>
-    <!-- Button to trigger the updateData function -->
-    <button class="update-btn" onclick="updateData()">update</button>
+    <!-- Button to trigger the restart function -->
+    <button class="restart" onclick="restart()">restart layout</button>
     <!-- Container for the SVG that will hold the graph -->
     <div id="chart-container"></div>
 
@@ -210,8 +210,8 @@
         }
 
 
-        // The updateData function to restart the simulation
-        function updateData() {
+        // The restart function to restart the simulation
+        function restart() {
             // This should be updated to actually bind and update the data
             // Currently, it just restarts the simulation
             simulation.alpha(1).restart();

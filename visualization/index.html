@@ -1,154 +1,200 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <style>
-    .links line {
-      stroke: #999;
-      stroke-opacity: 0.6;
-    }
+    <meta charset="UTF-8">
+    <title>Force-Directed Graph</title>
+    <style>
+        .links line {
+            stroke: #999;
+            stroke-opacity: 0.6;
+        }
 
-    .nodes circle {
-      stroke: #000;
-      stroke-width: 1.5px;
-    }
+        .nodes circle {
+            stroke: #000;
+            stroke-width: 1.5px;
+        }
 
-    .labels {
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-      pointer-events: none;
-    }
+        .labels {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            pointer-events: none;
+        }
 
-    body {
-      margin: 0;
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    }
+        .datamodel {
+            fill: #D5E8D4;
+            stroke: #82B366;
+        }
 
-    #chart-container {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-    }
+        .sdk {
+            fill: #F5F5F5;
+            stroke: #A9A9A9;
+        }
 
-    button {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 10;
-    }
-  </style>
+        .domain {
+            fill: #FFF2CC;
+            stroke: #D6B656;
+        }
+
+        .primitive {
+            fill: #DAE8FC;
+            stroke: #6C8EBF;
+        }
+
+        .update-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
-  <button onclick="updateData()">update</button>
-  <div id="chart-container"></div>
+    <button class="update-btn" onclick="updateData()">update</button>
+    <div id="chart-container"></div>
 
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-  <script>
-    var width = window.innerWidth;
-    var height = window.innerHeight;
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+        var width = window.innerWidth;
+        var height = window.innerHeight;
 
-    var svg = d3.select('#chart-container').append('svg')
-      .attr('width', '100%')
-      .attr('height', '100%');
+        var svg = d3.select('body').append('svg')
+            .attr('width', width)
+            .attr('height', height);
 
-    var simulation = d3.forceSimulation()
-      .force('link', d3.forceLink().id(function(d) { return d.id; }))
-      .force('charge', d3.forceManyBody())
-      .force('center', d3.forceCenter(width / 2, height / 2));
+        // Setup the force simulation
+        var simulation = d3.forceSimulation()
+            .force('link', d3.forceLink().id(function(d) { return d.id; }).distance(100))
+            .force('charge', d3.forceManyBody().strength(-500))
+            .force('center', d3.forceCenter(width / 2, height / 2));
 
-    var link = svg.append('g').attr('class', 'links').selectAll('line');
-    var node = svg.append('g').attr('class', 'nodes').selectAll('circle');
-    var label = svg.append('g').attr('class', 'labels').selectAll('text');
+        // Define node data
+        var nodes = [
+            { id: 'Percept', group: 'datamodel' },
+            { id: 'Observation', group: 'datamodel' },
+            { id: 'IObserver', group: 'sdk' },
+            { id: 'Measurement', group: 'datamodel' },
+            { id: 'Context', group: 'datamodel' },
+            { id: 'Query', group: 'datamodel' },
+            { id: 'Action', group: 'datamodel' },
+            { id: 'Initiative', group: 'datamodel' },
+            { id: 'Decision', group: 'datamodel' },
+            { id: 'DecisionReflection', group: 'datamodel' },
+            { id: 'Reflection', group: 'datamodel' },
+            { id: 'Strategy', group: 'datamodel' },
+            { id: 'IBroker', group: 'datamodel' },
+            { id: 'ActionSpace', group: 'domain' },
+            { id: 'ObservationSpace', group: 'domain' },
+            { id: 'QueryParameters', group: 'domain' },
+            { id: 'QuerySurface', group: 'domain' },
+            { id: 'Result', group: 'domain' },
+            { id: 'Response', group: 'domain' },
+            { id: 'DateTime', group: 'primitive' },
+            { id: 'Task', group: 'primitive' },
+            { id: 'IAsyncEnumerable', group: 'primitive' },
+            { id: 'String', group: 'primitive' },
+            { id: 'Option', group: 'primitive' },
+        ];
 
-// Define the getColor function
-    function getColor(group) {
-      switch (group) {
-        case 'domain': return '#ffcc00';
-        case 'sdk': return '#666666';
-        default: return '#cccccc';
-      }
-    }
+        // Define link data
+        var links = [
+            { source: 'Percept', target: 'ObservationSpace' },
+            { source: 'Observation', target: 'Percept' },
+            { source: 'IObserver', target: 'Observation' },
+            { source: 'Measurement', target: 'Observation' },
+            { source: 'Measurement', target: 'DateTime' },
+            { source: 'Context', target: 'Measurement' },
+            { source: 'Query', target: 'QueryParameters' },
+            { source: 'Query', target: 'Context' },
+            { source: 'Query', target: 'Result' },
+            { source: 'Action', target: 'ActionSpace' },
+            { source: 'Initiative', target: 'Action' },
+            { source: 'Decision', target: 'Initiative' },
+            { source: 'DecisionReflection', target: 'Decision' },
+            { source: 'DecisionReflection', target: 'DateTime' },
+            { source: 'Reflection', target: 'DecisionReflection' },
+            { source: 'Strategy', target: 'Reflection' },
+            { source: 'Strategy', target: 'Context' },
+            { source: 'Strategy', target: 'Decision' },
+            { source: 'IBroker', target: 'Action' },
+        ];
 
-    function dragstarted(d) {
-      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    }
+        // Add the links
+        var link = svg.append('g')
+            .attr('class', 'links')
+            .selectAll('line')
+            .data(links)
+            .enter().append('line');
 
-    function dragged(d) {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    }
+        // Add the nodes
+        var node = svg.append('g')
+            .attr('class', 'nodes')
+            .selectAll('circle')
+            .data(nodes)
+            .enter().append('circle')
+            .attr('r', 10)
+            .attr('class', function(d) { return d.group; })
+            .call(d3.drag()
+                .on('start', dragstarted)
+                .on('drag', dragged)
+                .on('end', dragended));
 
-    function dragended(d) {
-      if (!d3.event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    }
+        // Add labels to the nodes
+        var label = svg.append('g')
+            .attr('class', 'labels')
+            .selectAll('text')
+            .data(nodes)
+            .enter().append('text')
+            .attr('class', function(d) { return d.group; })
+            .text(function(d) { return d.id; });
 
-    function ticked() {
-      link
-        .attr('x1', function(d) { return d.source.x; })
-        .attr('y1', function(d) { return d.source.y; })
-        .attr('x2', function(d) { return d.target.x; })
-        .attr('y2', function(d) { return d.target.y; });
+        // Define the ticked function
+        function ticked() {
+            link
+                .attr('x1', function(d) { return d.source.x; })
+                .attr('y1', function(d) { return d.source.y; })
+                .attr('x2', function(d) { return d.target.x; })
+                .attr('y2', function(d) { return d.target.y; });
 
-      node
-        .attr('cx', function(d) { return d.x; })
-        .attr('cy', function(d) { return d.y; });
+            node
+                .attr('cx', function(d) { return d.x; })
+                .attr('cy', function(d) { return d.y; });
 
-      label
-        .attr('x', function(d) { return d.x + 10; })
-        .attr('y', function(d) { return d.y + 3; });
-    }
+            label
+                .attr('x', function(d) { return d.x; })
+                .attr('y', function(d) { return d.y; });
+        }
 
-    function updateData() {
-      // Here we hardcode the data types to be visualized.
-      // They are derived from the SDK and DataModel code, and assumes a set of well-known primitives.
-      var nodes = [
-        { id: 'Percept', group: 'domain' },
-        { id: 'Observation', group: 'domain' },
-        { id: 'IObserver', group: 'sdk' },
-        // ... add other nodes
-      ];
+        // Define the drag event functions
+        function dragstarted(d) {
+            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
 
-      var links = [
-        { source: 'Percept', target: 'Observation', value: 1 },
-        // ... add other links
-      ];
+        function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
 
-      // Bind the new data to the elements
-      link = link.data(links);
-      link.exit().remove();
-      link = link.enter().append('line').merge(link)
-        .attr('stroke-width', function(d) { return Math.sqrt(d.value); });
+        function dragended(d) {
+            if (!d3.event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
 
-      node = node.data(nodes, function(d) { return d.id; });
-      node.exit().remove();
-      node = node.enter().append('circle').merge(node)
-        .attr('r', 5)
-        .attr('fill', function(d) { return getColor(d.group); })
-        .call(d3.drag()
-          .on('start', dragstarted)
-          .on('drag', dragged)
-          .on('end', dragended));
+        // Start the simulation
+        simulation
+            .nodes(nodes)
+            .on('tick', ticked);
 
-      label = label.data(nodes, function(d) { return d.id; });
-      label.exit().remove();
-      label = label.enter().append('text').merge(label)
-        .text(function(d) { return d.id; });
+        simulation.force('link')
+            .links(links);
 
-      simulation.nodes(nodes).on('tick', ticked);
-      simulation.force('link').links(links);
-      simulation.alpha(1).restart();
-    }
-
-    // Call updateData to draw the initial graph
-    updateData();
-  </script>
+        // Update data function
+        function updateData() {
+            // For now, this just restarts the simulation
+            simulation.alpha(1).restart();
+        }
+    </script>
 </body>
 </html>

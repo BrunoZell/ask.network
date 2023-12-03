@@ -18,25 +18,28 @@ open System
 type KnowledgeBase = {
     /// Maps ObservationSequenceHead.Identity as the observation sequence id
     /// to the latest known ObservationSequenceHead.Observation
-    Observations: Map<ContentId, ContentId list> // Map<ObservationSequenceHead, ObservationSequenceHead list>
+    /// Map<ObservationSequenceHead.Identity, ObservationSequenceHead.Observation>
+    Observations: Map<ContentId<ObservationSequenceHead>, ContentId<ObservationSequenceHead > list>
     
-    /// Maps ActionSequenceHead.Identity as the observation sequence id
+    /// Maps ActionSequenceHead.Identity as the action sequence id
     /// to the latest known ActionSequenceHead.Action
-    Actions: Map<ContentId, ContentId list> // Map<ActionSequenceHead, ActionSequenceHead list>
+    /// Map<ActionSequenceHead.Identity, ActionSequenceHead.Action>
+    Actions: Map<ContentId<ActionSequenceHead>, ContentId<ActionSequenceHead> list>
 
     /// Maps ContextSequenceHead.Identity as the heaviest full context history,
     /// referencing all (abandoned) forks ever produced. This preserves the full history
     /// of real time ordering. Sequencing information is impure information and must be
     /// preserved for fully deterministic replays.
-    Contexts: Map<ContentId, ContentId> // Map<ContextSequenceHead, ContextHistory>
+    /// Map<ContextSequenceHead.Identity, ContextHistory>
+    Contexts: Map<ContentId<ContextSequenceHead>, ContentId<ContextHistory>>
 }
 
 /// Output type produced by a wrapped sequencer, referencing all context sequence heads it every produced,
 /// even if there was a rewind and on top of another head got built.
 type ContextHistory = {
     // The last published context sequence, with the most information of all references context sequences.
-    Latest: ContentId // ContextSequence
+    Latest: ContentId<ContextSequence>
 
     // Referencing all published context sequences that since have been abandoned due to a rewind from late arriving data.
-    Dropped: ContentId list // ContextSequence list
+    Dropped: ContentId<ContextSequence> list
 }

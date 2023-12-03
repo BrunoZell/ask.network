@@ -1,144 +1,154 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <style>
-      .links line {
-        stroke: #999;
-        stroke-opacity: 0.6;
+<head>
+  <meta charset="UTF-8">
+  <style>
+    .links line {
+      stroke: #999;
+      stroke-opacity: 0.6;
+    }
+
+    .nodes circle {
+      stroke: #000;
+      stroke-width: 1.5px;
+    }
+
+    .labels {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    body {
+      margin: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    #chart-container {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="updateData()">update</button>
+  <div id="chart-container"></div>
+
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script>
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+
+    var svg = d3.select('#chart-container').append('svg')
+      .attr('width', '100%')
+      .attr('height', '100%');
+
+    var simulation = d3.forceSimulation()
+      .force('link', d3.forceLink().id(function(d) { return d.id; }))
+      .force('charge', d3.forceManyBody())
+      .force('center', d3.forceCenter(width / 2, height / 2));
+
+    var link = svg.append('g').attr('class', 'links').selectAll('line');
+    var node = svg.append('g').attr('class', 'nodes').selectAll('circle');
+    var label = svg.append('g').attr('class', 'labels').selectAll('text');
+
+// Define the getColor function
+    function getColor(group) {
+      switch (group) {
+        case 'domain': return '#ffcc00';
+        case 'sdk': return '#666666';
+        default: return '#cccccc';
       }
+    }
 
-      .nodes circle {
-        stroke: #000;
-        stroke-width: 1.5px;
-      }
+    function dragstarted(d) {
+      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
 
-      .labels {
-        font-family: Arial, sans-serif;
-        font-size: 12px;
-        pointer-events: none;
-      }
+    function dragged(d) {
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    }
 
-      body {
-        margin: 0;
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
+    function dragended(d) {
+      if (!d3.event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
 
-      #chart-container {
-        display: block;
-        width: 100vw;
-        height: 100vh;
-      }
+    function ticked() {
+      link
+        .attr('x1', function(d) { return d.source.x; })
+        .attr('y1', function(d) { return d.source.y; })
+        .attr('x2', function(d) { return d.target.x; })
+        .attr('y2', function(d) { return d.target.y; });
 
-      button {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        z-index: 10;
-      }
-    </style>
-  </head>
+      node
+        .attr('cx', function(d) { return d.x; })
+        .attr('cy', function(d) { return d.y; });
 
-  <body>
-    <button onclick="updateData()">update</button>
-    <div id="chart-container"></div>
+      label
+        .attr('x', function(d) { return d.x + 10; })
+        .attr('y', function(d) { return d.y + 3; });
+    }
 
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script>
-      var width = window.innerWidth;
-      var height = window.innerHeight;
+    function updateData() {
+      // Here we hardcode the data types to be visualized.
+      // They are derived from the SDK and DataModel code, and assumes a set of well-known primitives.
+      var nodes = [
+        { id: 'Percept', group: 'domain' },
+        { id: 'Observation', group: 'domain' },
+        { id: 'IObserver', group: 'sdk' },
+        // ... add other nodes
+      ];
 
-      var svg = d3
-        .select('#chart-container')
-        .append('svg')
-        .attr('width', '100%')
-        .attr('height', '100%');
+      var links = [
+        { source: 'Percept', target: 'Observation', value: 1 },
+        // ... add other links
+      ];
 
-      // Initialize empty selections for links and nodes
-      var link = svg.append('g').attr('class', 'links').selectAll('line');
-      var node = svg.append('g').attr('class', 'nodes').selectAll('circle');
-      var label = svg.append('g').attr('class', 'labels').selectAll('text');
+      // Bind the new data to the elements
+      link = link.data(links);
+      link.exit().remove();
+      link = link.enter().append('line').merge(link)
+        .attr('stroke-width', function(d) { return Math.sqrt(d.value); });
 
-      // Define the getColor function
-      function getColor(group) {
-        switch (group) {
-          case 'domain': return '#ffcc00';
-          case 'sdk': return '#666666';
-          default: return '#cccccc';
-        }
-      }
+      node = node.data(nodes, function(d) { return d.id; });
+      node.exit().remove();
+      node = node.enter().append('circle').merge(node)
+        .attr('r', 5)
+        .attr('fill', function(d) { return getColor(d.group); })
+        .call(d3.drag()
+          .on('start', dragstarted)
+          .on('drag', dragged)
+          .on('end', dragended));
 
-      // When updating data and restarting the simulation:
-      function updateData() {
-        // Here you would fetch or generate new data for nodes and links
-        var nodes = [
-          { id: 'Percept', group: 'domain' },
-          { id: 'Observation', group: 'domain' },
-          { id: 'IObserver', group: 'sdk' },
-          // ... add other nodes
-        ];
+      label = label.data(nodes, function(d) { return d.id; });
+      label.exit().remove();
+      label = label.enter().append('text').merge(label)
+        .text(function(d) { return d.id; });
 
-        var links = [
-          { source: 'Percept', target: 'Observation', value: 1 },
-          // ... add other links
-        ];
+      simulation.nodes(nodes).on('tick', ticked);
+      simulation.force('link').links(links);
+      simulation.alpha(1).restart();
+    }
 
-        // Bind the new data to the elements
-        link = link.data(links);
-        link.exit().remove();
-        link = link
-          .enter()
-          .append('line')
-          .merge(link)
-          .attr('stroke-width', function (d) {
-            return Math.sqrt(d.value);
-          });
-
-        node = node.data(nodes, function (d) {
-          return d.id;
-        });
-        node.exit().remove();
-        node = node
-          .enter()
-          .append('circle')
-          .merge(node)
-          .attr('r', 5)
-          .attr('fill', function (d) {
-            return getColor(d.group);
-          })
-          .call(
-            d3
-              .drag()
-              .on('start', dragstarted)
-              .on('drag', dragged)
-              .on('end', dragended)
-          );
-
-        label = label.data(nodes, function (d) {
-          return d.id;
-        });
-        label.exit().remove();
-        label = label
-          .enter()
-          .append('text')
-          .merge(label)
-          .text(function (d) {
-            return d.id;
-          });
-
-        // Update and restart the simulation.
-        simulation.nodes(nodes).on('tick', ticked);
-        simulation.force('link').links(links);
-        simulation.alpha(1).restart();
-      }
-
-      // Call updateData to draw the initial graph
-      updateData();
-
-      // ... (rest of the ticked, dragstarted, dragged, dragended functions)
-    </script>
-  </body>
+    // Call updateData to draw the initial graph
+    updateData();
+  </script>
+</body>
 </html>

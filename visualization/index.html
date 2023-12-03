@@ -57,23 +57,10 @@
         .attr('width', '100%')
         .attr('height', '100%');
 
-      var initialNodes = [
-        { id: 'Percept', group: 'domain' },
-        { id: 'Observation', group: 'domain' },
-        { id: 'IObserver', group: 'sdk' },
-        // ... add other nodes
-      ];
-
-      var initialLinks = [
-        { source: 'Percept', target: 'Observation', value: 1 },
-        // ... add other links
-      ];
-
-      var simulation = d3
-        .forceSimulation()
-        .force('link', d3.forceLink().id(function (d) { return d.id; }))
-        .force('charge', d3.forceManyBody())
-        .force('center', d3.forceCenter(width / 2, height / 2));
+      // Initialize empty selections for links and nodes
+      var link = svg.append('g').attr('class', 'links').selectAll('line');
+      var node = svg.append('g').attr('class', 'nodes').selectAll('circle');
+      var label = svg.append('g').attr('class', 'labels').selectAll('text');
 
       // Define the getColor function
       function getColor(group) {
@@ -87,8 +74,17 @@
       // When updating data and restarting the simulation:
       function updateData() {
         // Here you would fetch or generate new data for nodes and links
-        var nodes = initialNodes; // Replace with new data
-        var links = initialLinks; // Replace with new data
+        var nodes = [
+          { id: 'Percept', group: 'domain' },
+          { id: 'Observation', group: 'domain' },
+          { id: 'IObserver', group: 'sdk' },
+          // ... add other nodes
+        ];
+
+        var links = [
+          { source: 'Percept', target: 'Observation', value: 1 },
+          // ... add other links
+        ];
 
         // Bind the new data to the elements
         link = link.data(links);

@@ -114,7 +114,7 @@ type Initiative<'Action> = {
 /// An 'ActionSpace is a discriminated union over one or more 'Action types,
 /// allowing the strategy to decide on multiple different 'Actions simultaneously,
 /// with each Initiative<'Action> selecting exactly one 'Action from that 'ActionSpace
-/// which then can be executed by an according IBroker<'Action>.
+/// which then can be executed by an according IBroker<'Action, _>.
 type Decision<'ActionSpace> =
     | Inaction
     | Initiate of Initiatives:Initiative<'ActionSpace> array
@@ -127,5 +127,5 @@ type Strategy<'ObservationSpace, 'ActionSpace> =
 // #### EXECUTION ####
 // ###################
 
-type IBroker<'Action> =
-    abstract member Execute : 'Action -> Task<byte[] option>
+type IBroker<'Action, 'Response> =
+    abstract member Execute : 'Action -> Task<'Response>

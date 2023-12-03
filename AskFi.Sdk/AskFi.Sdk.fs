@@ -36,7 +36,7 @@ type IObserver<'ObservationSpae> =
 [<IsReadOnly; Struct>]
 type Measurement<'ObservationSpace> = {
     /// Sensory information captured by the producing IObserver.
-    observation: Observation<'ObservationSpace>
+    observation: Observation<specific_observation_of<'ObservationSpace>>
 
     /// Runtime timestamp at which this observation was produced by the IObserver.
     At: DateTime
@@ -64,16 +64,17 @@ type Query<'Query, 'Result> =
 // #### STRATEGY ####
 // ##################
 
-type DecisionReflection<'Action> = {
-    /// The action itself
-    Action: 'Action
+type DecisionReflection<'ActionSpace> = {
+    /// The decision that is reflected on
+    Decision: Decision<'ActionSpace>
 
-    /// Timestamp of the context on which this actions decisions was made.
+    /// Timestamp of the context on which this decision was made.
     VirtualTimestamp: DateTime
     
-    /// Runtime timestamp at which this actions decisions was made.
+    /// Runtime timestamp on which this decision was made.
     /// For live execution, the difference between virtual and actual timestamp is the strategy evaluation time.
-    /// For backtests, the difference between virtual and actual timestamp is the time duration looking back in time.
+    /// For backtests, the difference between virtual and actual timestamp is the time duration looking back in time
+    /// (i.e. the age of the evaluated context)
     ActualTimestamp: DateTime
 }
 
@@ -85,11 +86,11 @@ type DecisionReflection<'Action> = {
 type Reflection = 
     /// Get the latest received perception of the requested type.
     /// Returns `None` if no observation of the requested type has been made yet.
-    abstract member latest<'ActionSpace> : unit -> DecisionReflection<'Action> option
+    abstract member latest<'ActionSpace> : unit -> DecisionReflection<'ActionSpace> option
     
     /// Get an iterator the all Observations of type `'Perception` since the passed `from` until `to`
     /// (as determined by the runtime clock used during context sequencing).
-    abstract member inTimeRange<'ActionSpace> : from: DateTime * ``to``: DateTime -> DecisionReflection<'Action> seq
+    abstract member inTimeRange<'ActionSpace> : from: DateTime * ``to``: DateTime -> DecisionReflection<'ActionSpace> seq
 
 /// Represents the strategies intent to execute the specified action immediately
 // Where "immediately" is analogous to "now" in the evaluated context.
@@ -108,7 +109,7 @@ type Initiative<'Action> = {
 /// which then can be executed by an according IBroker<'Action, _>.
 type Decision<'ActionSpace> =
     | Inaction
-    | Initiate of Initiatives:Initiative<'ActionSpace> array
+    | Initiate of Initiatives:Initiative<specific_action_of<'ActionSpace>> array
 
 /// Contains the code of a strategy decision, called upon each evolution of the Askbot sessions context (i.e. on every new observation).
 type Strategy<'ObservationSpace, 'ActionSpace> =

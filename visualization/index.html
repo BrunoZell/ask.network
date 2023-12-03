@@ -149,19 +149,28 @@
 
         // Define the ticked function
         function ticked() {
-            link
-                .attr('x1', function(d) { return d.source.x; })
-                .attr('y1', function(d) { return d.source.y; })
-                .attr('x2', function(d) { return d.target.x; })
-                .attr('y2', function(d) { return d.target.y; });
+          // Apply constraints to the nodes to keep them within a bounding box
+          var padding = 20, // Padding from the edge of the SVG
+              radius = 10;  // Radius of the nodes
 
-            node
-                .attr('cx', function(d) { return d.x; })
-                .attr('cy', function(d) { return d.y; });
-
-            label
-                .attr('x', function(d) { return d.x; })
-                .attr('y', function(d) { return d.y; });
+          nodes.forEach(function(d) {
+            d.x = Math.max(radius + padding, Math.min(width - radius - padding, d.x));
+            d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y));
+          });
+        
+          link
+            .attr('x1', function(d) { return d.source.x; })
+            .attr('y1', function(d) { return d.source.y; })
+            .attr('x2', function(d) { return d.target.x; })
+            .attr('y2', function(d) { return d.target.y; });
+        
+          node
+            .attr('cx', function(d) { return d.x; })
+            .attr('cy', function(d) { return d.y; });
+        
+          label
+            .attr('x', function(d) { return d.x; })
+            .attr('y', function(d) { return d.y + 5; }); // Adjust label position relative to the node
         }
 
         // Define the drag event functions

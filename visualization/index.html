@@ -145,11 +145,30 @@
         node.append('title')
             .text(function(d) { return d.id; });
 
+        // Define cluster centers
+        var clusterCenters = {
+            'datamodel': {x: width / 5, y: height / 2},
+            'sdk': {x: 2 * width / 5, y: height / 2},
+            'domain': {x: 3 * width / 5, y: height / 2},
+            'primitive': {x: 4 * width / 5, y: height / 2}
+        };
+      
+        // Custom force function for clustering
+        function forceCluster(alpha) {
+            for (var i = 0, n = nodes.length, node, cluster; i < n; ++i) {
+                node = nodes[i];
+                cluster = clusterCenters[node.group];
+                node.vx -= (node.x - cluster.x) * alpha;
+                node.vy -= (node.y - cluster.y) * alpha;
+            }
+        }
+      
         // Initialize the force simulation with nodes and define the forces
         var simulation = d3.forceSimulation(nodes)
-          .force('link', d3.forceLink(links).id(function(d) { return d.id; }).distance(100))
-          .force('charge', d3.forceManyBody())
-          .force('center', d3.forceCenter(width / 2, height / 2));
+            .force('link', d3.forceLink(links).id(function(d) { return d.id; }).distance(100))
+            .force('charge', d3.forceManyBody())
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('cluster', alpha => forceCluster(alpha)); // Apply custom clustering force
 
         // Define the ticked function which updates node and link positions on each simulation tick
         function ticked() {

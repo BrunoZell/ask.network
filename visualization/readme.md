@@ -11,7 +11,7 @@ npm install --global http-server
 ```
 
 To then locally serve the visualization under [http://127.0.0.1:8080](http://127.0.0.1:8080)
-from a terminal in directory `paper/visualization`:
+from a terminal in directory `visualization`:
 
 ```
 http-server

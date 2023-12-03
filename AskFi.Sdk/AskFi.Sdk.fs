@@ -44,18 +44,15 @@ type CapturedObservation<'Percept> = {
 
 /// Public query interface into a given Context.
 /// Used by strategies, visualizations, and standalone analysis code to retrieve information from a Context.
+/// Where 'ObservationSpace is a discriminated union over one or more distinct 'Percept types.
 type IContextQueries = 
     /// Get the latest received perception of the requested type.
     /// Returns `None` if no observation of the requested type has been made yet.
-    abstract member latest<'Percept> : unit -> CapturedObservation<'Percept> option
+    abstract member latest<'ObservationSpace> : unit -> CapturedObservation<'ObservationSpace> option
     
     /// Get an iterator the all Observations of type `'Perception` since the passed `from` until `to`
     /// (as determined by the runtime clock used during context sequencing).
-    abstract member inTimeRange<'Percept> : from: DateTime * ``to``: DateTime -> CapturedObservation<'Percept> seq
-
-    /// Get an iterator the all Observations of the two types `'Perception1` and `'Perception2` since the passed `from` until `to``.
-    /// (as by the runtime clock used for context sequencing)
-    abstract member inTimeRange<'Percept1, 'Percept2> : from: DateTime * ``to``: DateTime -> System.ValueTuple<CapturedObservation<'Percept1> option, CapturedObservation<'Percept2> option> seq
+    abstract member inTimeRange<'ObservationSpace> : from: DateTime * ``to``: DateTime -> CapturedObservation<'ObservationSpace> seq
 
 [<IsReadOnly; Struct>]
 type Context = {
@@ -103,10 +100,21 @@ type Reflection<'ActionSpace> = {
     Query: IReflectionQueries
 }
 
+/// Represents the strategies intent to execute the specified action immediately
+// Where "immediately" is analogous to "now" in the evaluated context.
+/// With "now" being the contexts latest instant (point in time).
+/// With the contexts latest instant (point in time) being the latest observation in the context sequence.
 type Initiative<'Action> = {
     Action: 'Action
 }
 
+/// Represents the complete decision of a strategy when evaluated against a context.
+/// It can either decide to do nothing (Inaction),
+/// or decide to initiate one or more actions from the strategies 'ActionSpace.
+/// An 'ActionSpace is a discriminated union over one or more 'Action types,
+/// allowing the strategy to decide on multiple different 'Actions simultaneously,
+/// with each Initiative<'Action> selecting exactly one 'Action from that 'ActionSpace
+/// which then can be executed by an according IBroker<'Action>.
 type Decision<'ActionSpace> =
     | Inaction
     | Initiate of Initiatives:Initiative<'ActionSpace> array

@@ -57,8 +57,7 @@
         .attr('width', '100%')
         .attr('height', '100%');
 
-      
-        var initialNodes = [
+      var initialNodes = [
         { id: 'Percept', group: 'domain' },
         { id: 'Observation', group: 'domain' },
         { id: 'IObserver', group: 'sdk' },
@@ -70,16 +69,20 @@
         // ... add other links
       ];
 
-      // Update the force simulation center
       var simulation = d3
         .forceSimulation()
         .force('link', d3.forceLink().id(function (d) { return d.id; }))
         .force('charge', d3.forceManyBody())
         .force('center', d3.forceCenter(width / 2, height / 2));
 
-        var link = svg.append('g').attr('class', 'links').selectAll('line');
-      var node = svg.append('g').attr('class', 'nodes').selectAll('circle');
-      var label = svg.append('g').attr('class', 'labels').selectAll('text');
+      // Define the getColor function
+      function getColor(group) {
+        switch (group) {
+          case 'domain': return '#ffcc00';
+          case 'sdk': return '#666666';
+          default: return '#cccccc';
+        }
+      }
 
       // When updating data and restarting the simulation:
       function updateData() {
@@ -139,7 +142,7 @@
       // Call updateData to draw the initial graph
       updateData();
 
-      // ... (rest of the ticked, getColor, dragstarted, dragged, dragended functions)
+      // ... (rest of the ticked, dragstarted, dragged, dragended functions)
     </script>
   </body>
 </html>

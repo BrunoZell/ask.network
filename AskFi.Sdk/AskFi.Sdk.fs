@@ -10,56 +10,53 @@ open System.Threading.Tasks
 
 /// An atomic appearance of sensory information from within an IObserver<'Percept>.
 /// Includes a Percept, which is a typed (via a domain model) representation of the newly observed information.
-/// An observation can have multiple Percepts in case they all appeared at the same instant (point in time).
-/// An individual observation, by definition, appeared at a singular instant (point in time).
+/// An observation can have multiple Percepts in case they all appeared at the same instant (point in time),
+/// with each Percept representing a single piece of sensory information each with a single 'Observation type selected from 'ObservationSpace.
+/// An individual observation, by definition, appeared at a singular instant (point in time), and must've originated from some IObserver<'Observation>.
 /// Since the 'Percept here is already strongly typed, it is data resulted from already interpreting the observed system.
 [<IsReadOnly; Struct>]
-type Observation<'Percept> = {
-    Percepts: 'Percept array
+type Observation<'ObservationSpace> = {
+    Percepts: 'ObservationSpace array
 }
 
 /// Implemented by domain modules. An implementation defines imperative networking behavior to interact with
 /// an external system with the aim of observing it to later infer what was happening. The observer implementation
 /// interprets the networking traffic and emits strongly-typed 'Percepts whenever there are new measurements obtained.
-type IObserver<'Percept> =
-    abstract member Observations : IAsyncEnumerable<Observation<'Percept>>
+type IObserver<'ObservationSpae> =
+    abstract member Observations : IAsyncEnumerable<Observation<'ObservationSpae>>
 
 // ###############
 // #### QUERY ####
 // ###############
 
-/// An atomic appearance of sensory information from callers of IContextQueries.
-/// Includes a Percept, which is a typed (via a domain model) representation of the newly observed information.
-/// An observation can have multiple Percepts in case they all appeared at the same instant (point in time).
-/// An individual observation, by definition, appeared at a singular instant (point in time).
+/// A measurement is an atomic appearance of sensory information for callers of IContextQueries,
+/// originating from captured observations of a single IObserver<'Observation> instance.
+/// An individual observation, by definition, appeared at a singular instant (point in time) from a defined IObserver<'Observation>.
 /// When this observation was captured, a runtime timestamp was attached to later filter it by query-provided unobserved timestamps.
 [<IsReadOnly; Struct>]
-type CapturedObservation<'Percept> = {
+type Measurement<'ObservationSpace> = {
     /// Sensory information captured by the producing IObserver.
-    Percepts: 'Percept array
+    observation: Observation<'ObservationSpace>
 
     /// Runtime timestamp at which this observation was produced by the IObserver.
     At: DateTime
 }
 
 /// Public query interface into a given Context.
+/// All queries on Context have a type parameter 'ActionSpace.
+/// The strategy compiler verifies it only used with this "Reflection<'ActionSpace>" action space type.
 /// Used by strategies, visualizations, and standalone analysis code to retrieve information from a Context.
 /// Where 'ObservationSpace is a discriminated union over one or more distinct 'Percept types.
-type IContextQueries = 
+type Context = 
     /// Get the latest received perception of the requested type.
     /// Returns `None` if no observation of the requested type has been made yet.
-    abstract member latest<'ObservationSpace> : unit -> CapturedObservation<'ObservationSpace> option
+    abstract member latest<'ObservationSpace> : unit -> Measurement<'ObservationSpace> option
     
     /// Get an iterator the all Observations of type `'Perception` since the passed `from` until `to`
     /// (as determined by the runtime clock used during context sequencing).
-    abstract member inTimeRange<'ObservationSpace> : from: DateTime * ``to``: DateTime -> CapturedObservation<'ObservationSpace> seq
+    abstract member inTimeRange<'ObservationSpace> : from: DateTime * ``to``: DateTime -> Measurement<'ObservationSpace> seq
 
-[<IsReadOnly; Struct>]
-type Context = {
-    /// Built in default query interface for a given Context
-    Query: IContextQueries
-}
-
+/// A query really is just a parameterized transformer mapping a context to an instance of some type 'Result.
 type Query<'Parameters, 'Result> =
     'Parameters -> Context -> 'Result
 
@@ -81,9 +78,11 @@ type DecisionReflection<'Action> = {
 }
 
 /// Query interface into decisions from a decision sequence "AskFi.Runtime.DataModel.DecisionSequenceHead".
+/// All queries on Reflection have a type parameter 'ActionSpace.
+/// The strategy compiler verifies it only used with this "Reflection<'ActionSpace>" action space type.
 /// Used by strategies to reflect on past actions. This is important so the strategy can remember it just
 /// did some 'Action to not do it again even if there is no external sensory-information hinting on it.
-type IReflectionQueries = 
+type Reflection = 
     /// Get the latest received perception of the requested type.
     /// Returns `None` if no observation of the requested type has been made yet.
     abstract member latest<'ActionSpace> : unit -> DecisionReflection<'Action> option
@@ -91,14 +90,6 @@ type IReflectionQueries =
     /// Get an iterator the all Observations of type `'Perception` since the passed `from` until `to`
     /// (as determined by the runtime clock used during context sequencing).
     abstract member inTimeRange<'ActionSpace> : from: DateTime * ``to``: DateTime -> DecisionReflection<'Action> seq
-
-[<IsReadOnly; Struct>]
-type Reflection<'ActionSpace> = {
-    /// This references the callable interface into this strategies past decision sequence
-    /// All queries on IReflectionQueries have a type parameter 'ActionSpace.
-    /// The strategy compiler verifies it only used with this "Reflection<'ActionSpace>" action space type.
-    Query: IReflectionQueries
-}
 
 /// Represents the strategies intent to execute the specified action immediately
 // Where "immediately" is analogous to "now" in the evaluated context.
@@ -121,7 +112,7 @@ type Decision<'ActionSpace> =
 
 /// Contains the code of a strategy decision, called upon each evolution of the Askbot sessions context (i.e. on every new observation).
 type Strategy<'ObservationSpace, 'ActionSpace> =
-    Reflection<'ActionSpace> -> Context<'ObservationSpace> -> Decision<'ActionSpace>
+    Reflection -> Context -> Decision<'ActionSpace>
 
 // ###################
 // #### EXECUTION ####

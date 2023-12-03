@@ -63,9 +63,10 @@ and Action = {
     ActionCid: ContentId
 }
 
-type ActionExecutionTrace =
-    /// Data emitted by the IBroker action execution. Could include an execution id, transaction, or validity proofs.
-    | Success of trace: byte[] option
+type ActionExecutionTrace<'Response> =
+    /// Data emitted by the IBroker<'Action, 'Response> action execution.
+    /// Responses could include an execution id, transaction, or validity proofs, but are abstracted out at the data structure level.
+    | Success of trace: 'Response'
     /// IBroker action execution failed. This holds an exception message, if any, encountered during user code execution.
     | Error of ``exception``: string option
 

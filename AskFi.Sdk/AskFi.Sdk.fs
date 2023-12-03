@@ -1,4 +1,5 @@
 module AskFi.Sdk
+open System
 open System.Collections.Generic
 open System.Runtime.CompilerServices
 open System.Threading.Tasks
@@ -38,7 +39,7 @@ type CapturedObservation<'Percept> = {
     Percepts: 'Percept array
 
     /// Runtime timestamp at which this observation was produced by the IObserver.
-    At: System.DateTime
+    At: DateTime
 }
 
 /// Public query interface into a given Context.
@@ -50,11 +51,11 @@ type IContextQueries =
     
     /// Get an iterator the all Observations of type `'Perception` since the passed `from` until `to`
     /// (as determined by the runtime clock used during context sequencing).
-    abstract member inTimeRange<'Percept> : from: System.DateTime * ``to``: System.DateTime -> CapturedObservation<'Percept> seq
+    abstract member inTimeRange<'Percept> : from: DateTime * ``to``: DateTime -> CapturedObservation<'Percept> seq
 
     /// Get an iterator the all Observations of the two types `'Perception1` and `'Perception2` since the passed `from` until `to``.
     /// (as by the runtime clock used for context sequencing)
-    abstract member inTimeRange<'Percept1, 'Percept2> : from: System.DateTime * ``to``: System.DateTime -> System.ValueTuple<CapturedObservation<'Percept1> option, CapturedObservation<'Percept2> option> seq
+    abstract member inTimeRange<'Percept1, 'Percept2> : from: DateTime * ``to``: DateTime -> System.ValueTuple<CapturedObservation<'Percept1> option, CapturedObservation<'Percept2> option> seq
 
 [<IsReadOnly; Struct>]
 type Context = {
@@ -74,12 +75,12 @@ type DecisionReflection<'Action> = {
     Action: 'Action
 
     /// Timestamp of the context on which this actions decisions was made.
-    VirtualTimestamp: System.DateTime
+    VirtualTimestamp: DateTime
     
     /// Runtime timestamp at which this actions decisions was made.
     /// For live execution, the difference between virtual and actual timestamp is the strategy evaluation time.
     /// For backtests, the difference between virtual and actual timestamp is the time duration looking back in time.
-    ActualTimestamp: System.DateTime
+    ActualTimestamp: DateTime
 }
 
 /// Query interface into decisions from a decision sequence "AskFi.Runtime.DataModel.DecisionSequenceHead".
@@ -88,30 +89,31 @@ type DecisionReflection<'Action> = {
 type IReflectionQueries = 
     /// Get the latest received perception of the requested type.
     /// Returns `None` if no observation of the requested type has been made yet.
-    abstract member latest<'Action> : unit -> DecisionReflection<'Action> option
+    abstract member latest<'ActionSpace> : unit -> DecisionReflection<'Action> option
     
     /// Get an iterator the all Observations of type `'Perception` since the passed `from` until `to`
     /// (as determined by the runtime clock used during context sequencing).
-    abstract member inTimeRange<'Action> : from: System.DateTime * ``to``: System.DateTime -> DecisionReflection<'Action> seq
+    abstract member inTimeRange<'ActionSpace> : from: DateTime * ``to``: DateTime -> DecisionReflection<'Action> seq
 
 [<IsReadOnly; Struct>]
-type Reflection = {
-    /// Built in default query interface for the runtimes decision Sequence
+type Reflection<'ActionSpace> = {
+    /// This references the callable interface into this strategies past decision sequence
+    /// All queries on IReflectionQueries have a type parameter 'ActionSpace.
+    /// The strategy compiler verifies it only used with this "Reflection<'ActionSpace>" action space type.
     Query: IReflectionQueries
 }
 
-type ActionInitiation = {
-    Action: obj
-    Type: System.Type
+type Initiative<'Action> = {
+    Action: 'Action
 }
 
-type Decision =
+type Decision<'ActionSpace> =
     | Inaction
-    | Initiate of Initiatives:ActionInitiation array
+    | Initiate of Initiatives:Initiative<'ActionSpace> array
 
 /// Contains the code of a strategy decision, called upon each evolution of the Askbot sessions context (i.e. on every new observation).
-type Strategy =
-    Reflection -> Context -> Decision
+type Strategy<'ObservationSpace, 'ActionSpace> =
+    Reflection<'ActionSpace> -> Context<'ObservationSpace> -> Decision<'ActionSpace>
 
 // ###################
 // #### EXECUTION ####

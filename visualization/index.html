@@ -2,44 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Force-Directed Graph</title>
+    <title>Force-Directed Graph with Bounding Box</title>
     <style>
         .links line {
             stroke: #999;
             stroke-opacity: 0.6;
         }
-
         .nodes circle {
             stroke: #000;
             stroke-width: 1.5px;
         }
-
         .labels {
             font-family: Arial, sans-serif;
             font-size: 12px;
             pointer-events: none;
         }
-
         .datamodel {
             fill: #D5E8D4;
             stroke: #82B366;
         }
-
         .sdk {
             fill: #F5F5F5;
             stroke: #A9A9A9;
         }
-
         .domain {
             fill: #FFF2CC;
             stroke: #D6B656;
         }
-
         .primitive {
             fill: #DAE8FC;
             stroke: #6C8EBF;
         }
-
         .update-btn {
             position: absolute;
             top: 20px;
@@ -57,15 +50,9 @@
         var width = window.innerWidth;
         var height = window.innerHeight;
 
-        var svg = d3.select('body').append('svg')
+        var svg = d3.select('#chart-container').append('svg')
             .attr('width', width)
             .attr('height', height);
-
-        // Setup the force simulation
-        var simulation = d3.forceSimulation()
-            .force('link', d3.forceLink().id(function(d) { return d.id; }).distance(100))
-            .force('charge', d3.forceManyBody().strength(-500))
-            .force('center', d3.forceCenter(width / 2, height / 2));
 
         // Define node data
         var nodes = [
@@ -94,6 +81,12 @@
             { id: 'String', group: 'primitive' },
             { id: 'Option', group: 'primitive' },
         ];
+
+        // Initialize node positions
+        nodes.forEach(function(d) {
+            d.x = width / 2; // Center x-coordinate
+            d.y = height / 2; // Center y-coordinate
+        });
 
         // Define link data
         var links = [
@@ -132,7 +125,7 @@
             .data(nodes)
             .enter().append('circle')
             .attr('r', 10)
-            .attr('class', function(d) { return d.group; })
+            .attr('fill', function(d) { return getColor(d.group); })
             .call(d3.drag()
                 .on('start', dragstarted)
                 .on('drag', dragged)
@@ -144,33 +137,75 @@
             .selectAll('text')
             .data(nodes)
             .enter().append('text')
-            .attr('class', function(d) { return d.group; })
+            .text(function(d) { return d.id; })
+            .attr('x', 6)
+            .attr('y', 3);
+
+        node.append('title')
             .text(function(d) { return d.id; });
 
-        // Define the ticked function
-        function ticked() {
-          // Apply constraints to the nodes to keep them within a bounding box
-          var padding = 20, // Padding from the edge of the SVG
-              radius = 10;  // Radius of the nodes
+        // Setup the force simulation
+        var simulation = d3.forceSimulation(nodes) // Initialize with nodes
+          .force('link', d3.forceLink(links).id(function(d) { return d.id; })) // Initialize with links
+          .force('charge', d3.forceManyBody())
+          .force('center', d3.forceCenter(width / 2, height / 2));
 
-          nodes.forEach(function(d) {
-            d.x = Math.max(radius + padding, Math.min(width - radius - padding, d.x));
-            d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y));
-          });
-        
-          link
-            .attr('x1', function(d) { return d.source.x; })
-            .attr('y1', function(d) { return d.source.y; })
-            .attr('x2', function(d) { return d.target.x; })
-            .attr('y2', function(d) { return d.target.y; });
-        
-          node
-            .attr('cx', function(d) { return d.x; })
-            .attr('cy', function(d) { return d.y; });
-        
-          label
-            .attr('x', function(d) { return d.x; })
-            .attr('y', function(d) { return d.y + 5; }); // Adjust label position relative to the node
+
+        simulation
+            .nodes(nodes)
+            .on('tick', ticked);
+
+        simulation.force('link')
+            .links(links);
+
+        // Add three force centers for the clusters
+        var center1 = d3.forceCenter(width / 4, height / 2); // Center for primitives
+        var center2 = d3.forceCenter(width / 2, height / 2); // Center for SDK types
+        var center3 = d3.forceCenter((width * 3) / 4, height / 2); // Center for domain type parameters
+
+        // Update the ticked function to apply the force center for each cluster
+        function ticked() {
+            // Apply constraints to the nodes to keep them within a bounding box
+            var padding = 20, // Padding from the edge of the SVG
+                radius = 10;  // Radius of the nodes
+
+            nodes.forEach(function(d) {
+                d.x = Math.max(radius + padding, Math.min(width - radius - padding, d.x));
+                d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y));
+            });
+
+            // Apply force center based on node group
+            nodes.forEach(function (d) {
+                if (d.group === 'primitive') {
+                    d.fx = center1.x;
+                    d.fy = center1.y;
+                } else if (d.group === 'sdk') {
+                    d.fx = center2.x;
+                    d.fy = center2.y;
+                } else if (d.group === 'domain') {
+                    d.fx = center3.x;
+                    d.fy = center3.y;
+                }
+            });
+
+            // Update link positions
+            link
+                .attr('x1', function(d) { return d.source.x; })
+                .attr('y1', function(d) { return d.source.y; })
+                .attr('x2', function(d) { return d.target.x; })
+                .attr('y2', function(d) { return d.target.y; });
+
+            node
+                .attr('cx', function(d) {
+                    return d.x = Math.max(10, Math.min(width - 10, d.x));
+                })
+                .attr('cy', function(d) {
+                    return d.y = Math.max(10, Math.min(height - 10, d.y));
+                });
+
+            label
+                .attr('x', function(d) { return d.x; })
+                .attr('y', function(d) { return d.y + 5; }); // Adjust label position relative to the node
         }
 
         // Define the drag event functions
@@ -191,17 +226,26 @@
             d.fy = null;
         }
 
-        // Start the simulation
+        function getColor(group) {
+            switch(group) {
+                case 'datamodel': return '#D5E8D4';
+                case 'sdk': return '#F5F5F5';
+                case 'domain': return '#FFF2CC';
+                case 'primitive': return '#DAE8FC';
+                default: return '#cccccc';
+            }
+        }
+
         simulation
-            .nodes(nodes)
-            .on('tick', ticked);
+                .nodes(nodes)
+                .on('tick', ticked);
 
         simulation.force('link')
-            .links(links);
+                .links(links);
 
         // Update data function
         function updateData() {
-            // For now, this just restarts the simulation
+            // Restart the simulation
             simulation.alpha(1).restart();
         }
     </script>

@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Force-Directed Graph with Bounding Box</title>
-        <style>
+    <title>Force-Directed Graph with Hierarchy</title>
+    <style>
+        /* Styles for links, nodes, labels, and groups */
         .links line {
             stroke: #999;
             stroke-opacity: 0.6;
@@ -17,46 +18,24 @@
             font-size: 12px;
             pointer-events: none;
         }
-        .datamodel {
-            fill: #D5E8D4;
-            stroke: #82B366;
-        }
-        .sdk {
-            fill: #F5F5F5;
-            stroke: #A9A9A9;
-        }
-        .domain {
-            fill: #FFF2CC;
-            stroke: #D6B656;
-        }
-        .primitive {
-            fill: #DAE8FC;
-            stroke: #6C8EBF;
-        }
-        .restart {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
-        }
+        .datamodel { fill: #D5E8D4; stroke: #82B366; }
+        .sdk { fill: #F5F5F5; stroke: #A9A9A9; }
+        .domain { fill: #FFF2CC; stroke: #D6B656; }
+        .primitive { fill: #DAE8FC; stroke: #6C8EBF; }
+        .restart { position: absolute; top: 20px; left: 20px; z-index: 10; }
     </style>
 </head>
 <body>
-    <!-- Button to trigger the restart function -->
     <button class="restart" onclick="restart()">restart layout</button>
-    <!-- Container for the SVG that will hold the graph -->
     <div id="chart-container"></div>
-
-    <!-- Including the D3.js library from a CDN -->
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
-        // Set the width and height of the SVG element to the window's dimensions
         var width = window.innerWidth;
         var height = window.innerHeight;
 
         // Create an SVG element within the chart container and set its dimensions
         var svg = d3.select('#chart-container').append('svg')
-            .attr('width', width)
+                    .attr('width', width)
             .attr('height', height);
 
         // Define an array of node objects for the graph
@@ -111,117 +90,90 @@
             { source: 'IBroker', target: 'Action' },
         ];
 
-        // Select all 'line' elements for links and bind the link data to them
-        var link = svg.append('g')
-            .attr('class', 'links')
-            .selectAll('line')
-            .data(links)
-            .enter().append('line');
+        var nodeById = d3.map();
+        nodes.forEach(node => {
+            nodeById.set(node.id, node);
+            node.incoming = [];
+            node.outgoing = [];
+        });
 
-        // Select all 'circle' elements for nodes and bind the node data to them
-        var node = svg.append('g')
-            .attr('class', 'nodes')
-            .selectAll('circle')
-            .data(nodes)
-            .enter().append('circle')
-            .attr('r', 10)
-            .attr('fill', function(d) { return getColor(d.group); })
-            .call(d3.drag()
-                .on('start', dragstarted)
-                .on('drag', dragged)
-                .on('end', dragended));
+        links.forEach(link => {
+            var source = nodeById.get(link.source),
+                target = nodeById.get(link.target);
+            source.outgoing.push(target);
+            target.incoming.push(source);
+        });
 
-        // Add text labels to the nodes
-        var label = svg.append('g')
-            .attr('class', 'labels')
-            .selectAll('text')
-            .data(nodes)
-            .enter().append('text')
-            .text(function(d) { return d.id; })
-            .attr('x', 6)
-            .attr('y', 3);
+        // Assign levels based on hierarchy
+        function assignLevels() {
+          var queue = [];
 
-        // Attach a title element to each node with its id as the content
-        node.append('title')
-            .text(function(d) { return d.id; });
-
-        // Define cluster centers
-        var clusterCenters = {
-            'sdk': {x: width / 2, y: height / 4},           // Upmost middle
-            'primitive': {x: width / 4, y: height / 2},    // Left side
-            'domain': {x: width / 2, y: 3 * height / 4},   // Middle bottom
-            'datamodel': {x: 3 * width / 4, y: height / 2} // Right side (assuming you want this)
-        };
-
-        // Increase the distance between nodes in the forceLink
-        var linkForce = d3.forceLink(links).id(function(d) { return d.id; }).distance(700);
-      
-        // Increase the repulsion strength
-        var chargeForce = d3.forceManyBody().strength(-300);
-      
-        // Custom force function for clustering
-        function forceCluster(alpha) {
-            for (var i = 0, n = nodes.length, node, cluster; i < n; ++i) {
-                node = nodes[i];
-                cluster = clusterCenters[node.group];
-                node.vx -= (node.x - cluster.x) * alpha;
-                node.vy -= (node.y - cluster.y) * alpha;
-            }
+          // Set initial level for nodes with no incoming links
+          nodes.forEach(node => {
+              node.incoming = links.filter(l => l.target.id === node.id);
+              node.outgoing = links.filter(l => l.source.id === node.id);
+          
+              if (node.incoming.length === 0) {
+                  node.level = 0;
+                  queue.push(node);
+              } else {
+                  node.level = undefined;
+              }
+          });
+        
+          // Breadth-first traversal to set levels
+          while (queue.length > 0) {
+              var current = queue.shift();
+              current.outgoing.forEach(link => {
+                  var targetNode = link.target;
+                  if (targetNode.level === undefined) {
+                      targetNode.level = current.level + 1;
+                      queue.push(targetNode);
+                  }
+              });
+          }
         }
 
-        // Initialize the force simulation with nodes and define the forces
+        assignLevels();
+
+        console.log(nodes);
+
+        var levelY = d3.scalePoint()
+               .domain(d3.range(d3.max(nodes, d => d.level) + 1))
+               .range([height, 0]);
+
+        var link = svg.append('g').attr('class', 'links')
+                      .selectAll('line').data(links).enter().append('line');
+
+        var node = svg.append('g').attr('class', 'nodes')
+                      .selectAll('circle').data(nodes).enter().append('circle')
+                      .attr('r', 10).attr('fill', d => getColor(d.group));
+
+        var label = svg.append('g').attr('class', 'labels')
+                       .selectAll('text').data(nodes).enter().append('text')
+                       .text(d => d.id).attr('x', 6).attr('y', 3);
+
+        node.append('title').text(d => d.id);
+
         var simulation = d3.forceSimulation(nodes)
-            .force('link', linkForce)
-            .force('charge', chargeForce)
-            .force('center', d3.forceCenter(width / 2, height / 2))
-            .force('cluster', alpha => forceCluster(alpha)); // Apply custom clustering force
-      
-        // Define the ticked function which updates node and link positions on each simulation tick
-        function ticked() {
-            // Apply constraints to the nodes to keep them within a bounding box
-            var padding = 20, // Padding from the edge of the SVG
-                radius = 10;  // Radius of the nodes
+                           .force('link', d3.forceLink(links).id(d => d.id))
+                           .force('charge', d3.forceManyBody())
+                           .force('x', d3.forceX().x(d => width / 2))
+                           .force('y', d3.forceY().y(d => levelY(d.level)));
 
-            nodes.forEach(function(d) {
-                d.x = Math.max(radius + padding, Math.min(width - radius - padding, d.x));
-                d.y = Math.max(radius + padding, Math.min(height - radius - padding, d.y));
-            });
+        simulation.on('tick', () => {
+            link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+                .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
 
-            // Update link positions
-            link
-                .attr('x1', function(d) { return d.source.x; })
-                .attr('y1', function(d) { return d.source.y; })
-                .attr('x2', function(d) { return d.target.x; })
-                .attr('y2', function(d) { return d.target.y; });
+            // node.attr('cx', d => d.x).attr('cy', d => d.y);
+            node.attr('cx', function(d) { return d.x; })
+                .attr('cy', function(d) {
+                    // console.log(d.id, d.y); // Log to inspect the y-values
+                    return d.y;
+                });
 
-            node
-                .attr('cx', function(d) { return d.x; })
-                .attr('cy', function(d) { return d.y; });
-
-            label
-                .attr('x', function(d) { return d.x; })
-                .attr('y', function(d) { return d.y + 5; }); // Adjust label position relative to the node
-        }
-
-        // Start the simulation
-        simulation
-            .on('tick', ticked);
-
-        // Define the drag event functions for dragging nodes
-        function dragstarted(d) {
-            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-            d.fx = d.x;
-            d.fy = d.y;
-        }
-        function dragged(d) {
-            d.fx = d3.event.x;
-            d.fy = d3.event.y;
-        }
-        function dragended(d) {
-            if (!d3.event.active) simulation.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
-        }
+            label.attr('x', d => d.x).attr('y', d => d.y + 5);
+        });
 
         // A utility function to get the color based on the node group
         function getColor(group) {
@@ -234,11 +186,8 @@
             }
         }
 
-
         // The restart function to restart the simulation
         function restart() {
-            // This should be updated to actually bind and update the data
-            // Currently, it just restarts the simulation
             simulation.alpha(1).restart();
         }
     </script>

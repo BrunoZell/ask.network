@@ -41,7 +41,7 @@ type IObserver<'ObservationSpace> =
 [<IsReadOnly; Struct>]
 type Measurement<'ObservationSpace> = {
     /// Sensory information captured by the producing IObserver.
-    observation: Observation<'ObservationSpace>
+    Observation: Observation<'ObservationSpace>
 
     /// Runtime timestamp at which this observation was produced by the IObserver.
     At: DateTime

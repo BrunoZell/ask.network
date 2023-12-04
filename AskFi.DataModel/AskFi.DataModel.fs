@@ -114,7 +114,7 @@ and ContextSequenceNode<'ObservationSpace, 'ActionSpace, 'Response> = {
 /// with decision sequences of the live strategy module possibly being routed to an according 'Broker Group'.
 type DecisionSequenceHead<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> =
     | Start of DecisionSequenceStart<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
-    | Decision of DecisionSequenceNode<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
+    | Decision of Node:DecisionSequenceNode<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
 and DecisionSequenceStart<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> = {
     /// References the strategy to be used for every decision to be a valid decision sequence.
     Strategy: ContentId<Sdk.Strategy<'ObservationSpace, 'QuerySurface, 'ActionSpace>>

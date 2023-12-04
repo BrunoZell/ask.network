@@ -187,8 +187,8 @@ type Reflection =
     abstract member inTimeRange<'ActionSpace> : from: DateTime * ``to``: DateTime -> DecisionReflection<'ActionSpace> seq
 
 /// Contains the code of a strategy decision, called upon each evolution of the Askbot sessions world (i.e. on every change in a query result).
-type Strategy<'ObservationSpace, 'QuerySurface, 'ActionSpace> =
-    Reflection -> World -> Decision<'ActionSpace>
+type Strategy<'Parameters, 'QuerySurface, 'ActionSpace> =
+    'Parameters -> Reflection -> World -> Decision<'ActionSpace>
 
 // ###################
 // #### EXECUTION ####

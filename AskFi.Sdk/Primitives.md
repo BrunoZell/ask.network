@@ -53,9 +53,9 @@ uint128   >=0 & <=340_282_366_920_938_463_463_374_607_431_768_211_455
 |-------------|-----------------------------------------|----------------------------------|----------------|----------------|
 | boolean     | bool                                    | bool                             | Bool           | bool           |
 | integer     | int                                     | int                              | Int            | int            |
-| decimal     | decimal                                 | decimal                          | **String**     | **number**     |
+| decimal     | decimal                                 | decimal                          | **String**     | **number** ⚠️ |
 | float       | float                                   | float                            | Float          | number         |
 | string      | string                                  | string                           | String         | string         |
 | bytes       | byte[]                                  | byte[]                           | Bytes          | bytes          |
-| link 'Datum | AskFi.ContentId<'Datum>                 | AskFi.ContentId<'Datum>          | Link           | bytes          |
+| link 'Datum | AskFi.ContentId<'Datum>                 | AskFi.ContentId<'Datum>          | Link           | **bytes**      |
 | option 'T   | Microsoft.FSharp.Core.Option<'T>        | System.Nullable<'T> or T?        | optional       | *_             |

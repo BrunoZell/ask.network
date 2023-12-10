@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 const WalletMultiButtonDynamic = dynamic(
   async () =>
-      (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
+    (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
   { ssr: false }
 )
 
@@ -14,7 +14,7 @@ export const AppBar: FC = () => {
     <div className={styles.AppHeader}>
       <Image src='/solanaLogo.png' height={30} width={200} />
       <span>Ask Network</span>
-      
+
       <WalletMultiButtonDynamic />
     </div>
   );

@@ -8,7 +8,7 @@ For a domain model to be considered, it must specify the following:
 - The action space $A_D$ specific to the domain that defines what users can do within the chosen domain model.
 - The rules that govern how the user's actions expectedly transform their state, captured in a structured causal model.
 
-Such a domain model interface is already implemented as part of the [Ask Finance SDK](https://github.com/BrunoZell/ask.network/blob/askfi/AskFi.Sdk/AskFi.Sdk.fs). Any F# code implementing these interfaces and function signatures qualify as a domain model.
+Such a domain model interface is already implemented as part of the [Ask Finance SDK](https://github.com/BrunoZell/ask.network/blob/main/Ask.Sdk/Ask.Sdk.fs). Any F# code implementing these interfaces and function signatures qualify as a domain model.
 
 ## User Accounts
 
@@ -22,7 +22,7 @@ Let's consider $N$ users $U_i$ indexed by $i$, each with:
 
 ## Happenings
 
-Each users virtual agent continuously observes the world with the human acting within it. Observations and actions, whether hypothetical or measured, are grouped togeher into a happening $H_i$ and sorted into a state-vector:
+Each users virtual agent continuously observes the world with the human acting within it. Observations and actions, whether hypothetical or measured, are grouped together into a happening $H_i$ and sorted into a state-vector:
 
 $$H_i = O_i \cup A_i $$
 $$s_i = [H_{i1}, H_{i2}, H_{i3}, ..., H_{in}] $$

@@ -10,7 +10,7 @@ The network helps to coordinate who does what so that people get what they want 
 
 It achieves a high quality of service by standardizing the expression of wants and aversions (as Asks), essentially outsourcing market analysis and offer selection to professional market makers with just the final purchasing decision being signed by the user.
 
-However, the efficiency gain only shines through once the network has a large user base. Until then, the code can be used to run trading bots. If you want to do that, get familiar with the [AskFi SDK](https://github.com/BrunoZell/AskFi.Sdk) and [AskFi Runtime](https://github.com/BrunoZell/AskFi.Runtime).
+However, the efficiency gain only shines through once the network has a large user base. Until then, the code can be used to run trading bots. If you want to do that, get familiar with the [Ask SDK](https://github.com/BrunoZell/ask.network/tree/main/Ask.Sdk) and [Ask Runtime](https://github.com/BrunoZell/ask.network/tree/main/Ask.Runtime).
 
 ## Simple description of the solution
 

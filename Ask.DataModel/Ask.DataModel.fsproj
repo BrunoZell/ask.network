@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ask.Sdk\Ask.Sdk.fsproj" />
+    <ProjectReference Include="..\Ask.Host\Ask.Host.fsproj" />
   </ItemGroup>
 
 </Project>

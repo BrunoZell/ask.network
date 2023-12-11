@@ -1,6 +1,7 @@
 module Ask.DataModel
 
 open System
+open Ask.Host.Persistence
 
 // ######################
 // #### OBSERVATIONS ####
@@ -72,7 +73,7 @@ type ActionSequenceHead<'ActionSpace, 'Response> =
     | Action of Node:ActionSequenceNode<'ActionSpace, 'Response>
 and ActionSequenceNode<'ActionSpace, 'Response> = {
     /// Links previous decision.
-    Previous: ContentId<ActionSequenceHead>
+    Previous: ContentId<ActionSequenceHead<'ActionSpace, 'Response>>
 
     /// Holds timestamps and information obtained through the broker.
     Result: ActionExecutionResult<'ActionSpace, 'Response>
@@ -111,20 +112,20 @@ and ContextSequenceNode<'ObservationSpace, 'ActionSpace, 'Response> = {
 /// decisions are made from now into the future using the same strategy.
 /// It is produced by the runtime modules 'Live Strategy' and 'Backtester',
 /// with decision sequences of the live strategy module possibly being routed to an according 'Broker Group'.
-type DecisionSequenceHead<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> =
-    | Start of DecisionSequenceStart<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
-    | Decision of Node:DecisionSequenceNode<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
-and DecisionSequenceStart<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> = {
+type DecisionSequenceHead<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> =
+    | Start of DecisionSequenceStart<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
+    | Decision of Node:DecisionSequenceNode<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
+and DecisionSequenceStart<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> = {
     /// References the strategy to be used for every decision to be a valid decision sequence.
-    Strategy: ContentId<Sdk.Strategy<'ObservationSpace, 'QuerySurface, 'ActionSpace>>
+    Strategy: ContentId<Sdk.Strategy<'StrategyParameters, (*'ObservationSpace,*) 'ActionSpace>>
 
     /// The first context the strategy should produce decisions on, with all later contexts being
     /// part of the same decision sequence for this to be a valid decision sequence.
     FirstContext: ContentId<ContextSequenceHead<'ObservationSpace, 'ActionSpace, 'Response>>
 }
-and DecisionSequenceNode<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> = {
+and DecisionSequenceNode<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> = {
     /// Links previous decision head of this decision sequence.
-    Previous: ContentId<DecisionSequenceHead<'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>>
+    Previous: ContentId<DecisionSequenceHead<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>>
 
     /// What actions have been decided on by the evaluated strategy.
     Decision: ContentId<Sdk.Decision<'ActionSpace>>

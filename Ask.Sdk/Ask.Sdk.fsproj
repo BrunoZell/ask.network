@@ -9,4 +9,8 @@
     <Compile Include="Ask.Sdk.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ask.Host\Ask.Host.fsproj" />
+  </ItemGroup>
+
 </Project>

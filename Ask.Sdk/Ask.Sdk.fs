@@ -3,6 +3,7 @@ open System
 open System.Collections.Generic
 open System.Runtime.CompilerServices
 open System.Threading.Tasks
+open Ask.Host.Persistence
 
 // Todo: Integrate HKT
 type specific_observation_of<'ObservationSpace> = struct end

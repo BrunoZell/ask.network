@@ -4,6 +4,11 @@ open System.Collections.Generic
 open System.Runtime.CompilerServices
 open System.Threading.Tasks
 
+// Todo: Integrate HKT
+type specific_observation_of<'ObservationSpace> = struct end
+type specific_action_of<'ActionSpace> = struct end
+type specific_query_of<'QuerySurface> = struct end
+
 // ######################
 // #### OBSERVATIONS ####
 // ######################
@@ -77,6 +82,14 @@ type Measurement<'ObservationSpace> = {
     At: DateTime
 }
 
+/// Represents success or failure of a single IBroker<_, 'Response> action execution.
+type Evidence<'Response> = 
+    /// Data emitted by the IBroker<'Action, 'Response> action execution.
+    /// Responses could include an execution id, transaction, or validity proofs, but are abstracted out at the data structure level.
+    | Success of Trail: ContentId<'Response>
+    /// IBroker action execution failed. This holds an exception message, if any, encountered during user code execution.
+    | Error of Exception: string option
+
 /// Represents a completed action execution. Similarly as a measurement, it is an interface
 /// into new environment information and can be queried via the Context.
 type Act<'Action, 'Response> = {
@@ -93,14 +106,6 @@ type Act<'Action, 'Response> = {
     /// Runtime-measured timestamps of when the used IBroker implementation completed executing.
     CompletionTimestamp: DateTime
 }
-
-/// Represents success or failure of a single IBroker<_, 'Response> action execution.
-type Evidence<'Response> = 
-    /// Data emitted by the IBroker<'Action, 'Response> action execution.
-    /// Responses could include an execution id, transaction, or validity proofs, but are abstracted out at the data structure level.
-    | Success of Trail: ContentId<'Response>
-    /// IBroker action execution failed. This holds an exception message, if any, encountered during user code execution.
-    | Error of Exception: string option
 
 /// Public query interface into a given Context.
 /// All queries on Context have a type parameter 'ActionSpace.
@@ -126,7 +131,7 @@ type Context =
 
 /// A query that solely depends on observations or action traces to compute its result.
 /// Really a query is just a parameterized transformer mapping a context to an instance of some type 'Result.
-type Query<'Query, 'ObservationSpace, 'Result> =
+type Query<'Query, (*'ObservationSpace,*) 'Result> =
     'Query -> Context -> 'Result
 
 /// An indirect view on a context, where only specific queries lying on a 'QuerySurface are readable.
@@ -140,7 +145,7 @@ type World =
     abstract member inTimeRange<'Query, 'Result> : from: DateTime * ``to``: DateTime -> 'Result seq
 
 /// A query that solely depends on other queries for its evaluation.
-type CompositeQuery<'Query, 'QuerySurface, 'Result> =
+type CompositeQuery<'Query, (*'QuerySurface,*) 'Result> =
     'Query -> World -> 'Result
 
 // ##################
@@ -187,7 +192,7 @@ type Reflection =
     abstract member inTimeRange<'ActionSpace> : from: DateTime * ``to``: DateTime -> DecisionReflection<'ActionSpace> seq
 
 /// Contains the code of a strategy decision, called upon each evolution of the Askbot sessions world (i.e. on every change in a query result).
-type Strategy<'Parameters, 'QuerySurface, 'ActionSpace> =
+type Strategy<'Parameters, (*'QuerySurface,*) 'ActionSpace> =
     'Parameters -> Reflection -> World -> Decision<'ActionSpace>
 
 // ###################

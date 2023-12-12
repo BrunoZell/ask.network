@@ -9,7 +9,8 @@
     <Compile Include="KnowledgeBase.fs" />
     <Compile Include="DomainStore.fs" />
     <Compile Include="OperatorState.fs" />
-    <Compile Include="UserState.fs" />
+    <Compile Include="UserRequests.fs" />
+    <Compile Include="UserResults.fs" />
   </ItemGroup>
 
   <ItemGroup>

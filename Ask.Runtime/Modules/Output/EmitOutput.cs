@@ -1,5 +1,4 @@
 using System.Threading.Channels;
-using Ask.Runtime.Platform;
 
 namespace Ask.Runtime.Modules.Output;
 internal class EmitOutput<TMessage>

@@ -1,7 +1,6 @@
 using System.Threading.Channels;
-using Ask.Runtime.Messages;
-using Ask.Runtime.Platform;
-using static Ask.Runtime.DataModel;
+using Ask.Host.Persistence;
+using static Ask.DataModel;
 
 namespace Ask.Runtime.Modules.Observation;
 
@@ -16,14 +15,14 @@ internal sealed class ObserverGroup : IAsyncDisposable
     private readonly IReadOnlyCollection<ObserverInstance> _observers;
     private readonly Channel<NewInternalObservation> _incomingObservations;
     private readonly ChannelWriter<NewObservation> _output;
-    private readonly IPlatformPersistence _persistence;
+    private readonly IHostPersistence _persistence;
     private readonly CancellationTokenSource _cancellation;
     private readonly Task _observationSequencing;
 
     private ObserverGroup(
         IReadOnlyCollection<ObserverInstance> observers,
         Channel<NewInternalObservation> incomingObservations,
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         ChannelWriter<NewObservation> output,
         CancellationTokenSource cancellation)
     {
@@ -37,7 +36,7 @@ internal sealed class ObserverGroup : IAsyncDisposable
 
     public static ObserverGroup StartNew(
         /*IObserver<'Percept> (where Percept = .Key)*/ IReadOnlyDictionary<Type, object> observers,
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         ChannelWriter<NewObservation> output,
         CancellationToken cancellationToken)
     {

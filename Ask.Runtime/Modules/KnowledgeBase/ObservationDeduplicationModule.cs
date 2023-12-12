@@ -1,7 +1,5 @@
 using System.Threading.Channels;
-using Ask.Runtime.Messages;
-using Ask.Runtime.Platform;
-using static Ask.Runtime.DataModel;
+using Ask.Host.Persistence;
 
 namespace Ask.Runtime.Modules.Perspective;
 
@@ -12,12 +10,12 @@ internal class ObservationDeduplicationModule
 {
     private readonly ChannelReader<NewKnowledgeBase> _input;
     private readonly Channel<NewKnowledgeBase> _output;
-    private readonly IPlatformPersistence _persistence;
+    private readonly IHostPersistence _persistence;
 
     public ChannelReader<NewKnowledgeBase> Output => _output.Reader;
 
     public ObservationDeduplicationModule(
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         ChannelReader<NewKnowledgeBase> input)
     {
         _output = Channel.CreateUnbounded<NewKnowledgeBase>();
@@ -36,7 +34,7 @@ internal class ObservationDeduplicationModule
 
         await foreach (var pool in _input.ReadAllAsync(cancellationToken)) {
             // Merge incoming pool with local pool, creating a new heaviest local pool
-            var incomingKnowledgeBase = await _persistence.Get<KnowledgeBase>(pool.KnowledeBase);
+            var incomingKnowledgeBase = await _persistence.Store<KnowledgeBase>(pool.KnowledeBase);
             var mergedKnowledgeBase = await KnowledgeBaseMerge.Join(localHeaviestObservationPool, incomingKnowledgeBase, _persistence);
             var mergedKnowledgeBaseCid = _persistence.Cid(mergedKnowledgeBase);
 

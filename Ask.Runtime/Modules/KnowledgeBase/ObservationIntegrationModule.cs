@@ -1,9 +1,6 @@
 using System.Threading.Channels;
-using Ask.Runtime.Messages;
-using Ask.Runtime.Persistence;
-using Ask.Runtime.Platform;
+using Ask.Host.Persistence;
 using Microsoft.FSharp.Collections;
-using static Ask.Runtime.DataModel;
 
 namespace Ask.Runtime.Modules.Perspective;
 
@@ -14,12 +11,12 @@ internal class ObservationIntegrationModule
 {
     private readonly ChannelReader<NewObservation> _input;
     private readonly Channel<NewKnowledgeBase> _output;
-    private readonly IPlatformPersistence _persistence;
+    private readonly IHostPersistence _persistence;
 
     public ChannelReader<NewKnowledgeBase> Output => _output.Reader;
 
     public ObservationIntegrationModule(
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         ChannelReader<NewObservation> input)
     {
         _output = Channel.CreateUnbounded<NewKnowledgeBase>();

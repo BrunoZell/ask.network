@@ -1,9 +1,8 @@
-using Ask.Runtime.Messages;
+using Ask.Host.Persistence;
 using Ask.Runtime.Modules.Input;
 using Ask.Runtime.Modules.Output;
 using Ask.Runtime.Modules.Perspective;
 using Ask.Runtime.Modules.Strategy;
-using Ask.Runtime.Platform;
 using static Ask.Sdk;
 
 namespace Ask.Runtime;
@@ -29,7 +28,7 @@ public class LiveStrategy
 
     public static LiveStrategy Build(
         Func<Reflection, Context, Decision> strategy,
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         IPlatformMessaging messaging)
     {
         var input = new StreamInput<NewKnowledgeBase>(messaging);

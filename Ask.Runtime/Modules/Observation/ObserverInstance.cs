@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Channels;
-using Ask.Runtime.Platform;
-using static Ask.Runtime.DataModel;
+using Ask.Host.Persistence;
+using static Ask.DataModel;
 
 namespace Ask.Runtime.Modules.Observation;
 
@@ -27,7 +27,7 @@ internal sealed class ObserverInstance : IAsyncDisposable
         /*'P*/ Type percept,
         /*IObserver<'P>*/ object observer,
         ChannelWriter<NewInternalObservation> observationSink,
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         CancellationToken sessionShutdown)
     {
         var observerType = typeof(Sdk.IObserver<>).MakeGenericType(percept);
@@ -58,7 +58,7 @@ internal sealed class ObserverInstance : IAsyncDisposable
     private static ObserverInstance StartNewInternal<TPercept>(
         Sdk.IObserver<TPercept> observer,
         ChannelWriter<NewInternalObservation> observationSink,
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         CancellationToken sessionShutdown)
     {
         var linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(sessionShutdown);
@@ -75,7 +75,7 @@ internal sealed class ObserverInstance : IAsyncDisposable
     private static async Task PullObservations<TPercept>(
         Sdk.IObserver<TPercept> observer,
         ChannelWriter<NewInternalObservation> observationSink,
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         CancellationToken cancellationToken)
     {
         await Task.Yield();
@@ -84,7 +84,7 @@ internal sealed class ObserverInstance : IAsyncDisposable
             await foreach (var observation in observer.Observations.WithCancellation(cancellationToken)) {
                 // Capture timestamp and persist observation
                 var timestamp = DateTime.UtcNow;
-                var observationCid = await persistence.Put(observation);
+                var observationCid = await persistence.Store(observation);
                 var capturedObservation = new CapturedObservation(
                     at: timestamp,
                     perceptType: typeof(TPercept),

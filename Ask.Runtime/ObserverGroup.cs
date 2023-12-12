@@ -1,8 +1,7 @@
-using Ask.Runtime.Messages;
+using Ask.Host.Persistence;
 using Ask.Runtime.Modules.Observation;
 using Ask.Runtime.Modules.Output;
 using Ask.Runtime.Modules.Perspective;
-using Ask.Runtime.Platform;
 
 namespace Ask.Runtime;
 
@@ -25,7 +24,7 @@ public class ObserverGroup
     /// <param name="observers">TValue = <see cref="Sdk.IObserver{Percept}"/> (where Percept = .Key)</param>
     public static ObserverGroup Build(
         IReadOnlyDictionary<Type, object> observers,
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         IPlatformMessaging messaging)
     {
         var observation = new ObserverModule(observers, persistence);

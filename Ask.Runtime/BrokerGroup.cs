@@ -1,8 +1,7 @@
-using Ask.Runtime.Messages;
+using Ask.Host.Persistence;
 using Ask.Runtime.Modules.Execution;
 using Ask.Runtime.Modules.Input;
 using Ask.Runtime.Modules.Output;
-using Ask.Runtime.Platform;
 
 namespace Ask.Runtime;
 public class BrokerGroup
@@ -23,7 +22,7 @@ public class BrokerGroup
 
     public static BrokerGroup Build(
         IReadOnlyDictionary<Type, object> broker,
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         IPlatformMessaging messaging)
     {
         var input = new StreamInput<NewDecision>(messaging);

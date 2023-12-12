@@ -1,8 +1,6 @@
 using System.Threading.Channels;
-using Ask.Runtime.Messages;
-using Ask.Runtime.Persistence;
-using Ask.Runtime.Platform;
-using static Ask.Runtime.DataModel;
+using Ask.Host.Persistence;
+using static Ask.DataModel;
 using static Ask.Sdk;
 
 namespace Ask.Runtime.Modules.Strategy;
@@ -10,7 +8,7 @@ namespace Ask.Runtime.Modules.Strategy;
 internal class StrategyModule
 {
     private readonly Func<Reflection, Sdk.Context, Decision> _strategy;
-    private readonly IPlatformPersistence _persistence;
+    private readonly IHostPersistence _persistence;
     private readonly ChannelReader<NewKnowledgeBase> _input;
     private readonly Channel<NewDecision> _output;
 
@@ -18,7 +16,7 @@ internal class StrategyModule
 
     public StrategyModule(
         Func<Reflection, Sdk.Context, Decision> strategy,
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         ChannelReader<NewKnowledgeBase> input)
     {
         _strategy = strategy;
@@ -33,7 +31,7 @@ internal class StrategyModule
             strategy: ContentId.Zero, // Todo: reference transferable implementation of _strategy
             firstContext: ContentId.Zero)); // Todo: Link virtual start timestamp as a user defined knowledge base
 
-        var decisionSequenceIdentity = await _persistence.Put(decisionSequence);
+        var decisionSequenceIdentity = await _persistence.Store(decisionSequence);
         var decisionSequenceCid = decisionSequenceIdentity;
 
         await foreach (var pool in _input.ReadAllAsync(sessionShutdown)) {
@@ -51,19 +49,19 @@ internal class StrategyModule
             // Build action set
             var actions = new List<DataModel.Action>();
             foreach (var initiative in initiate.Initiatives) {
-                var actionCid = await _persistence.Put(initiative.Action);
+                var actionCid = await _persistence.Store(initiative.Action);
                 actions.Add(new DataModel.Action(initiative.Type, actionCid));
             }
 
             var actionSet = new ActionSet(actions.ToArray());
-            var actionSetCid = await _persistence.Put(actionSet);
+            var actionSetCid = await _persistence.Store(actionSet);
 
             // Append this action set to the decision sequence
-            decisionSequence = DecisionSequenceHead.NewDecision(new DecisionSequenceNode(
+            decisionSequence = DataModel.DecisionSequenceHead.NewDecision(new DecisionSequenceNode(
                 previous: decisionSequenceCid,
                 actionSet: actionSetCid));
 
-            decisionSequenceCid = await _persistence.Put(decisionSequence);
+            decisionSequenceCid = await _persistence.Store(decisionSequence);
 
             await _output.Writer.WriteAsync(new NewDecision(
                 identity: decisionSequenceIdentity,

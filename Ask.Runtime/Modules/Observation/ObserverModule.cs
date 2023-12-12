@@ -1,6 +1,5 @@
 using System.Threading.Channels;
-using Ask.Runtime.Messages;
-using Ask.Runtime.Platform;
+using Ask.Host.Persistence;
 
 namespace Ask.Runtime.Modules.Observation;
 
@@ -13,14 +12,14 @@ namespace Ask.Runtime.Modules.Observation;
 internal sealed class ObserverModule
 {
     private readonly IReadOnlyDictionary<Type, object> _observers;
-    private readonly IPlatformPersistence _persistence;
+    private readonly IHostPersistence _persistence;
     private readonly Channel<NewObservation> _output;
 
     public ChannelReader<NewObservation> Output => _output.Reader;
 
     public ObserverModule(
         /*IObserver<'Percept> (where Percept = .Key)*/ IReadOnlyDictionary<Type, object> observers,
-        IPlatformPersistence persistence)
+        IHostPersistence persistence)
     {
 
         _observers = observers;

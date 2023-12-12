@@ -1,8 +1,7 @@
-using Ask.Runtime.Messages;
+using Ask.Host.Persistence;
 using Ask.Runtime.Modules.Input;
 using Ask.Runtime.Modules.Output;
 using Ask.Runtime.Modules.Perspective;
-using Ask.Runtime.Platform;
 
 namespace Ask.Runtime;
 
@@ -23,7 +22,7 @@ public class KnowledgeBaseGossip
     }
 
     public static KnowledgeBaseGossip Build(
-        IPlatformPersistence persistence,
+        IHostPersistence persistence,
         IPlatformMessaging messaging)
     {
         var input = new StreamInput<NewKnowledgeBase>(messaging);

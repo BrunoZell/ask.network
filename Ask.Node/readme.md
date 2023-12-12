@@ -11,3 +11,13 @@ Observers and brokers are configured as fixed configuration at startup once as t
 There always runs a single default context sequencer, sequencing all observations and actions of this node.
 
 A running node maintains a database of all captured information on the local disk as type `KnowledgeBase`, holding observations, actions and sequence information.
+
+The node exposes an GRPC request to be called by the Ask CLI through which the user can do:
+
+- Start live trading: live strategy with real action execution
+- Start a simulation: live strategy with simulated effects
+- Start a backtest: historic strategy with simulated effects
+- Evaluate query on latest data
+- Start a continuous live query evaluation
+- Evaluate a query on a range of historic contexts
+- Request a query evaluation on a historic context

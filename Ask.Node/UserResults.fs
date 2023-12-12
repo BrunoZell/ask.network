@@ -1,6 +1,6 @@
-module Ask.Node.UserRequests
+namespace Ask.Node
+
 open Ask.Host.Persistence
-open System
 
 // References results from user-requested compute from RPC requests
 type UserResults = {

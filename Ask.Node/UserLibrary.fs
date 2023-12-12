@@ -30,3 +30,10 @@ type Visualization = {
     Name: string
     Code: CodeId
 }
+
+type UserLibrary = {
+    Domains: Domain list
+    Strategies: Strategy list
+    Queries: Query list
+    Visualizations: Visualization list
+}

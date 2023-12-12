@@ -1,24 +1,25 @@
-module Ask.Node.UserRequests
+namespace Ask.Node
+
 open Ask.Host.Persistence
 open System
 
 type ActiveQuery =
-    | ContinuousHistoric of from:DateTime * ``to``:DateTime * query:CodeId * parameters:ContentId<unit>
-    | OneShotHistoric of at:DateTime * query:CodeId * parameters:ContentId<unit>
-    | OneShotLive of query:CodeId * parameters:ContentId<unit>
-    | ContinuousLive of query:CodeId * parameters:ContentId<unit>
+    | ContinuousHistoric of from:DateTime * ``to``:DateTime * query:Query * parameters:ContentId<unit>
+    | OneShotHistoric of at:DateTime * query:Query * parameters:ContentId<unit>
+    | OneShotLive of query:Query * parameters:ContentId<unit>
+    | ContinuousLive of query:Query * parameters:ContentId<unit>
 
 type ActiveVisualization =
-    | VisualizationRun of at:DateTime * visualization:CodeId
+    | VisualizationRun of at:DateTime * visualization:Visualization
 
 type BacktestSession =
-    | Backtest of strategies:Map<string, CodeId> * from:DateTime * ``to``:DateTime
+    | Backtest of strategies:Map<string, Strategy> * from:DateTime * ``to``:DateTime
 
 type SimulationSession =
-    | Simulation of strategies:Map<string, CodeId>
+    | Simulation of strategies:Map<string, Strategy>
 
 type LiveSession =
-    | LiveDeploy of strategy:CodeId
+    | LiveDeploy of strategy:Strategy
 
 // User-requested compute currently executing as part of active RPC requests
 type UserRequests = {

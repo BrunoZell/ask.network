@@ -1,7 +1,8 @@
 namespace Ask.Node
+
+open Ask.DataModel
 open Ask.Host.Persistence
 open System
-open Ask.DataModel
 
 type ActiveObserver = {
     StartTimestamp: DateTime

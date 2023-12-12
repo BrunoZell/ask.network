@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <Compile Include="KnowledgeBase.fs" />
-    <Compile Include="DomainStore.fs" />
+    <Compile Include="UserLibrary.fs" />
     <Compile Include="OperatorState.fs" />
     <Compile Include="UserRequests.fs" />
     <Compile Include="UserResults.fs" />

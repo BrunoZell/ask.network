@@ -6,7 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Ask.Node.fs" />
+    <Compile Include="KnowledgeBase.fs" />
+    <Compile Include="DomainStore.fs" />
+    <Compile Include="OperatorState.fs" />
+    <Compile Include="UserState.fs" />
   </ItemGroup>
 
   <ItemGroup>

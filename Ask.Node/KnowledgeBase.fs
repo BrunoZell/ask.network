@@ -1,11 +1,18 @@
-module Ask.Node
+namespace Ask.Node
 
-open Ask.DataModel
 open Ask.Host.Persistence
 
-// ##################
-// ####  MEMORY  ####
-// ##################
+/// Output type produced by a wrapped sequencer, referencing all context sequence heads it every produced,
+/// even if there was a rewind and on top of another head got built.
+type ContextHistory = {
+    // The last published context sequence, with the most information of all references context sequences.
+    Latest: ContentId<unit(*ContextSequenceHead*)>
+
+    // Referencing all published context sequences that since have been abandoned due to a rewind from late arriving data.
+    /// Set<ContextSequenceHead.Happening>
+    /// APG> where all ContextSequenceHead.Identity relating to those heads are the same, and equal to Latest.Identity
+    Dropped: ContentId<unit(*ContextSequenceHead*)> list
+}
 
 /// With observation sequences and execution sequences being the root data entry point of all external data
 /// flowing into the system, a knowledge base instance references a specific set of those sequences.
@@ -19,27 +26,17 @@ type KnowledgeBase = {
     /// Maps ObservationSequenceHead.Identity as the observation sequence id
     /// to the latest known ObservationSequenceHead.Observation
     /// Map<ObservationSequenceHead.Identity, ObservationSequenceHead.Observation>
-    Observations: Map<ContentId<ObservationSequenceHead>, ContentId<ObservationSequenceHead > list>
+    Observations: Map<ContentId<unit(*ObservationSequenceHead*)>, ContentId<unit(*ObservationSequenceHead*) > list>
     
     /// Maps ActionSequenceHead.Identity as the action sequence id
     /// to the latest known ActionSequenceHead.Action
     /// Map<ActionSequenceHead.Identity, ActionSequenceHead.Action>
-    Actions: Map<ContentId<ActionSequenceHead>, ContentId<ActionSequenceHead> list>
+    Actions: Map<ContentId<unit(*ActionSequenceHead*)>, ContentId<unit(*ActionSequenceHead*)> list>
 
     /// Maps ContextSequenceHead.Identity as the heaviest full context history,
     /// referencing all (abandoned) forks ever produced. This preserves the full history
     /// of real time ordering. Sequencing information is impure information and must be
     /// preserved for fully deterministic replays.
     /// Map<ContextSequenceHead.Identity, ContextHistory>
-    Contexts: Map<ContentId<ContextSequenceHead>, ContentId<ContextHistory>>
-}
-
-/// Output type produced by a wrapped sequencer, referencing all context sequence heads it every produced,
-/// even if there was a rewind and on top of another head got built.
-type ContextHistory = {
-    // The last published context sequence, with the most information of all references context sequences.
-    Latest: ContentId<ContextSequence>
-
-    // Referencing all published context sequences that since have been abandoned due to a rewind from late arriving data.
-    Dropped: ContentId<ContextSequence> list
+    ContextSequences: Map<ContentId<unit(*ContextSequenceHead*)>, ContentId<ContextHistory>>
 }

@@ -1,6 +1,22 @@
 # User State
 
 ```yaml
+users:
+  [user-id]:
+    active-queries:
+      [query-run-id]:
+        continuous: {continuous | one-shot}
+        mode: {[live|historic]}
+        time:
+          from-to (for continuous historic)
+          at (for one-shot historic)
+          latest (for one-shot live)
+          live (for continuous live)
+        query: CodeId<Query<'ObservationSpace, 'Query, 'Result>>
+        parameters: ContentId<'Query>
+```
+
+```yaml
 queries:
 - name: Candlesticks
   code: B32queryId

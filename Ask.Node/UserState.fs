@@ -18,21 +18,6 @@ type UserData = {
     LiveSession: ContentId<LiveSession>
 }
 
-type Query = {
-    Name: string
-    Code: CodeId
-}
-
-type Strategy = {
-    Name: string
-    Code: CodeId
-}
-
-type Visualization = {
-    Name: string
-    Code: CodeId
-}
-
 type ActiveQuery =
     | ContinuousHistoric of from:DateTime * to:DateTime * query:CodeId * parameters:ContentId
     | OneShotHistoric of at:DateTime * query:CodeId * parameters:ContentId

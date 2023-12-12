@@ -1,6 +1,7 @@
-module Ask.DataModel
+module Ask.Node
 
-open System
+open Ask.DataModel
+open Ask.Host.Persistence
 
 // ##################
 // ####  MEMORY  ####

@@ -41,6 +41,9 @@ and ObservationSequenceNode<'ObservationSpace> = {
 // ####  EXECUTION  ####
 // #####################
 
+// with 'ActionSpace = Map<'Action, 'Response>, it picks any single 'Response as type
+type response_of_any_action_from<'ActionSpace> = struct end
+
 // Action execution traces are the other entry point of data flowing into the system,
 // which include the information gained from executing certain actions.
 // Keeping a handle on created action execution sequences therefore is important
@@ -52,12 +55,13 @@ type ActionExecutionTrace<'Response> =
     /// IBroker action execution failed. This holds an exception message, if any, encountered during user code execution.
     | Error of ``exception``: string option
 
-type ActionExecutionResult<'ActionSpace, 'Response> = {
+type ActionExecutionResult<'ActionSpace> = {
     /// What specific action has been executed by the IBroker
     Executed: Sdk.Action<'ActionSpace>
 
     /// Trace output from broker.
-    Trace: ActionExecutionTrace<'Response>
+    Trace: ActionExecutionTrace<response_of_any_action_from<'ActionSpace>>
+    // where trace.ActionExecutionTrace.'Response = executed.Actions.map('Action.'Response).any()
 
     /// When the used IBroker implementation started executing.
     InitiationTimestamp: DateTime
@@ -68,15 +72,15 @@ type ActionExecutionResult<'ActionSpace, 'Response> = {
 
 /// An action sequence is produced by a Broker Group, which forms the second type
 /// of data entry into the system, holding information we got from executing actions.
-type ActionSequenceHead<'ActionSpace, 'Response> =
+type ActionSequenceHead<'ActionSpace> =
     | Identity of Nonce:uint64
-    | Action of Node:ActionSequenceNode<'ActionSpace, 'Response>
-and ActionSequenceNode<'ActionSpace, 'Response> = {
+    | Action of Node:ActionSequenceNode<'ActionSpace>
+and ActionSequenceNode<'ActionSpace> = {
     /// Links previous decision.
-    Previous: ContentId<ActionSequenceHead<'ActionSpace, 'Response>>
+    Previous: ContentId<ActionSequenceHead<'ActionSpace>>
 
     /// Holds timestamps and information obtained through the broker.
-    Result: ActionExecutionResult<'ActionSpace, 'Response>
+    Result: ActionExecutionResult<'ActionSpace>
 }
 
 // ###################
@@ -89,19 +93,19 @@ and ActionSequenceNode<'ActionSpace, 'Response> = {
 // - sequence on different timestamps (observer or sequencer), or
 // - handle late arriving data differently (drop or rewind, up to a threshold)
 
-type Happening<'ObservationSpace, 'ActionSpace, 'Response> =
+type Happening<'ObservationSpace, 'ActionSpace> =
     | Observation of CapturedObservation<'ObservationSpace>
-    | Action of ActionExecutionResult<'ActionSpace, 'Response>
+    | Action of ActionExecutionResult<'ActionSpace>
 
-type ContextSequenceHead<'ObservationSpace, 'ActionSpace, 'Response> =
+type ContextSequenceHead<'ObservationSpace, 'ActionSpace> =
     | Identity of Nonce:uint64
-    | Context of Node:ContextSequenceNode<'ObservationSpace, 'ActionSpace, 'Response>
-and ContextSequenceNode<'ObservationSpace, 'ActionSpace, 'Response> = {
+    | Context of Node:ContextSequenceNode<'ObservationSpace, 'ActionSpace>
+and ContextSequenceNode<'ObservationSpace, 'ActionSpace> = {
     /// Links previous context sequence head
-    Previous: ContentId<ContextSequenceHead<'ObservationSpace, 'ActionSpace, 'Response>>
+    Previous: ContentId<ContextSequenceHead<'ObservationSpace, 'ActionSpace>>
 
     /// The latest happening of this context sequence.
-    Happening: Happening<'ObservationSpace, 'ActionSpace, 'Response>
+    Happening: Happening<'ObservationSpace, 'ActionSpace>
 }
 
 // ###################
@@ -121,7 +125,7 @@ and QuerySequenceStart<'Query, 'Result> = {
 
     /// The first context the strategy should evaluate the query on, with all later contexts being
     /// part of the same query sequence for this to be a valid query sequence.
-    FirstContext: ContentId<ContextSequenceHead<unit, unit, unit>>
+    FirstContext: ContentId<ContextSequenceHead<unit, unit>>
 }
 and QuerySequenceNode<'Query, 'Result> = {
     /// Links previous decision head of this decision sequence.
@@ -139,20 +143,20 @@ and QuerySequenceNode<'Query, 'Result> = {
 /// decisions are made from now into the future using the same strategy.
 /// It is produced by the runtime modules 'Live Strategy' and 'Backtester',
 /// with decision sequences of the live strategy module possibly being routed to an according 'Broker Group'.
-type DecisionSequenceHead<'StrategyParameters, 'ActionSpace, 'Response> =
-    | Start of DecisionSequenceStart<'StrategyParameters, 'ActionSpace, 'Response>
-    | Decision of Node:DecisionSequenceNode<'StrategyParameters, 'ActionSpace, 'Response>
-and DecisionSequenceStart<'StrategyParameters, 'ActionSpace, 'Response> = {
+type DecisionSequenceHead<'StrategyParameters, 'ActionSpace> =
+    | Start of DecisionSequenceStart<'StrategyParameters, 'ActionSpace>
+    | Decision of Node:DecisionSequenceNode<'StrategyParameters, 'ActionSpace>
+and DecisionSequenceStart<'StrategyParameters, 'ActionSpace> = {
     /// References the strategy to be used for every decision to be a valid decision sequence.
     Strategy: ContentId<Sdk.Strategy<'StrategyParameters, (*'ObservationSpace,*) 'ActionSpace>>
 
     /// The first context the strategy should produce decisions on, with all later contexts being
     /// part of the same decision sequence for this to be a valid decision sequence.
-    FirstContext: ContentId<ContextSequenceHead<unit, 'ActionSpace, 'Response>>
+    FirstContext: ContentId<ContextSequenceHead<unit, 'ActionSpace>>
 }
-and DecisionSequenceNode<'StrategyParameters, 'ActionSpace, 'Response> = {
+and DecisionSequenceNode<'StrategyParameters, 'ActionSpace> = {
     /// Links previous decision head of this decision sequence.
-    Previous: ContentId<DecisionSequenceHead<'StrategyParameters, 'ActionSpace, 'Response>>
+    Previous: ContentId<DecisionSequenceHead<'StrategyParameters, 'ActionSpace>>
 
     /// What actions have been decided on by the evaluated strategy.
     Decision: ContentId<Sdk.Decision<'ActionSpace>>

@@ -112,23 +112,23 @@ and ContextSequenceNode<'ObservationSpace, 'ActionSpace, 'Response> = {
 /// decisions are made from now into the future using the same strategy.
 /// It is produced by the runtime modules 'Live Strategy' and 'Backtester',
 /// with decision sequences of the live strategy module possibly being routed to an according 'Broker Group'.
-type QuerySequenceHead<'QueryParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> =
-    | Start of QuerySequenceStart<'QueryParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
-    | Decision of Node:QuerySequenceNode<'QueryParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
-and QuerySequenceStart<'QueryParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> = {
+type QuerySequenceHead<'Query, 'Result> =
+    | Start of QuerySequenceStart<'Query, 'Result>
+    | Decision of Node:QuerySequenceNode<'Query, 'Result>
+and QuerySequenceStart<'Query, 'Result> = {
     /// References the strategy to be used for every decision to be a valid decision sequence.
-    Strategy: ContentId<Sdk.Strategy<'QueryParameters, (*'ObservationSpace,*) 'ActionSpace>>
+    Query: ContentId<Sdk.Query<'Query, (*'ObservationSpace,*) 'Result>> // -> space of pssibly queryed 'ObservationSpace implied by the queries typed use of Context(latest, inTimeRange)-queries and World(latest, inTimeRange)-queries.
 
-    /// The first context the strategy should produce decisions on, with all later contexts being
-    /// part of the same decision sequence for this to be a valid decision sequence.
-    FirstContext: ContentId<ContextSequenceHead<'ObservationSpace, 'ActionSpace, 'Response>>
+    /// The first context the strategy should evaluate the query on, with all later contexts being
+    /// part of the same query sequence for this to be a valid query sequence.
+    FirstContext: ContentId<ContextSequenceHead<unit, unit, unit>>
 }
-and QuerySequenceNode<'QueryParameters, 'ObservationSpace,'QuerySurface, 'ActionSpace, 'Response> = {
+and QuerySequenceNode<'Query, 'Result> = {
     /// Links previous decision head of this decision sequence.
-    Previous: ContentId<QuerySequenceHead<'QueryParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>>
+    Previous: ContentId<QuerySequenceHead<'Query, 'Result>>
 
     /// What actions have been decided on by the evaluated strategy.
-    Decision: ContentId<Sdk.Decision<'ActionSpace>>
+    Result: ContentId<'Result>
 }
 
 // ####################
@@ -139,20 +139,20 @@ and QuerySequenceNode<'QueryParameters, 'ObservationSpace,'QuerySurface, 'Action
 /// decisions are made from now into the future using the same strategy.
 /// It is produced by the runtime modules 'Live Strategy' and 'Backtester',
 /// with decision sequences of the live strategy module possibly being routed to an according 'Broker Group'.
-type DecisionSequenceHead<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> =
-    | Start of DecisionSequenceStart<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
-    | Decision of Node:DecisionSequenceNode<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>
-and DecisionSequenceStart<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> = {
+type DecisionSequenceHead<'StrategyParameters, 'ActionSpace, 'Response> =
+    | Start of DecisionSequenceStart<'StrategyParameters, 'ActionSpace, 'Response>
+    | Decision of Node:DecisionSequenceNode<'StrategyParameters, 'ActionSpace, 'Response>
+and DecisionSequenceStart<'StrategyParameters, 'ActionSpace, 'Response> = {
     /// References the strategy to be used for every decision to be a valid decision sequence.
     Strategy: ContentId<Sdk.Strategy<'StrategyParameters, (*'ObservationSpace,*) 'ActionSpace>>
 
     /// The first context the strategy should produce decisions on, with all later contexts being
     /// part of the same decision sequence for this to be a valid decision sequence.
-    FirstContext: ContentId<ContextSequenceHead<'ObservationSpace, 'ActionSpace, 'Response>>
+    FirstContext: ContentId<ContextSequenceHead<unit, 'ActionSpace, 'Response>>
 }
-and DecisionSequenceNode<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response> = {
+and DecisionSequenceNode<'StrategyParameters, 'ActionSpace, 'Response> = {
     /// Links previous decision head of this decision sequence.
-    Previous: ContentId<DecisionSequenceHead<'StrategyParameters, 'ObservationSpace, 'QuerySurface, 'ActionSpace, 'Response>>
+    Previous: ContentId<DecisionSequenceHead<'StrategyParameters, 'ActionSpace, 'Response>>
 
     /// What actions have been decided on by the evaluated strategy.
     Decision: ContentId<Sdk.Decision<'ActionSpace>>

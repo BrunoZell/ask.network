@@ -1,1 +1,59 @@
-<mxfile host="Electron" modified="2023-12-10T21:05:59.098Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/16.1.2 Chrome/96.0.4664.55 Electron/16.0.5 Safari/537.36" etag="9aUIjT2PSviDxOdHv11J" version="16.1.2" type="device"><diagram id="PhFdvqSgjBlysVg2z-UK" name="Ask Repository">3Vldc9M6EP01eQyT2E0aHtumFxi4TG87DJfHrS3baiXLSHI++PXsyrJdx1BcoMTDS+xdrSxpj3bPSpmEF3L3SkOR/atiJibBLN5NwvUkCObzWYAP0uwrzWpxWilSzWNv1Cpu+BfmlTOvLXnMTMfQKiUsL7rKSOU5i2xHB1qrbdcsUaI7agEp6yluIhB97Uce28yvIjht9a8ZT7N65PnyZdUioTb2KzEZxGr7QBVeTsILrZSt3uTugglyXu2Xqt8/32ltJqZZbod0WIYf7q7t54/r929P3wbX2f787r/p3H9mA6L0K2Y7FpUWfY6e3hfuyWUhmMRxWExS7hdk97WXWIxO86LSNlOpykFcttpzrco8ZjSVGUqtzTulClTOUXnHrN37HQClVajKrBS+FUfX+/+p/4tFLX7yn3PCeteR9l7qu8kv2ahSR+wx3/jtBjpl9hG7k8qOfPBgAA/CK6Ykw/mggWYCLN90Nxb4/Zk2di2E+OJRfAqiYQ/RQqu4jBySMVigNWng9CWVeJTHhOj86IjOg3FBuuxByjEWdQIVqCioSbAUuKTzW41vKb1lytTxmmgwVpeRLTWj73Do4f3LaP4BVEYWaD1QGgxqCM7M/YvrMrdcsroNh2qa+5hhomW6mjtRWkwPicErqnSsaPVVeibHxvfTCsE2rquEfUFIuKDneUpr70X+d9EnKLcZt+ymAIfaFnm9i7TBFvouSqvHgN8wbdnuUaR8axB6jvRFQrjy8ral3KYiyDp0O3smdPtZlOLJHCNP/nxkBUMja1yBNev53sK9iwAwlScAR2J6TKT1fGXIUBBX4wJx0eesuor8W6NoXPwUDOOn945lhpBTxTxw6wjHIAMINpUQZTx3bCU4eZZqyoRpzzsiVZrbTFLYJlpJcmNG1jgy/l7iqU1JHlHzFRQU0RXJOaZiUZZzPImRS3MqZErzjZg/MnUtTkZHXSfDgL+J74fhTkXFVLCNO9ljWZFi+pUVwA6sSIAxPCGnxEoCHQ+paHHm9QkyUbrBXtcV0WFBg83S1T1a41Fe7MeG9WGZsjg+1i97WEdKFrytF4/IkI3wqUuXv50hVwMT9G/Pz77rleIu89UmmAENTuQQ22aEn4d79ePQXtch6O/ihkQ4JdZpzBLM5JRnt0qL2J0T2XYSnvXta03MN53ttfxcKpcx2M5OQfA0d91ngiW2bT38CgZqXuumRCC3OJ0NIqBoGcYFeLuMh9YP1G4qf2J2EI10YhvQvCbnkU0tgtI4HkeiKGVBDjRPnN64mOCQ9UfABPWd1Y9ofw0WnpAaMBQ54v7F7yx/i9DcJpl+D0wmccP4WNMZbizLaT/OwJVxVkNuJMeaQfVvkkdG8fMRADuwnnutjB14y3R4IXh29aauxhC9plDzNx7fBFEyYyCtqsAICrjlglvO+ke7kUXqswKKYvt/TsX57b9i4eVX</diagram></mxfile>
+<mxfile host="Electron" modified="2023-12-12T21:44:30.390Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.2 Chrome/114.0.5735.289 Electron/25.9.4 Safari/537.36" etag="isqMryg7Am7uklDvGj3J" version="22.1.2" type="device">
+  <diagram id="PhFdvqSgjBlysVg2z-UK" name="Ask Repository">
+    <mxGraphModel dx="915" dy="790" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-11" value="executes types implemented in" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="63UjRtqWDNK7K2RhyBjQ-1" target="63UjRtqWDNK7K2RhyBjQ-4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-13" value="produces data trail of type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="63UjRtqWDNK7K2RhyBjQ-1" target="63UjRtqWDNK7K2RhyBjQ-12" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-16" value="interfaces into&lt;br&gt;hosted infrastructure via" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="63UjRtqWDNK7K2RhyBjQ-1" target="63UjRtqWDNK7K2RhyBjQ-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-1" value="&lt;b&gt;Ask.Runtime&lt;/b&gt;&lt;br&gt;imperative code modules to execute sdk-style data types, producing a data trail" style="rounded=1;whiteSpace=wrap;html=1;spacing=18;" parent="1" vertex="1">
+          <mxGeometry x="779" y="359" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-3" value="hosts" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="63UjRtqWDNK7K2RhyBjQ-2" target="63UjRtqWDNK7K2RhyBjQ-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-10" value="takes as parameter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="63UjRtqWDNK7K2RhyBjQ-2" target="63UjRtqWDNK7K2RhyBjQ-8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-15" value="implements" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="63UjRtqWDNK7K2RhyBjQ-2" target="63UjRtqWDNK7K2RhyBjQ-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-2" value="&lt;b&gt;Ask.Node&lt;/b&gt;&lt;br&gt;executable single-machine client offering algorithms from the Ask Economics Paper to a technical end user" style="rounded=1;whiteSpace=wrap;html=1;spacing=18;" parent="1" vertex="1">
+          <mxGeometry x="479" y="359" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-4" value="&lt;b&gt;Ask.Sdk&lt;/b&gt;&lt;br&gt;type-level programming to classify domain model types for the runtime to execute them correctly" style="rounded=1;whiteSpace=wrap;html=1;spacing=18;" parent="1" vertex="1">
+          <mxGeometry x="779" y="159" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-9" value="compiles to" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="63UjRtqWDNK7K2RhyBjQ-8" target="63UjRtqWDNK7K2RhyBjQ-4" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-8" value="&lt;b&gt;Domain Model&lt;/b&gt;&lt;br&gt;user-defined world view:&lt;br&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;- observation space&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;- action space&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;- variable space&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;- causal assumptions&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;- custom queries, strategies&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;spacing=18;" parent="1" vertex="1">
+          <mxGeometry x="479" y="159" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-12" value="&lt;b&gt;Ask.DataModel&lt;/b&gt;&lt;br&gt;serializable data structures&lt;br&gt;used for persistence and transmission" style="rounded=1;whiteSpace=wrap;html=1;spacing=18;" parent="1" vertex="1">
+          <mxGeometry x="779" y="559" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="63UjRtqWDNK7K2RhyBjQ-14" value="&lt;b&gt;Ask.Host&lt;/b&gt;&lt;br&gt;infrastructure API to use the hosts persistence and messaging capabilities" style="rounded=1;whiteSpace=wrap;html=1;spacing=18;" parent="1" vertex="1">
+          <mxGeometry x="479" y="559" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-SYFGQcgWxdQqtdu8-DM-2" value="interacts with" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="-SYFGQcgWxdQqtdu8-DM-1" target="63UjRtqWDNK7K2RhyBjQ-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-SYFGQcgWxdQqtdu8-DM-1" value="&lt;b&gt;Ask.Cli&lt;/b&gt;&lt;br&gt;executable single-machine client offering algorithms from the Ask Economics Paper to a technical end user" style="rounded=1;whiteSpace=wrap;html=1;spacing=18;" vertex="1" parent="1">
+          <mxGeometry x="179" y="359" width="210" height="110" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -204,8 +204,24 @@ type TypeTerm =
     | Product of t1:TypeTerm * t2:TypeTerm
     | Primitive of Primitive
 
+type Mechanism<'Codomain> = {
+    Fn: Func<'Codomain> // executable function parameterized by a Context
+
+    // That functions derived domain (domains as measurable spaces for each possibly queried input type)
+    ObservationsIn: Set<int> // set of indexes of the ObservationSpace set O_i
+    VariablesIn: Set<int> // set of indexes of the Latent Variable Space set V_i
+
+    // That functions derived codomain (measurable spaces for the return type, which must match the type of the target variable V_i this f_i is for)
+    VariableOut: int // index of the Latent Variable Space
+    // Todo: The above should be a fact on the APG and not show up in the data structure here
+}
+
 type Domain = {
     Labels: Map<string, TypeHash> // indexed by ordinal
     Types: Map<TypeHash, TypeTerm> // where Key = Value.TypeHash()
-    
+    // Facts: For each type, a custom validation function. Alternatively, CQL path equations to allow for a formal prover.
+    ObservationSpace: int list // indexed-set of ordinal indexes of the label that is considered a valid observation and is free to be used in SCM mechanisms
+    ActionSpace: int list // indexed-set of ordinal indexes of the label that is considered an action, and can be routed to an according IBroker when available.
+    LatentVariables: int list // indexed-set of ordinal indexes of the labels that represent hidden state of external systems. They are connected with observational nodes and interventional nodes via causal mechanisms
+    CausalAssumptions: Map<int, Mechanism<int>> // maps indexes from the set of latent variables V_i to a causal mechanism f_i, where 'Codomain in Mechanism<'Codomain> is the type represented by the respective Key, which is an index-access to the set of latent variables.
 }

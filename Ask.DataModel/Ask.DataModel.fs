@@ -161,3 +161,28 @@ and DecisionSequenceNode<'StrategyParameters, 'ActionSpace> = {
     /// What actions have been decided on by the evaluated strategy.
     Decision: ContentId<Sdk.Decision<'ActionSpace>>
 }
+
+// [measurment]->ObservationSequence
+// ObservationSequence.append(ObservationSequence) = ObservationSequence
+
+// [happening]->strategy->[decision]->broker->[act]
+// ContextSequence + Strategy = DecisionSequence (where each decision.'Action is element of strategy.'ActionSpace)
+// DecisionSequence + BrokerGroup = ActionSequence (where each decision.'Action is element of BrokerGroup.'ActionSpace)
+
+
+// DecisionSequence + Simulation[CausalAssumptions] = EnvironmentTree
+// walk(EnvironmentTree) = iteration of EnvironmentSequence (in APG as infinite stream)
+// SimulationSequence = EnvironmentSequence + Strategy (with Actions from Strategies decision)
+// SimulationSequence.latest := ContextSequence
+// SimulationSequence = EnvironmentSequence + Actions (or with arbitrary other action set)
+
+// to integrate newest observations while keeping latent effects of previously simulated actions, like account balance debits:
+// SimulationSequence = SimulationSequence + ContextSequence (where SimulationSequence.latestContext.traverseToIdentity() == ContextSequence.traverseToIdentity())
+
+// every such state action sequence can be evaluated at each intermediary superstate.
+// a specifiy non-branching sequence of evaluations of those states is a trajectory, with each trajectory ending when a steady state ecomomy is reached.
+// Trajectory = SimulationSequence[context->action->simulation[->simulation]->action] + ValueTree
+// Trajectory.step.askFulfillment = [evaluation of all users asks]
+// Trajectory.step.preferenceScore = [weighted aggregation of all individual ask fulfillments]
+// Trajectory.step.aggregatedUtility
+// Trajectory.totalUtility

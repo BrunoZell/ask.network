@@ -186,3 +186,26 @@ and DecisionSequenceNode<'StrategyParameters, 'ActionSpace> = {
 // Trajectory.step.preferenceScore = [weighted aggregation of all individual ask fulfillments]
 // Trajectory.step.aggregatedUtility
 // Trajectory.totalUtility
+
+type TypeHash = struct end
+
+type Primitive =
+    | Boolean of bool // 4 bytes
+    | Integer of int64 // 8 bytes
+    | Decimal of decimal // 16 bytes
+    | String of string // 4 bytes + (len * 8 bytes) [UTF8]
+    | Bytes of Byte[] // 4 bytes + (len * 1 bytes)
+    | Link of ContentId<TypeHash> // 8 bytes .NET reference to a ContentId<'Type>
+
+type TypeTerm =
+    | Error // 0
+    | Unit // 1
+    | Sum of t1:TypeTerm * t2:TypeTerm
+    | Product of t1:TypeTerm * t2:TypeTerm
+    | Primitive of Primitive
+
+type Domain = {
+    Labels: Map<string, TypeHash> // indexed by ordinal
+    Types: Map<TypeHash, TypeTerm> // where Key = Value.TypeHash()
+    
+}

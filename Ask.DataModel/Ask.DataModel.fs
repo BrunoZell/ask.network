@@ -6,7 +6,7 @@ open Ask.Host.Persistence
 // ####################
 // #### PRIMITIVES ####
 // ####################
-
+ 
 type Primitive =
     | Boolean of bool // 4 bytes
     | Integer of int64 // 8 bytes
@@ -26,20 +26,51 @@ type TypeTerm =
     | Product of t1:TypeTerm * t2:TypeTerm
     | Primitive of Primitive
 
-type Mechanism<'Codomain> = {
-    Fn: Func<'Codomain> // executable function parameterized by a Context
-
-    // That functions derived domain (domains as measurable spaces for each possibly queried input type)
-    ObservationsIn: Set<int> // set of indexes of the ObservationSpace set O_i
-    VariablesIn: Set<int> // set of indexes of the Latent Variable Space set V_i
-
-    // That functions derived codomain (measurable spaces for the return type, which must match the type of the target variable V_i this f_i is for)
-    VariableOut: int // index of the Latent Variable Space
-    // Todo: The above should be a fact on the APG and not show up in the data structure here
-}
-
 // Addressing a specific TypeTerm by a well-formed hash of the term
 type TypeHash = TypeHash of uint64
+
+type ProbabilityDistribution<'T when 'T : comparison> = P of Map<'T, float>
+type Variable = Variable of domain:TypeHash * label:string * information:ProbabilityDistribution<unit> (*P(u)*)
+
+type Intervention<'Action, 'X> = {
+    (*F_i*) Intervention: 'Action -> 'X
+}
+
+type Endogenous<'Z> = {
+    (*f_i(pa_i, u_i)*) Mechanism: Sdk.Context * Sdk.World -> 'Z
+    // Sdk.Context exposes Observations O ⊆ V, basically passing P(u) as PMF, with static validation ensuring P(u) = P(u_i)
+    // Sdk.World exposes Queries Z ⊆ V over all times t <= now, basically passing the nodes parents pa as a recursive SCM
+    // the mechanisms function signature and static analysis of calls to Context and World implies:
+    // background variables input P(u_i)
+    // latent variables input Z_i
+    // observed variables input O_i
+}
+
+type CausalModel = {
+    (*X*) Actions: Map<Variable, Intervention<unit, unit>>
+    (*Z*) Covariates: Map<Variable, Endogenous<unit>>
+    (*Y*) Outcome: Variable list
+}
+
+type Node = Variable
+type DirectedEdge = Node * Node
+type BiDirectedEdge = Node * Node
+
+/// 1. A directed graph is a pair G = (V, E), where V is a set of nodes and E is a set of directed
+/// edges, which is a subset E ⊆ V × V of ordered pairs of nodes. Each element (i, j) ∈ E can
+/// be represented by the directed edge i → j or equivalently j ← i. In particular, (i, i) ∈ E
+/// represents a self-cycle i → i.
+/// 2. A directed mixed graph is a triple G = (V, E,B), where the pair (V, E) forms a directed
+/// graph and B is a set of bidirected edges, which is a subset B ⊆ {{i, j} : i, j ∈ V, i 6= j}
+/// of unordered (distinct) pairs of nodes. Each element {i, j} ∈ B can be represented by the
+/// bidirected edge i ↔ j or equivalently j ↔ i. Note that a directed graph can be considered
+/// as a directed mixed graph without bidirected edges.
+type CausalGraph = {
+    (*V*) Nodes : Node list;
+    (*E*) DirectedEdges : DirectedEdge list;
+    (*B*) BiDirectedEdges : BiDirectedEdge list
+}
+
 // Address a specific 'Observation by its union case number from a Domain.ObservationSpace
 type ObservationType = ObservationType of uint64
 // Address a specific 'Action by its union case number from a Domain.ActionSpace
@@ -57,14 +88,13 @@ type Domain = {
     // Facts: For each type, a custom validation function. Alternatively, CQL path equations to allow for a formal prover.
     ObservationSpace: LabelId list // indexed-set of ordinal indexes of the label that is considered a valid observation and is free to be used in SCM mechanisms
     ActionSpace: LabelId list // indexed-set of ordinal indexes of the label that is considered an action, and can be routed to an according IBroker when available.
-    LatentVariables: LabelId list // indexed-set of ordinal indexes of the labels that represent hidden state of external systems. They are connected with observational nodes and interventional nodes via causal mechanisms
-    CausalAssumptions: Map<VariableType, Mechanism<VariableType>> // maps indexes from the set of latent variables V_i to a causal mechanism f_i, where 'Codomain in Mechanism<'Codomain> is the type represented by the respective Key, which is an index-access to the set of latent variables.
+    CausalAssumptions: CausalModel
 }
 
 // ######################
 // #### OBSERVATIONS ####
 // ######################
-//
+
 // Observations are the main entry point of data flowing into the system.
 // Keeping a handle on created observation sequences therefore is important
 // if the data should not get lost.
@@ -228,8 +258,8 @@ and DecisionSequenceNode<'StrategyParameters, 'ActionSpace> = {
 // DecisionSequence + BrokerGroup = ActionSequence (where each decision.'Action is element of BrokerGroup.'ActionSpace)
 
 
-// DecisionSequence + Simulation[CausalAssumptions] = EnvironmentTree
-// walk(EnvironmentTree) = iteration of EnvironmentSequence (in APG as infinite stream)
+// EnvironmentResponses = Context + 'Action -> Counterfactual[TwinNetwork(domain.CausalAssumptions, do 'Action)]
+// walk(EnvironmentResponses) = iteration of all action sequnces among all agents in EnvironmentResponses (in APG as infinite stream) ; which is, what commitment is triggered next, and what agent does that action
 // SimulationSequence = EnvironmentSequence + Strategy (with Actions from Strategies decision)
 // SimulationSequence.latest := ContextSequence
 // SimulationSequence = EnvironmentSequence + Actions (or with arbitrary other action set)

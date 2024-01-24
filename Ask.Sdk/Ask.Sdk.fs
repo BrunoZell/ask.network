@@ -5,18 +5,13 @@ open System.Runtime.CompilerServices
 open System.Threading.Tasks
 open Ask.Host.Persistence
 
-// Todo: Integrate HKT
-type specific_observation_of<'ObservationSpace> = struct end
-type specific_action_of<'ActionSpace> = struct end
-type specific_query_of<'QuerySurface> = struct end
-
 // ######################
 // #### OBSERVATIONS ####
 // ######################
 
 /// The instance of a single observation from the given 'ObservationSpace.
 type Percept<'ObservationSpace> = {
-    SensoryInformation: specific_observation_of<'ObservationSpace>
+    SensoryInformation: 'ObservationSpace
 }
 
 /// An atomic appearance of sensory information emitted from a single IObserver instance.
@@ -42,7 +37,7 @@ type IObserver<'ObservationSpace> =
 
 /// Virtually represents a specific abstract action with some 'Action type from 'ActionSpace
 type Action<'ActionSpace> = {
-    Action: specific_action_of<'ActionSpace>
+    Action: 'ActionSpace
 }
 
 /// Represents the strategies intent to execute one or more specified actions immediately.

@@ -1,6 +1,6 @@
 {
 	"name": "Ask Network",
-	"dockerFile": "Dockerfile",
+	"dockerFile": "Dockerfile-avx2",
 	"workspaceMount": "type=bind,src=${localWorkspaceFolder},dst=/ask.network",
 	"workspaceFolder": "/ask.network",
 	"mounts": [

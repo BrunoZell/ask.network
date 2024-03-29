@@ -1,6 +1,7 @@
 [features]
 seeds = false
 skip-lint = false
+
 [programs.localnet]
 ask_network = "4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE"
 

@@ -14,7 +14,7 @@ To implement an instruciton, you need to:
   - A `struct` declaring the accounts root data type
   - Possibly inner types like enums or other structs referenced by the root account struct.
   - An `impl` of that account struct containing:
-    - A `const SIZE: u64` if the account struct has a constant size. A dynamic function otherwise.
+    - A `const SIZE: usize` if the account struct has a constant size to be used in Anchor constraints. A dynamic function otherwise.
     - A function `invariant` defining all imperative validaton code depending on solely an instance of the account type. This must be called manually in each instruction that interacts with accounts of that type
 - Add the instructions entry point to `lib.rs`
 - Add the new instruction and state files to `src/instructions/mod.rs` and `src/state/mod.rs` respectively
@@ -69,8 +69,8 @@ pub struct AccountType {
     pub data_field: u64, // 8
 }
 
-pub impl AccountType {
-    // pub const SIZE: u64 = 8 + ...; // Sum of all data field sizes + 8b Anchor discriminator
+impl AccountType {
+    // pub const SIZE: usize = 8 + ...; // Sum of all data field sizes + 8b Anchor discriminator
 
     pub fn invariant(&self) -> Result<()> {
         // Todo: Implement validation code depending only on the account type data

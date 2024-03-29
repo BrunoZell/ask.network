@@ -11,7 +11,7 @@ pub struct PlaceAskArgs {
 pub struct PlaceAsk<'info> {
     #[account(
         init, // this 'ask' account will be initialized
-        seeds = [user_account.key().as_ref(), &user_account.running_ask_ordinal.to_le_bytes()], // unique ask address from user key and ordinal
+        seeds = [b"ask", user_account.key().as_ref(), &user_account.running_ask_ordinal.to_le_bytes()], // unique ask address from user key and ordinal
         bump,
         payer = user_login, // 'user_login' account pays fees
         space = Ask::size(args.content.len()))]

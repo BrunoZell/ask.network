@@ -2,10 +2,10 @@ use crate::state::*;
 use anchor_lang::prelude::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
-pub struct InitializeUserArgs {}
+pub struct SignUpUserArgs {}
 
 #[derive(Accounts)]
-pub struct InitializeUser<'info> {
+pub struct SignUpUser<'info> {
     #[account(
         init,
         seeds= [user_login.key().as_ref()],
@@ -21,16 +21,16 @@ pub struct InitializeUser<'info> {
     pub rent: Sysvar<'info, Rent>,
 }
 
-impl InitializeUser<'_> {
-    fn validate(&self, _args: &InitializeUserArgs) -> Result<()> {
+impl SignUpUser<'_> {
+    fn validate(&self, _args: &SignUpUserArgs) -> Result<()> {
         // fee and accs checked in invariant
         Ok(())
     }
 
     #[access_control(ctx.accounts.validate(&args))]
-    pub fn handle(ctx: Context<Self>, args: InitializeUserArgs) -> Result<()> {
+    pub fn handle(ctx: Context<Self>, args: SignUpUserArgs) -> Result<()> {
         msg!(
-            "Initializing user {} for login account {}",
+            "Initializing personal account named {} for login address {}",
             ctx.accounts.user_account.key(),
             ctx.accounts.user_login.key()
         );

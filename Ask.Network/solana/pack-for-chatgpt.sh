@@ -1,0 +1,1 @@
+find ./programs/ask-network/src -type f -name '*.rs' -exec cat {} + > chatgpt.txt

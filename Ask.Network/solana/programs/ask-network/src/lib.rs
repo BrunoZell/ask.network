@@ -11,6 +11,13 @@ declare_id!("EaBpabfkGswhPnC14mnwz3XxHHyJuqZjPZAMU9mR7KR3");
 pub mod ask_network {
     use super::*;
 
+    pub fn initialize_global(
+        ctx: Context<InitializeGlobal>,
+        args: InitializeGlobalArgs,
+    ) -> Result<()> {
+        InitializeGlobal::handle(ctx, args)
+    }
+
     pub fn sign_up_user(ctx: Context<SignUpUser>, args: SignUpUserArgs) -> Result<()> {
         SignUpUser::handle(ctx, args)
     }

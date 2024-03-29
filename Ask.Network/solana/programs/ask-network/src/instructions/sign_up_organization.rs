@@ -13,7 +13,7 @@ pub struct SignUpOrganization<'info> {
         init,
         seeds = [b"organization", &global.running_organization_ordinal.to_le_bytes()[..]],
         bump,
-        space = 8 + (4 + args.alias.len()),
+        space = Organization::size(args.alias.len()),
         payer = initial_member_login)]
     pub organization_account: Account<'info, Organization>,
 

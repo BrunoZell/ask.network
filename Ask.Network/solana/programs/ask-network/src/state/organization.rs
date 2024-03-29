@@ -7,7 +7,12 @@ pub struct Organization {
 }
 
 impl Organization {
-    // pub const SIZE: usize = 8 + 8;
+    pub const DISCRIMINATOR_SIZE: usize = 8; // 8 bytes for the discriminator
+    pub const ALIAS_LEN_PREFIX: usize = 4; // 4 bytes to store the length of `alias`
+
+    pub fn size(alias_len: usize) -> usize {
+        Self::DISCRIMINATOR_SIZE + Self::ALIAS_LEN_PREFIX + alias_len
+    }
 
     pub fn invariant() -> Result<()> {
         Ok(())

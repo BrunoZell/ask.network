@@ -8,7 +8,8 @@ pub struct User {
 }
 
 impl User {
-    pub const SIZE: usize = 8 + 8;
+    pub const DISCRIMINATOR_SIZE: usize = 8; // 8 bytes for the discriminator
+    pub const SIZE: usize = Self::DISCRIMINATOR_SIZE + 8;
 
     pub fn invariant() -> Result<()> {
         Ok(())

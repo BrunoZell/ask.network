@@ -13,8 +13,8 @@ pub struct PlaceAsk<'info> {
         init, // this 'ask' account will be initialized
         seeds = [user_account.key().as_ref(), &user_account.running_ask_ordinal.to_le_bytes()], // unique ask address from user key and ordinal
         bump,
-        payer = user_login, // 'user' account pays fees
-        space = 8 + 8 + 4 + args.content.len())]
+        payer = user_login, // 'user_login' account pays fees
+        space = Ask::size(args.content.len()))]
     pub ask: Account<'info, Ask>,
 
     #[account(

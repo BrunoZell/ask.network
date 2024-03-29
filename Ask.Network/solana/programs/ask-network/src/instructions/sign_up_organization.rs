@@ -17,6 +17,15 @@ pub struct SignUpOrganization<'info> {
         payer = initial_member_login)]
     pub organization_account: Account<'info, Organization>,
 
+    #[account(
+        init,
+        seeds = [b"member", &global.running_organization_ordinal.to_le_bytes()[..], initial_member_login.key().as_ref()],
+        bump,
+        space = Membership::SIZE,
+        payer = initial_member_login
+    )]
+    pub initial_membership: Account<'info, Membership>,
+
     #[account(seeds= [b"user", initial_member_login.key().as_ref()], bump)]
     pub initial_member_account: Account<'info, User>,
 
@@ -39,7 +48,8 @@ impl SignUpOrganization<'_> {
     #[access_control(ctx.accounts.validate(&args))]
     pub fn handle(ctx: Context<Self>, args: SignUpOrganizationArgs) -> Result<()> {
         msg!(
-            "Initializing organizational account named {} under accoount {} with the initial member account of {}",
+            "Initializing organization {} named {} under accoount {} with the initial member account of {}",
+            ctx.accounts.global.running_organization_ordinal,
             ctx.accounts.organization_account.alias,
             ctx.accounts.organization_account.key(),
             ctx.accounts.initial_member_login.key()

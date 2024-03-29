@@ -8,7 +8,7 @@ pub struct SignUpUserArgs {}
 pub struct SignUpUser<'info> {
     #[account(
         init,
-        seeds= [user_login.key().as_ref()],
+        seeds= [b"user", user_login.key().as_ref()],
         bump,
         space = User::SIZE,
         payer = user_login)]

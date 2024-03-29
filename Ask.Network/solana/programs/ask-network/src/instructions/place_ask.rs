@@ -19,7 +19,7 @@ pub struct PlaceAsk<'info> {
 
     #[account(
         mut, // users running ask ordinal is incremented after ask placement
-        seeds = [user_login.key().as_ref()], // 'user' account is derived from the users public key
+        seeds= [b"user", user_login.key().as_ref()],
         bump)]
     pub user_account: Account<'info, User>,
 

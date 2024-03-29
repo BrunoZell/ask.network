@@ -17,7 +17,7 @@ pub struct CancelAsk<'info> {
     pub ask: Account<'info, Ask>,
 
     #[account(
-        seeds = [user_login.key().as_ref()],
+        seeds= [b"user", user_login.key().as_ref()],
         bump)]
     pub user_account: Account<'info, User>,
 

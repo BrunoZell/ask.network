@@ -132,4 +132,124 @@ pub enum RegistrationNumber {
     NewZealand {
         nzbn: String,
     },
+
+    // Malaysia: Companies Commission of Malaysia (SSM)
+    // Companies are given a unique registration number upon incorporation.
+    Malaysia {
+        registration_number: String,
+    },
+
+    // Turkey: Trade Registry Gazette
+    // Companies are identified by a unique Trade Registry Number.
+    Turkey {
+        trade_registry_number: String,
+    },
+
+    // Sweden: Bolagsverket (Swedish Companies Registration Office)
+    // Companies are assigned a unique organization number.
+    Sweden {
+        organization_number: String,
+    },
+
+    // Norway: Brønnøysund Register Centre
+    // Entities are given a unique organization number.
+    Norway {
+        organization_number: String,
+    },
+
+    // Finland: Finnish Patent and Registration Office (PRH)
+    // Companies receive a unique Business ID.
+    Finland {
+        business_id: String,
+    },
+
+    // Denmark: Danish Business Authority
+    // Companies are identified by a Central Business Register (CVR) number.
+    Denmark {
+        cvr_number: String,
+    },
+
+    // Ireland: Companies Registration Office (CRO)
+    // Companies are issued a unique Company Registration Number (CRN).
+    Ireland {
+        crn: String,
+    },
+
+    // Belgium: Crossroads Bank for Enterprises (KBO/BCE)
+    // Each company is assigned a unique enterprise number.
+    Belgium {
+        enterprise_number: String,
+    },
+
+    // Poland: National Court Register (KRS)
+    // Companies are registered with a unique KRS number.
+    Poland {
+        krs_number: String,
+    },
+
+    // Portugal: Commercial Registry Office
+    // Companies are identified by a unique registration number.
+    Portugal {
+        registration_number: String,
+    },
+
+    // Austria: Austrian Business Register
+    // Companies receive a unique company number (Firmenbuchnummer).
+    Austria {
+        firmenbuchnummer: String,
+    },
+
+    // Greece: General Commercial Registry (GEMI)
+    // Entities are identified by a unique GEMI number.
+    Greece {
+        gemi_number: String,
+    },
+
+    // Czech Republic: Commercial Register
+    // Companies are issued a unique Identification Number (IČO).
+    CzechRepublic {
+        ico_number: String,
+    },
+
+    // Hungary: Company Court
+    // Companies are registered with a unique company registration number.
+    Hungary {
+        registration_number: String,
+    },
+
+    // Slovakia: Commercial Register of the Slovak Republic
+    // Entities are identified by a unique Identification Number (IČO).
+    Slovakia {
+        ico_number: String,
+    },
+
+    // Luxembourg: Luxembourg Business Registers
+    // Companies are given a unique business permit number.
+    Luxembourg {
+        business_permit_number: String,
+    },
+
+    // Latvia: Register of Enterprises of Latvia
+    // Companies are assigned a unique registration number.
+    Latvia {
+        registration_number: String,
+    },
+
+    // Lithuania: Centre of Registers
+    // Companies receive a unique company code.
+    Lithuania {
+        company_code: String,
+    },
+
+    // Croatia: Court Register
+    // Companies are identified by a unique registration number (MBS).
+    Croatia {
+        mbs_number: String,
+    },
+
+    // Slovenia: Slovenian Business Register (AJPES)
+    // Companies are issued a unique registration number.
+    Slovenia {
+        registration_number: String,
+    },
 }

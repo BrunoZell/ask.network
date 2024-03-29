@@ -29,7 +29,7 @@ impl InitializeGlobal<'_> {
 
     #[access_control(ctx.accounts.validate(&args))]
     pub fn handle(ctx: Context<Self>, args: InitializeGlobalArgs) -> Result<()> {
-        ctx.accounts.global.running_account_ordinal = 0;
+        ctx.accounts.global.running_organization_ordinal = 0;
 
         Ok(())
     }

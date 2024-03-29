@@ -2,9 +2,9 @@ use anchor_lang::prelude::*;
 
 #[account]
 pub struct Global {
-    /// Each account, both organizational and personal, are identified by a unique account number.
-    /// These account numbers are issued sequentially starting from 0, incrementing by one with each account creation.
-    pub running_account_ordinal: u64, // 8
+    /// Each organizational account is identified by a unique u64 account number.
+    /// These account numbers are issued sequentially starting from 0, incrementing by one with each organization created.
+    pub running_organization_ordinal: u64, // 8
 }
 
 impl Global {
@@ -16,6 +16,6 @@ impl Global {
     }
 
     pub fn next_account_number(&self) -> u64 {
-        self.running_account_ordinal + 1
+        self.running_organization_ordinal + 1
     }
 }

@@ -13,7 +13,7 @@ pub struct SignUpOrganization<'info> {
         init,
         seeds = [b"organization", &global.running_organization_ordinal.to_le_bytes()[..]],
         bump,
-        space = 8 + 8 + (4 + args.alias.len()),
+        space = 8 + (4 + args.alias.len()),
         payer = initial_member_login)]
     pub organization_account: Account<'info, Organization>,
 
@@ -46,7 +46,6 @@ impl SignUpOrganization<'_> {
         );
 
         // Anchor creates the organization_account
-        ctx.accounts.organization_account.running_ask_ordinal = 0;
         ctx.accounts.organization_account.alias = args.alias;
 
         // Increment global organization ordinal for next signup

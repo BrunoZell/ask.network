@@ -33,7 +33,7 @@ pub mod ask_network {
         PlaceAsk::handle(ctx, args)
     }
 
-    pub fn cancecl_ask(ctx: Context<CancelAsk>, args: CancelAskArgs) -> Result<()> {
+    pub fn cancel_ask(ctx: Context<CancelAsk>, args: CancelAskArgs) -> Result<()> {
         CancelAsk::handle(ctx, args)
     }
 }

@@ -29,6 +29,27 @@ pub mod ask_network {
         SignUpOrganization::handle(ctx, args)
     }
 
+    pub fn request_register_verification(
+        ctx: Context<RequestRegisterVerification>,
+        args: RequestRegisterVerificationArgs,
+    ) -> Result<()> {
+        RequestRegisterVerification::handle(ctx, args)
+    }
+
+    pub fn fulfill_register_verification(
+        ctx: Context<FulfillRegisterVerification>,
+        args: FulfillRegisterVerificationArgs,
+    ) -> Result<()> {
+        FulfillRegisterVerification::handle(ctx, args)
+    }
+
+    pub fn complete_register_verification(
+        ctx: Context<CompleteRegisterVerification>,
+        args: CompleteRegisterVerificationArgs,
+    ) -> Result<()> {
+        CompleteRegisterVerification::handle(ctx, args)
+    }
+
     pub fn place_ask(ctx: Context<PlaceAsk>, args: PlaceAskArgs) -> Result<()> {
         PlaceAsk::handle(ctx, args)
     }

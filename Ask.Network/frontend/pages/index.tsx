@@ -112,10 +112,10 @@ const Page = () => {
     );
 
     const tx = await program.methods
-      .initializeUser()
+      .signUpUser({})
       .accounts({
         userAccount: userPda,
-        user: wallet.publicKey
+        userLogin: wallet.publicKey
       })
       .rpc();
 
@@ -174,11 +174,13 @@ const Page = () => {
       );
 
       const tx = await program.methods
-        .placeAsk(content)
+        .placeAsk({
+          content: content
+        })
         .accounts({
           ask: askPda,
           userAccount: userPda,
-          user: wallet.publicKey
+          userLogin: wallet.publicKey
         })
         .rpc();
 
@@ -211,7 +213,7 @@ const Page = () => {
       .cancelAsk(ordinal)
       .accounts({
         ask: askPda,
-        user: wallet.publicKey,
+        userLogin: wallet.publicKey,
         userAccount: userPda
       })
       .rpc();

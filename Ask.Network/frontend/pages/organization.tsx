@@ -47,7 +47,6 @@ const CompanyDetails = () => {
   const { Germany } = organizationData.Registration.RegistrationNumber;
   return (
     <div>
-      <h2>Details</h2>
       <div>
         <h3>Organization</h3>
         <p><span className="variable-name">ID:</span> <span className="variable-value">{organizationData.Organization.Identity}</span></p>
@@ -58,9 +57,11 @@ const CompanyDetails = () => {
         <p><span className="variable-name">Number:</span> <span className="variable-value">{`Germany, ${Germany.court}, HRB ${Germany.hrb_registration_number}`}</span></p>
         <p><span className="variable-name">Name:</span> <span className="variable-value">{organizationData.Registration.Name} ✅</span></p>
         <p><span className="variable-name">Address:</span> <span className="variable-value">{organizationData.Registration.Address} ✅</span></p>
+      </div><div>
+        <h3>Counterparties</h3>
+        <CompanyStructureVisualization />
       </div>
-      <CompanyStructureVisualization />
-      <h2>Uploaded Invoices</h2>
+      <h3>Uploaded Invoices</h3>
       <table>
         <thead>
           <tr>

@@ -10,10 +10,10 @@ const organizationData = {
     RegistrationNumber: {
       Germany: {
         court: "Hamburg",
-        hrb_registration_number: 17920,
+        hrb_registration_number: 171920,
       },
     },
-    Address: "Reimersbrucke 5, PLZ, Hamburg",
+    Address: "Reimersbrücke 5, 20457 Hamburg",
     Name: "RABOT CRYPTO GmbH"
   },
   Counterparties: ['Google', 'Ionos', 'OpenAI'], // Slugs for companies

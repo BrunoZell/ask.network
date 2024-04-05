@@ -1,21 +1,46 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const CompanyDetails = () => {
-  // Simulated invoice data
-  const invoices = [
-    { supplier: 'Google', billTo: 'RABOT CRYPTO GmbH', productDescription: 'Cloud Services', quantity: 3, totalCost: '€1200', linkToPdf: 'https://example.com/invoice1.pdf' },
-    { supplier: 'Ionos', billTo: 'RABOT CRYPTO GmbH', productDescription: 'Web Hosting', quantity: 12, totalCost: '€600', linkToPdf: 'https://example.com/invoice2.pdf' },
-    { supplier: 'OpenAI', billTo: 'RABOT CRYPTO GmbH', productDescription: 'API Usage', quantity: 1, totalCost: '€300', linkToPdf: 'https://example.com/invoice3.pdf' }
-  ];
+const organizationData = {
+  details: {
+    organizationID: "1",
+    registrationNumber: "Germany, Hamburg, HRB 17920",
+    organizationName: "RABOT CRYPTO GmbH",
+    organizationAddress: "Reimersbrucke 5, PLZ, Hamburg"
+  },
+  invoices: [
+    {
+      supplier: 'Google',
+      productDescription: 'Cloud Services',
+      quantity: 3,
+      totalCost: '€1200',
+      linkToPdf: 'https://example.com/invoice1.pdf'
+    },
+    {
+      supplier: 'Ionos',
+      productDescription: 'Web Hosting',
+      quantity: 12,
+      totalCost: '€600',
+      linkToPdf: 'https://example.com/invoice2.pdf'
+    },
+    {
+      supplier: 'OpenAI',
+      productDescription: 'API Usage',
+      quantity: 1,
+      totalCost: '€300',
+      linkToPdf: 'https://example.com/invoice3.pdf'
+    }
+  ]
+};
 
+const CompanyDetails = () => {
   return (
     <div>
       <h2>Organization Details</h2>
-      <p>Organization ID: 1</p>
-      <p>Registration Number: Germany, Hamburg, HRB 17920</p>
-      <p>Registered Organization Name: RABOT CRYPTO GmbH ✅</p>
-      <p>Registered Organization Address: Reimersbrucke 5, PLZ, Hamburg ✅</p>
+      <p><span className="variable-name">Organization ID:</span> <span className="variable-value">{organizationData.details.organizationID}</span></p>
+      <p><span className="variable-name">Registration Number:</span> <span className="variable-value">{organizationData.details.registrationNumber}</span></p>
+      <p><span className="variable-name">Registered Organization Name:</span> <span className="variable-value">{organizationData.details.organizationName} ✅</span></p>
+      <p><span className="variable-name">Registered Organization Address:</span> <span className="variable-value">{organizationData.details.organizationAddress} ✅</span></p>
       <CompanyStructureVisualization />
       <h2>Uploaded Invoices</h2>
       <table>
@@ -29,7 +54,7 @@ const CompanyDetails = () => {
           </tr>
         </thead>
         <tbody>
-          {invoices.map((invoice, index) => (
+          {organizationData.invoices.map((invoice, index) => (
             <tr key={index}>
               <td>{invoice.supplier}</td>
               <td>{invoice.productDescription}</td>

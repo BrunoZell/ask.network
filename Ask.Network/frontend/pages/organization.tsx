@@ -1,66 +1,84 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-
+// Data Structure as per the new format
 const organizationData = {
-  details: {
-    organizationID: "1",
-    registrationNumber: "Germany, Hamburg, HRB 17920",
-    organizationName: "RABOT CRYPTO GmbH",
-    organizationAddress: "Reimersbrucke 5, PLZ, Hamburg"
+  Organization: {
+    Identity: 1,
+    Alias: "RABOT CRYPTO",
   },
-  invoices: [
+  Registration: {
+    RegistrationNumber: {
+      Germany: {
+        court: "Hamburg",
+        hrb_registration_number: 17920,
+      },
+    },
+    Address: "Reimersbrucke 5, PLZ, Hamburg",
+    Name: "RABOT CRYPTO GmbH"
+  },
+  Counterparties: ['Google', 'Ionos', 'OpenAI'], // Slugs for companies
+  Invoices: [
     {
-      supplier: 'Google',
-      productDescription: 'Cloud Services',
-      quantity: 3,
-      totalCost: '€1200',
-      linkToPdf: 'https://example.com/invoice1.pdf'
+      supplier: 'Google', // slug from Counterparties
+      product: 'Cloud Services',
+      quantity: 3.0,
+      cost: 1200.0,
+      pdfLink: 'https://example.com/invoice1.pdf'
     },
     {
-      supplier: 'Ionos',
-      productDescription: 'Web Hosting',
-      quantity: 12,
-      totalCost: '€600',
-      linkToPdf: 'https://example.com/invoice2.pdf'
+      supplier: 'Ionos', // slug from Counterparties
+      product: 'Web Hosting',
+      quantity: 12.0,
+      cost: 600.0,
+      pdfLink: 'https://example.com/invoice2.pdf'
     },
     {
-      supplier: 'OpenAI',
-      productDescription: 'API Usage',
-      quantity: 1,
-      totalCost: '€300',
-      linkToPdf: 'https://example.com/invoice3.pdf'
+      supplier: 'OpenAI', // slug from Counterparties
+      product: 'API Usage',
+      quantity: 1.0,
+      cost: 300.0,
+      pdfLink: 'https://example.com/invoice3.pdf'
     }
   ]
 };
 
+// CompanyDetails component
 const CompanyDetails = () => {
+  const { Germany } = organizationData.Registration.RegistrationNumber;
   return (
     <div>
-      <h2>Organization Details</h2>
-      <p><span className="variable-name">Organization ID:</span> <span className="variable-value">{organizationData.details.organizationID}</span></p>
-      <p><span className="variable-name">Registration Number:</span> <span className="variable-value">{organizationData.details.registrationNumber}</span></p>
-      <p><span className="variable-name">Registered Organization Name:</span> <span className="variable-value">{organizationData.details.organizationName} ✅</span></p>
-      <p><span className="variable-name">Registered Organization Address:</span> <span className="variable-value">{organizationData.details.organizationAddress} ✅</span></p>
+      <h2>Details</h2>
+      <div>
+        <h3>Organization</h3>
+        <p><span className="variable-name">ID:</span> <span className="variable-value">{organizationData.Organization.Identity}</span></p>
+        <p><span className="variable-name">Alias:</span> <span className="variable-value">{organizationData.Organization.Alias}</span></p>
+      </div>
+      <div>
+        <h3>Registration</h3>
+        <p><span className="variable-name">Number:</span> <span className="variable-value">{`Germany, ${Germany.court}, HRB ${Germany.hrb_registration_number}`}</span></p>
+        <p><span className="variable-name">Name:</span> <span className="variable-value">{organizationData.Registration.Name} ✅</span></p>
+        <p><span className="variable-name">Address:</span> <span className="variable-value">{organizationData.Registration.Address} ✅</span></p>
+      </div>
       <CompanyStructureVisualization />
       <h2>Uploaded Invoices</h2>
       <table>
         <thead>
           <tr>
             <th>Supplier</th>
-            <th>Product Description</th>
+            <th>Product</th>
             <th>Quantity</th>
-            <th>Total Cost</th>
-            <th>Link to PDF</th>
+            <th>Cost</th>
+            <th>PDF Link</th>
           </tr>
         </thead>
         <tbody>
-          {organizationData.invoices.map((invoice, index) => (
+          {organizationData.Invoices.map((invoice, index) => (
             <tr key={index}>
               <td>{invoice.supplier}</td>
-              <td>{invoice.productDescription}</td>
+              <td>{invoice.product}</td>
               <td>{invoice.quantity}</td>
-              <td>{invoice.totalCost}</td>
-              <td><a href={invoice.linkToPdf} target="_blank" rel="noopener noreferrer">View Invoice</a></td>
+              <td>€{invoice.cost}</td>
+              <td><a href={invoice.pdfLink} target="_blank" rel="noopener noreferrer">View Invoice</a></td>
             </tr>
           ))}
         </tbody>

@@ -4,6 +4,8 @@ import { AppBar } from '../components/AppBar';
 
 const Organization = () => {
   const organizationAlias = "RABOT CRYPTO"; // Replace with dynamic content as needed
+  const offerText = `Profit Share of an automated trading bot based on the +EV-Crawler.
+The profit share is paid out quarterly in EUROe to all Stakeholders proportionally.`; // Prefilled text
 
   return (
     <div>
@@ -19,11 +21,13 @@ const Organization = () => {
         <Flex direction="column" alignItems="center" pt="4" pb="8">
           {/* Labeled offers text area */}
           <FormControl id="organization-offers" w={['90%', '70%', '50%', '40%']}>
-            <FormLabel>The Organization's Offers</FormLabel>
+            {/* Dynamic form label using organizationAlias */}
+            <FormLabel>{`${organizationAlias}'s Offers`}</FormLabel>
             <Textarea
               placeholder="Enter your offers..."
               size="md"
               rows={10}
+              defaultValue={offerText} // Set the default value for the textarea
             />
           </FormControl>
         </Flex>

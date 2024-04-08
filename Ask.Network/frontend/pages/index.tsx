@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Box, Button, Flex, flexbox, Input, Link, Stack, VStack } from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
 
-const HomePage = () => {
+const Page = () => {
   return (
     <div>
       <Box w='full'>
@@ -31,4 +31,4 @@ const HomePage = () => {
   )
 };
 
-export default HomePage;
+export default Page;

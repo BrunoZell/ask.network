@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Flex, Heading, Textarea, FormControl, FormLabel } from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
 
-const Organization = () => {
+const Page = () => {
   const organizationAlias = "RABOT CRYPTO"; // Replace with dynamic content as needed
   const offerText = `Profit Share of an automated trading bot based on the +EV-Crawler.
 The profit share is paid out quarterly in EUROe to all Stakeholders proportionally.`; // Prefilled text
@@ -36,4 +36,4 @@ The profit share is paid out quarterly in EUROe to all Stakeholders proportional
   );
 };
 
-export default Organization;
+export default Page;

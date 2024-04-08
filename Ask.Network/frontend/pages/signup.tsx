@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
 
-const CreateOrganizationPage = () => {
+const Page = () => {
   const [alias, setAlias] = useState('');
 
   return (
@@ -37,4 +37,4 @@ const CreateOrganizationPage = () => {
   );
 };
 
-export default CreateOrganizationPage;
+export default Page;

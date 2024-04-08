@@ -4,6 +4,7 @@ import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import * as anchor from '@project-serum/anchor';
 import idl from '../../solana/target/idl/ask_network.json';
+import { AskNetwork } from '../../solana/target/types/ask_network';
 import { AppBar } from '../components/AppBar';
 
 const programID = new PublicKey('8WfQ3nACPcoBKxFnN4ekiHp8bRTd35R4L8Pu3Ak15is3'); // Replace with your program's public key
@@ -11,7 +12,7 @@ const programID = new PublicKey('8WfQ3nACPcoBKxFnN4ekiHp8bRTd35R4L8Pu3Ak15is3');
 const Page = () => {
   const [alias, setAlias] = useState('');
   const wallet = useAnchorWallet();
-  const [program, setProgram] = useState<anchor.Program>();
+  const [program, setProgram] = useState<anchor.Program<AskNetwork>>();
 
   useEffect(() => {
     if (wallet) {
@@ -21,7 +22,7 @@ const Page = () => {
         wallet,
         anchor.AnchorProvider.defaultOptions(),
       );
-      const program = new anchor.Program(idl as any, programID, provider);
+      const program = new anchor.Program<AskNetwork>(idl as any, programID, provider);
       setProgram(program);
     }
   }, [wallet]);
@@ -39,7 +40,9 @@ const Page = () => {
       // Fetch the global account to get the running_organization_ordinal
       const globalAccount = await program.account.global.fetch(globalPda);
 
-      const ordinalBytes = new anchor.BN(globalAccount.running_organization_ordinal).toArrayLike(Buffer, 'le', 8);
+      console.log(globalAccount);
+
+      const ordinalBytes = new anchor.BN(globalAccount.runningOrganizationOrdinal).toArrayLike(Buffer, 'le', 8);
 
       // Deriving PDAs based on the provided seeds
       const [organizationPda] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -52,19 +55,22 @@ const Page = () => {
         program.programId
       );
 
+      console.log('Deploying organization ' + globalAccount.runningOrganizationOrdinal);
+
       // Building the instruction with derived accounts
-      const tx = await program.methods.signUpOrganization({
-        alias: alias.trim(),
-      }, {
-        accounts: {
+      const tx = await program.methods
+        .signUpOrganization({
+          alias: alias.trim(),
+        })
+        .accounts({
           organizationAccount: organizationPda,
           initialMembership: initialMembershipPda,
           initialMemberLogin: wallet.publicKey,
           global: globalPda,
           systemProgram: anchor.web3.SystemProgram.programId,
           rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-        },
-      });
+        })
+        .rpc();
 
       console.log('Transaction signature', tx);
     } catch (error) {

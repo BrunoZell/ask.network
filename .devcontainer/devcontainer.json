@@ -7,6 +7,7 @@
 		"vadimcn.vscode-lldb"
 	],
 	"mounts": [
+		"type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/solana/asknetwork-program.json,target=/root/.config/solana/asknetwork-program.json,readonly",
 		"type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/solana/asknetwork-deploy.json,target=/root/.config/solana/asknetwork-deploy.json,readonly"
 	],
 	"settings": {

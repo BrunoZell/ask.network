@@ -17,7 +17,7 @@ const InitializeGlobalPage = () => {
             return;
         }
 
-        const network = "https://api.devnet.solana.com"; // Adjust for your Solana cluster
+        const network = "http://127.0.0.1:8899"; // Adjust for your Solana cluster
         const provider = new anchor.AnchorProvider(
             new Connection(network),
             wallet,

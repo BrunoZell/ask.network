@@ -16,7 +16,7 @@ const Page = () => {
 
   useEffect(() => {
     if (wallet) {
-      const network = "https://api.devnet.solana.com"; // or your Solana cluster of choice
+      const network = "http://127.0.0.1:8899"; // or your Solana cluster of choice
       const provider = new anchor.AnchorProvider(
         new Connection(network),
         wallet,

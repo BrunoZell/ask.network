@@ -1,6 +1,15 @@
 import React from 'react';
-import { Box, Heading, List, ListItem, Container, Button, Flex } from '@chakra-ui/react';
+import {
+    Box,
+    Heading,
+    List,
+    ListItem,
+    Container,
+    Button,
+    useColorModeValue,
+} from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
 
 const organizations = [
@@ -10,6 +19,9 @@ const organizations = [
 ];
 
 const Page = () => {
+    // Get the border color that works with the current color mode
+    const borderColor = useColorModeValue('gray.200', 'gray.700');
+
     return (
         <Box>
             <AppBar />
@@ -19,13 +31,25 @@ const Page = () => {
                 </Heading>
                 <List spacing={3}>
                     {organizations.map((org, index) => (
-                        <ListItem key={index} padding="20px" shadow="md" borderWidth="1px" borderRadius="md" display="flex" justifyContent="space-between" alignItems="center">
+                        <ListItem
+                            key={index}
+                            padding="20px"
+                            shadow="md"
+                            borderWidth="1px"
+                            borderRadius="md"
+                            display="flex"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            borderColor={borderColor}
+                        >
                             <Box>
                                 <Heading as="h3" size="lg">{org.name}</Heading>
                                 <Box>{org.description}</Box>
                             </Box>
                             <Link href={`/${org.id}`} passHref>
-                                <Button as="a" colorScheme="teal">Details</Button>
+                                <Button as="a" variant="outline" borderColor={borderColor} colorScheme="teal" rightIcon={<ArrowForwardIcon />}>
+                                    Details
+                                </Button>
                             </Link>
                         </ListItem>
                     ))}

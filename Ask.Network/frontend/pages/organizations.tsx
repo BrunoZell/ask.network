@@ -6,6 +6,7 @@ import {
     ListItem,
     Container,
     useColorModeValue,
+    Icon
 } from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
@@ -31,7 +32,6 @@ const Page = () => {
                     {organizations.map((org) => (
                         <Link key={org.id} href={`/${org.id}`} passHref>
                             <ListItem
-                                key={org.id}
                                 as="a"
                                 padding="20px"
                                 shadow="md"
@@ -47,7 +47,7 @@ const Page = () => {
                                     <Heading as="h3" size="lg">{org.name}</Heading>
                                     <Box>{org.description}</Box>
                                 </Box>
-                                <Box as={ArrowForwardIcon} color={borderColor} />
+                                <Icon as={ArrowForwardIcon} w={14} h={14} color={borderColor} />
                             </ListItem>
                         </Link>
                     ))}

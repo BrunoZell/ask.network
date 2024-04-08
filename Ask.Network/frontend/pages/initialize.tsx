@@ -4,6 +4,7 @@ import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { Connection } from '@solana/web3.js';
 import * as anchor from '@project-serum/anchor';
 import idl from '../../solana/target/idl/ask_network.json';
+import { AskNetwork } from '../../solana/target/types/ask_network';
 
 const programID = new anchor.web3.PublicKey('8WfQ3nACPcoBKxFnN4ekiHp8bRTd35R4L8Pu3Ak15is3'); // Replace with your program's public key
 
@@ -22,7 +23,7 @@ const InitializeGlobalPage = () => {
             wallet,
             anchor.AnchorProvider.defaultOptions(),
         );
-        const program = new anchor.Program(idl as any, programID, provider);
+        const program = new anchor.Program<AskNetwork>(idl as any, programID, provider);
 
         try {
             const [globalPda] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -30,14 +31,15 @@ const InitializeGlobalPage = () => {
                 program.programId
             );
 
-            await program.rpc.initializeGlobal({}, {
-                accounts: {
+            await program.methods
+                .initializeGlobal({})
+                .accounts({
                     global: globalPda,
                     signer: wallet.publicKey,
                     systemProgram: anchor.web3.SystemProgram.programId,
                     rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-                },
-            });
+                })
+                .rpc();
 
             console.log('Global state initialized.');
         } catch (error) {

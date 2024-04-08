@@ -154,7 +154,7 @@ const OrganizationPage = () => {
                       size="lg"
                       w="100%"
                     />
-                    <Icon as={arrowIcon} color="gray.500" />
+                    <Icon as={arrowIcon} color="gray.500" display="flex" justifyContent="center" alignItems="center" w="100%" />
                     <Textarea
                       defaultValue={strat.action}
                       isReadOnly={isReadOnly}
@@ -166,7 +166,7 @@ const OrganizationPage = () => {
                 ) : (
                   <>
                     <Text p={2} textAlign="left">{strat.condition}</Text>
-                    <Icon as={arrowIcon} color="gray.500" />
+                    <Icon as={arrowIcon} color="gray.500" display="flex" justifyContent="center" alignItems="center" w="100%" />
                     <Text p={2} textAlign="right">{strat.action}</Text>
                   </>
                 )}

@@ -1,9 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { Connection, PublicKey } from '@solana/web3.js';
+import * as anchor from '@project-serum/anchor';
+import idl from '../../solana/target/idl/ask_network.json';
 import { AppBar } from '../components/AppBar';
+
+const programID = new PublicKey('8WfQ3nACPcoBKxFnN4ekiHp8bRTd35R4L8Pu3Ak15is3'); // Replace with your program's public key
 
 const Page = () => {
   const [alias, setAlias] = useState('');
+  const wallet = useAnchorWallet();
+  const [program, setProgram] = useState<anchor.Program>();
+
+  useEffect(() => {
+    if (wallet) {
+      const network = "https://api.devnet.solana.com"; // or your Solana cluster of choice
+      const provider = new anchor.AnchorProvider(
+        new Connection(network),
+        wallet,
+        anchor.AnchorProvider.defaultOptions(),
+      );
+      const program = new anchor.Program(idl as any, programID, provider);
+      setProgram(program);
+    }
+  }, [wallet]);
+
+  const signUpOrganization = async () => {
+    if (!wallet || !program || !alias.trim()) return;
+
+    try {
+      // Assume `global` account has already been initialized and is a singleton
+      const [globalPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('global')],
+        program.programId
+      );
+
+      // Fetch the global account to get the running_organization_ordinal
+      const globalAccount = await program.account.global.fetch(globalPda);
+
+      const ordinalBytes = new anchor.BN(globalAccount.running_organization_ordinal).toArrayLike(Buffer, 'le', 8);
+
+      // Deriving PDAs based on the provided seeds
+      const [organizationPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('organization'), ordinalBytes],
+        program.programId
+      );
+
+      const [initialMembershipPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('member'), ordinalBytes, wallet.publicKey.toBuffer()],
+        program.programId
+      );
+
+      // This might not need explicit PDA derivation if it's fetched or passed differently
+      const [initialMemberAccountPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('user'), wallet.publicKey.toBuffer()],
+        program.programId
+      );
+
+      // Building the instruction with derived accounts
+      const tx = await program.rpc.signUpOrganization({
+        alias: alias.trim(),
+      }, {
+        accounts: {
+          organizationAccount: organizationPda,
+          initialMembership: initialMembershipPda,
+          initialMemberAccount: initialMemberAccountPda,
+          initialMemberLogin: wallet.publicKey,
+          global: globalPda,
+          systemProgram: anchor.web3.SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        },
+      });
+
+      console.log('Transaction signature', tx);
+    } catch (error) {
+      console.error('Error signing up organization:', error);
+    }
+  };
 
   return (
     <div>
@@ -21,6 +95,7 @@ const Page = () => {
           </Box>
 
           <Button
+            onClick={signUpOrganization}
             size="lg"
             colorScheme="teal"
             px="8"

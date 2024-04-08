@@ -10,6 +10,7 @@
 		"type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/solana/asknetwork-program.json,target=/root/.config/solana/asknetwork-program.json,readonly",
 		"type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/solana/asknetwork-deploy.json,target=/root/.config/solana/asknetwork-deploy.json,readonly"
 	],
+	"postCreateCommand": "solana config set --keypair /root/.config/solana/asknetwork-deploy.json && solana config set --url https://api.devnet.solana.com",
 	"settings": {
 		"editor.formatOnSave": true,
 		"terminal.integrated.shell.linux": "/usr/bin/zsh",

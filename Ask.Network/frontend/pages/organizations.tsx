@@ -5,7 +5,6 @@ import {
     List,
     ListItem,
     Container,
-    Button,
     useColorModeValue,
 } from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
@@ -19,7 +18,6 @@ const organizations = [
 ];
 
 const Page = () => {
-    // Get the border color that works with the current color mode
     const borderColor = useColorModeValue('gray.200', 'gray.700');
 
     return (
@@ -30,28 +28,28 @@ const Page = () => {
                     Organizations on Ask Network
                 </Heading>
                 <List spacing={3}>
-                    {organizations.map((org, index) => (
-                        <ListItem
-                            key={index}
-                            padding="20px"
-                            shadow="md"
-                            borderWidth="1px"
-                            borderRadius="md"
-                            display="flex"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            borderColor={borderColor}
-                        >
-                            <Box>
-                                <Heading as="h3" size="lg">{org.name}</Heading>
-                                <Box>{org.description}</Box>
-                            </Box>
-                            <Link href={`/${org.id}`} passHref>
-                                <Button as="a" variant="outline" borderColor={borderColor} colorScheme="teal" rightIcon={<ArrowForwardIcon />}>
-                                    Details
-                                </Button>
-                            </Link>
-                        </ListItem>
+                    {organizations.map((org) => (
+                        <Link key={org.id} href={`/${org.id}`} passHref>
+                            <ListItem
+                                key={org.id}
+                                as="a"
+                                padding="20px"
+                                shadow="md"
+                                borderWidth="1px"
+                                borderRadius="md"
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                borderColor={borderColor}
+                                _hover={{ bg: useColorModeValue('gray.100', 'gray.700'), textDecoration: 'none' }}
+                            >
+                                <Box flex="1">
+                                    <Heading as="h3" size="lg">{org.name}</Heading>
+                                    <Box>{org.description}</Box>
+                                </Box>
+                                <Box as={ArrowForwardIcon} color={borderColor} />
+                            </ListItem>
+                        </Link>
                     ))}
                 </List>
             </Container>

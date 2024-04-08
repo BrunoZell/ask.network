@@ -1,7 +1,8 @@
-import React from 'react';
-import { Box, Flex, Heading, Textarea, FormControl, FormLabel } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { Box, Flex, Heading, Textarea, FormControl, FormLabel, Button, useToast } from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
 import { useRouter } from 'next/router';
+import { useWallet } from '@solana/wallet-adapter-react'; // Assuming Solana for this example
 
 const organizations = [
   {
@@ -68,33 +69,76 @@ const OrganizationPage = () => {
   const orgId = Array.isArray(organizationId) ? organizationId[0] : organizationId;
   const org = organizations.find(o => o.id === parseInt(orgId, 10));
 
-  // If the organization doesn't exist, you can return null or show a not found message
+  const { publicKey } = useWallet(); // Using Solana wallet adapter
+  const [isMember, setIsMember] = useState(false);
+  const [editableFields, setEditableFields] = useState({ description: '', offers: '' });
+  const toast = useToast();
+
+  useEffect(() => {
+    if (org && publicKey) {
+      // Check if the publicKey is in org.members
+      setIsMember(org.members.includes(publicKey.toString()));
+      // Initialize fields
+      setEditableFields({
+        description: org.description,
+        offers: org.offers.join('\n') // Assuming offers is an array of strings
+      });
+    }
+  }, [org, publicKey]);
+
+  const handleFieldChange = (e) => {
+    const { name, value } = e.target;
+    setEditableFields(prev => ({ ...prev, [name]: value }));
+  };
+
+  const saveChanges = () => {
+    // Placeholder for saving changes on-chain
+    toast({
+      title: 'Changes saved.',
+      description: "Your changes have been submitted to the blockchain.",
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    });
+  };
+
   if (!org) {
     return <p>Organization not found</p>;
   }
 
   return (
-    <div>
-      <Box w='full'>
-        <AppBar />
+    <Box w='full'>
+      <AppBar />
+      <Heading as="h1" size="2xl" my="4" textAlign="center">
+        {org.alias}
+      </Heading>
 
-        <Heading as="h1" size="2xl" my="4" textAlign="center">
-          {org.alias}
-        </Heading>
+      <Flex direction="column" alignItems="center" pt="4" pb="8">
+        <FormControl id="organization-description" w={['90%', '70%', '50%', '40%']} isReadOnly={!isMember}>
+          <FormLabel>Description</FormLabel>
+          <Textarea
+            name="description"
+            size="md"
+            rows={5}
+            value={editableFields.description}
+            onChange={handleFieldChange}
+          />
+        </FormControl>
 
-        <Flex direction="column" alignItems="center" pt="4" pb="8">
-          <FormControl id="organization-offers" w={['90%', '70%', '50%', '40%']}>
-            <FormLabel>{`${org.alias}'s Offers`}</FormLabel>
-            <Textarea
-              placeholder="Enter your offers..."
-              size="md"
-              rows={10}
-              defaultValue={org.description}
-            />
-          </FormControl>
-        </Flex>
-      </Box>
-    </div>
+        <FormControl id="organization-offers" w={['90%', '70%', '50%', '40%']} mt="4" isReadOnly={!isMember}>
+          <FormLabel>Offers</FormLabel>
+          <Textarea
+            name="offers"
+            size="md"
+            rows={10}
+            value={editableFields.offers}
+            onChange={handleFieldChange}
+          />
+        </FormControl>
+
+        {isMember && <Button colorScheme="blue" mt="4" onClick={saveChanges}>Save Changes</Button>}
+      </Flex>
+    </Box>
   );
 };
 

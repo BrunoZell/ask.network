@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Flex, Heading, Textarea, FormControl, FormLabel, Button, useToast } from '@chakra-ui/react';
+import {
+  Box, Flex, Heading, Textarea, FormControl, FormLabel, Button,
+  useToast, Text, VStack, HStack, Grid, Icon
+} from '@chakra-ui/react';
+import { ArrowRightIcon } from '@chakra-ui/icons';
 import { AppBar } from '../components/AppBar';
 import { useRouter } from 'next/router';
-import { useWallet } from '@solana/wallet-adapter-react'; // Assuming Solana for this example
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const organizations = [
   {
@@ -65,34 +69,32 @@ const organizations = [
 
 const OrganizationPage = () => {
   const router = useRouter();
-  const { organizationId } = router.query; // You get the ID from the URL
+  const { organizationId } = router.query;
   const orgId = Array.isArray(organizationId) ? organizationId[0] : organizationId;
   const org = organizations.find(o => o.id === parseInt(orgId, 10));
-
-  const { publicKey } = useWallet(); // Using Solana wallet adapter
+  const { publicKey } = useWallet();
   const [isMember, setIsMember] = useState(false);
-  const [editableFields, setEditableFields] = useState({ description: '', offers: '' });
   const toast = useToast();
 
   useEffect(() => {
     if (org && publicKey) {
-      // Check if the publicKey is in org.members
       setIsMember(org.members.includes(publicKey.toString()));
-      // Initialize fields
-      setEditableFields({
-        description: org.description,
-        offers: org.offers.join('\n') // Assuming offers is an array of strings
-      });
     }
   }, [org, publicKey]);
 
-  const handleFieldChange = (e) => {
-    const { name, value } = e.target;
-    setEditableFields(prev => ({ ...prev, [name]: value }));
+  const handleChange = (e, index, field, subfield = null) => {
+    const newValue = e.target.value;
+    if (subfield) {
+      // For strategy field changes
+      org[field][index][subfield] = newValue;
+    } else {
+      // For offer field changes
+      org[field][index] = newValue;
+    }
+    // This is a simplified example; for real applications, consider using state management libraries or context
   };
 
   const saveChanges = () => {
-    // Placeholder for saving changes on-chain
     toast({
       title: 'Changes saved.',
       description: "Your changes have been submitted to the blockchain.",
@@ -100,6 +102,7 @@ const OrganizationPage = () => {
       duration: 9000,
       isClosable: true,
     });
+    // Placeholder for on-chain submission logic
   };
 
   if (!org) {
@@ -109,35 +112,44 @@ const OrganizationPage = () => {
   return (
     <Box w='full'>
       <AppBar />
-      <Heading as="h1" size="2xl" my="4" textAlign="center">
-        {org.alias}
-      </Heading>
+      <VStack spacing={8} align="stretch" my={8} mx="auto" maxW="container.md" px={4}>
+        <Heading as="h1" size="2xl" textAlign="center">{org.alias}</Heading>
+        <Text textAlign="center">{org.description}</Text>
 
-      <Flex direction="column" alignItems="center" pt="4" pb="8">
-        <FormControl id="organization-description" w={['90%', '70%', '50%', '40%']} isReadOnly={!isMember}>
-          <FormLabel>Description</FormLabel>
-          <Textarea
-            name="description"
-            size="md"
-            rows={5}
-            value={editableFields.description}
-            onChange={handleFieldChange}
-          />
-        </FormControl>
+        <Box as="section" borderWidth="1px" p={4} borderRadius="md">
+          <Heading as="h2" size="lg" mb={4}>Offers</Heading>
+          <VStack divider={<Box borderColor="gray.200" borderWidth="1px" />} spacing={4}>
+            {org.offers.map((offer, index) => isMember ? (
+              <Textarea key={index} defaultValue={offer} isReadOnly={!isMember} />
+            ) : (
+              <Text key={index} p={2}>{offer}</Text>
+            ))}
+          </VStack>
+        </Box>
 
-        <FormControl id="organization-offers" w={['90%', '70%', '50%', '40%']} mt="4" isReadOnly={!isMember}>
-          <FormLabel>Offers</FormLabel>
-          <Textarea
-            name="offers"
-            size="md"
-            rows={10}
-            value={editableFields.offers}
-            onChange={handleFieldChange}
-          />
-        </FormControl>
+        <Box as="section" borderWidth="1px" p={4} borderRadius="md">
+          <Heading as="h2" size="lg" mb={4}>Strategy</Heading>
+          {org.strategy.map((strat, index) => (
+            <Grid templateColumns="1fr auto 1fr" gap={4} key={index} alignItems="center" mb={4}>
+              {isMember ? (
+                <>
+                  <Textarea defaultValue={strat.condition} isReadOnly={!isMember} />
+                  <Icon as={ArrowRightIcon} color="gray.500" />
+                  <Textarea defaultValue={strat.action} isReadOnly={!isMember} />
+                </>
+              ) : (
+                <>
+                  <Text p={2}>{strat.condition}</Text>
+                  <Icon as={ArrowRightIcon} color="gray.500" />
+                  <Text p={2}>{strat.action}</Text>
+                </>
+              )}
+            </Grid>
+          ))}
+        </Box>
 
-        {isMember && <Button colorScheme="blue" mt="4" onClick={saveChanges}>Save Changes</Button>}
-      </Flex>
+        {isMember && <Button colorScheme="blue" onClick={saveChanges}>Save Changes</Button>}
+      </VStack>
     </Box>
   );
 };

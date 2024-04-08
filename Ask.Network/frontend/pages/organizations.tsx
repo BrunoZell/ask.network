@@ -19,7 +19,8 @@ const organizations = [
 ];
 
 const Page = () => {
-    const borderColor = useColorModeValue('gray.200', 'gray.700');
+    const borderColor = useColorModeValue('gray.200', 'gray.500');
+    const arrowColor = useColorModeValue('blue.200', 'blue.500');
 
     return (
         <Box>
@@ -47,7 +48,7 @@ const Page = () => {
                                     <Heading as="h3" size="lg">{org.name}</Heading>
                                     <Box>{org.description}</Box>
                                 </Box>
-                                <Icon as={ArrowForwardIcon} w={14} h={14} color={borderColor} />
+                                <Icon as={ArrowForwardIcon} w={14} h={14} color={arrowColor} />
                             </ListItem>
                         </Link>
                     ))}

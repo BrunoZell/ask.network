@@ -1,11 +1,14 @@
 {
 	"name": "Ask Network",
+	"dockerFile": "Dockerfile",
 	"extensions": [
 		"rust-lang.rust-analyzer",
 		"serayuzgur.crates",
 		"vadimcn.vscode-lldb"
 	],
-	"dockerFile": "Dockerfile",
+	"mounts": [
+		"type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/solana/asknetwork-deploy.json,target=/root/.config/solana/asknetwork-deploy.json,readonly"
+	],
 	"settings": {
 		"editor.formatOnSave": true,
 		"terminal.integrated.shell.linux": "/usr/bin/zsh",

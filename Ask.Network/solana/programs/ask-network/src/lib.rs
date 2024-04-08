@@ -5,7 +5,7 @@ pub use state::*;
 pub mod instructions;
 pub mod state;
 
-declare_id!("EaBpabfkGswhPnC14mnwz3XxHHyJuqZjPZAMU9mR7KR3");
+declare_id!("8WfQ3nACPcoBKxFnN4ekiHp8bRTd35R4L8Pu3Ak15is3");
 
 #[program]
 pub mod ask_network {

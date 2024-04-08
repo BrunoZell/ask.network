@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import styles from '../styles/Home.module.css';
 import dynamic from 'next/dynamic'
-import Image from 'next/image';
 
 const WalletMultiButtonDynamic = dynamic(
   async () =>
@@ -12,8 +11,10 @@ const WalletMultiButtonDynamic = dynamic(
 export const AppBar: FC = () => {
   return (
     <div className={styles.AppHeader}>
+      {/* These pseudo-elements "::before" and "::after" are used to balance the space */}
       <span>Ask Network</span>
-
+      <div style={{ flex: 1 }}>
+      </div>
       <WalletMultiButtonDynamic />
     </div>
   );

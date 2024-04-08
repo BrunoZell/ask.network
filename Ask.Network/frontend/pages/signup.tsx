@@ -52,20 +52,13 @@ const Page = () => {
         program.programId
       );
 
-      // This might not need explicit PDA derivation if it's fetched or passed differently
-      const [initialMemberAccountPda] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from('user'), wallet.publicKey.toBuffer()],
-        program.programId
-      );
-
       // Building the instruction with derived accounts
-      const tx = await program.rpc.signUpOrganization({
+      const tx = await program.methods.signUpOrganization({
         alias: alias.trim(),
       }, {
         accounts: {
           organizationAccount: organizationPda,
           initialMembership: initialMembershipPda,
-          initialMemberAccount: initialMemberAccountPda,
           initialMemberLogin: wallet.publicKey,
           global: globalPda,
           systemProgram: anchor.web3.SystemProgram.programId,

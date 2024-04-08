@@ -83,7 +83,10 @@ const OrganizationPage = () => {
 
   // Using useBreakpointValue hook to dynamically switch between column and row layouts
   const arrowIcon = useBreakpointValue({ base: ArrowDownIcon, md: ArrowRightIcon });
-  const gridTemplateColumns = useBreakpointValue({ base: "1fr", md: "1fr auto 1fr" });
+  const gridTemplateColumns = useBreakpointValue({
+    base: "1fr", // On small devices, have a single column layout
+    md: "1fr auto 1fr" // On larger devices, split into 3 columns with the icon in the center
+  });
 
   const handleChange = (e, index, field, subfield = null) => {
     const newValue = e.target.value;

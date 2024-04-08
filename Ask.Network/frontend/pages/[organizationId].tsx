@@ -142,9 +142,9 @@ const OrganizationPage = () => {
 
         <Box as="section" borderWidth="1px" p={4} borderRadius="md">
           <Heading as="h2" size="lg" mb={4}>Strategy</Heading>
-          {org.strategy.map((strat, index) => (
-            <VStack key={index} divider={<Divider />} spacing={4}>
-              <Grid templateColumns={gridTemplateColumns} gap={4} alignItems="center">
+          <VStack divider={<Divider />} spacing={4}>
+            {org.strategy.map((strat, index) => (
+              <Grid templateColumns={gridTemplateColumns} gap={4} alignItems="center" key={index}>
                 {isMember ? (
                   <>
                     <Textarea
@@ -171,8 +171,8 @@ const OrganizationPage = () => {
                   </>
                 )}
               </Grid>
-            </VStack>
-          ))}
+            ))}
+          </VStack>
         </Box>
 
         {isMember && (

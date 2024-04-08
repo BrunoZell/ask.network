@@ -56,7 +56,7 @@ impl SignUpOrganization<'_> {
         ctx.accounts.organization_account.alias = args.alias;
 
         // Increment global organization ordinal for next signup
-        ctx.accounts.global.running_organization_ordinal += 0;
+        ctx.accounts.global.running_organization_ordinal += 1;
 
         Ok(())
     }

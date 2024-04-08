@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, VStack, Heading, Text, Divider, Grid, Icon, Textarea, Button, useToast
+  Box, VStack, Heading, Text, Divider, Grid, Icon, Textarea, Button, useToast, useBreakpointValue
 } from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
 import { ArrowRightIcon, ArrowDownIcon } from '@chakra-ui/icons';
@@ -81,6 +81,10 @@ const OrganizationPage = () => {
     }
   }, [org, publicKey]);
 
+  // Using useBreakpointValue hook to dynamically switch between column and row layouts
+  const arrowIcon = useBreakpointValue({ base: ArrowDownIcon, md: ArrowRightIcon });
+  const gridTemplateColumns = useBreakpointValue({ base: "1fr", md: "1fr auto 1fr" });
+
   const handleChange = (e, index, field, subfield = null) => {
     const newValue = e.target.value;
     if (subfield) {
@@ -140,7 +144,7 @@ const OrganizationPage = () => {
           <Heading as="h2" size="lg" mb={4}>Strategy</Heading>
           {org.strategy.map((strat, index) => (
             <VStack key={index} divider={<Divider />} spacing={4}>
-              <Grid templateColumns="1fr auto 1fr" gap={4} alignItems="center">
+              <Grid templateColumns={gridTemplateColumns} gap={4} alignItems="center">
                 {isMember ? (
                   <>
                     <Textarea
@@ -150,7 +154,7 @@ const OrganizationPage = () => {
                       size="lg"
                       w="100%"
                     />
-                    <Icon as={ArrowRightIcon} color="gray.500" />
+                    <Icon as={arrowIcon} color="gray.500" />
                     <Textarea
                       defaultValue={strat.action}
                       isReadOnly={isReadOnly}
@@ -162,7 +166,7 @@ const OrganizationPage = () => {
                 ) : (
                   <>
                     <Text p={2} textAlign="left">{strat.condition}</Text>
-                    <Icon as={ArrowRightIcon} color="gray.500" />
+                    <Icon as={arrowIcon} color="gray.500" />
                     <Text p={2} textAlign="right">{strat.action}</Text>
                   </>
                 )}

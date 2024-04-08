@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { Box, Button, Flex, flexbox, Input, Link, Stack, VStack } from '@chakra-ui/react';
+import React from 'react';
+import { Box, Flex, Button, Link, Text, Icon } from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
+import NextLink from 'next/link'; // Make sure to import NextLink for client-side transitions
 
 const Page = () => {
   return (
@@ -8,27 +10,38 @@ const Page = () => {
       <Box w='full'>
         <AppBar />
 
-        {/* Use Flex instead of div for centering */}
-        <Flex justifyContent="center" alignItems="center" h="100vh">
-          {/* h="100vh" ensures the container takes full viewport height */}
-
-          <Link href="/signup">
+        <Flex direction="column" justifyContent="center" alignItems="center" h="100vh">
+          <NextLink href="/signup" passHref>
             <Button
-              size="lg" // Makes the button larger
-              colorScheme="teal" // A predefined color scheme for a visually appealing look
-              px="8" // Padding left and right for a wider button
-              py="6" // Padding top and bottom for a taller button
-              fontSize="xl" // Larger font size for the button text
-              shadow="md" // Adds a slight shadow for depth
-              _hover={{ bg: "teal.500" }} // Changes background color on hover for interactivity
+              as="a" // Make the Button work as an anchor tag
+              size="lg"
+              colorScheme="teal"
+              px="8"
+              py="6"
+              fontSize="xl"
+              shadow="md"
+              _hover={{ bg: "teal.500" }}
+              mb="6" // Add some margin at the bottom
             >
               Create an Organization
             </Button>
-          </Link>
+          </NextLink>
+          <NextLink href="/organizations" passHref>
+            <Link
+              color="teal.600" // Or any color that fits your design
+              _hover={{ textDecoration: 'none', color: "teal.700" }} // Change color on hover
+              fontSize="md" // Adjust the font size as needed
+              display="flex"
+              alignItems="center" // Aligns the text and icon
+            >
+              <Text>See all Organizations on Ask Network</Text>
+              <Icon as={ArrowForwardIcon} ml="2" /> {/* Add some left margin to the icon */}
+            </Link>
+          </NextLink>
         </Flex>
       </Box>
     </div>
-  )
+  );
 };
 
 export default Page;

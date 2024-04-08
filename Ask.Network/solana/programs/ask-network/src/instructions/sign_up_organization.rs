@@ -26,9 +26,6 @@ pub struct SignUpOrganization<'info> {
     )]
     pub initial_membership: Account<'info, Membership>,
 
-    #[account(seeds= [b"user", initial_member_login.key().as_ref()], bump)]
-    pub initial_member_account: Account<'info, User>,
-
     #[account(mut)]
     pub initial_member_login: Signer<'info>,
 

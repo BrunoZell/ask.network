@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Flex, Heading, Textarea, FormControl, FormLabel, Button,
-  useToast, Text, VStack, HStack, Grid, Icon
+  Box, VStack, Heading, Text, Divider, Grid, Icon, Textarea, Button, useToast
 } from '@chakra-ui/react';
-import { ArrowRightIcon } from '@chakra-ui/icons';
 import { AppBar } from '../components/AppBar';
+import { ArrowRightIcon, ArrowDownIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { useWallet } from '@solana/wallet-adapter-react';
 
@@ -109,6 +108,8 @@ const OrganizationPage = () => {
     return <p>Organization not found</p>;
   }
 
+  const isReadOnly = !isMember;
+
   return (
     <Box w='full'>
       <AppBar />
@@ -118,37 +119,67 @@ const OrganizationPage = () => {
 
         <Box as="section" borderWidth="1px" p={4} borderRadius="md">
           <Heading as="h2" size="lg" mb={4}>Offers</Heading>
-          <VStack divider={<Box borderColor="gray.200" borderWidth="1px" />} spacing={4}>
-            {org.offers.map((offer, index) => isMember ? (
-              <Textarea key={index} defaultValue={offer} isReadOnly={!isMember} />
-            ) : (
-              <Text key={index} p={2}>{offer}</Text>
-            ))}
-          </VStack>
+          {org.offers.map((offer, index) => (
+            <VStack key={index} divider={<Divider />} spacing={4}>
+              {isMember ? (
+                <Textarea
+                  defaultValue={offer}
+                  isReadOnly={isReadOnly}
+                  resize="none"
+                  size="lg"
+                  w="100%"
+                />
+              ) : (
+                <Text p={2}>{offer}</Text>
+              )}
+            </VStack>
+          ))}
         </Box>
 
         <Box as="section" borderWidth="1px" p={4} borderRadius="md">
           <Heading as="h2" size="lg" mb={4}>Strategy</Heading>
           {org.strategy.map((strat, index) => (
-            <Grid templateColumns="1fr auto 1fr" gap={4} key={index} alignItems="center" mb={4}>
-              {isMember ? (
-                <>
-                  <Textarea defaultValue={strat.condition} isReadOnly={!isMember} />
-                  <Icon as={ArrowRightIcon} color="gray.500" />
-                  <Textarea defaultValue={strat.action} isReadOnly={!isMember} />
-                </>
-              ) : (
-                <>
-                  <Text p={2}>{strat.condition}</Text>
-                  <Icon as={ArrowRightIcon} color="gray.500" />
-                  <Text p={2}>{strat.action}</Text>
-                </>
-              )}
-            </Grid>
+            <VStack key={index} divider={<Divider />} spacing={4}>
+              <Grid templateColumns="1fr auto 1fr" gap={4} alignItems="center">
+                {isMember ? (
+                  <>
+                    <Textarea
+                      defaultValue={strat.condition}
+                      isReadOnly={isReadOnly}
+                      resize="none"
+                      size="lg"
+                      w="100%"
+                    />
+                    <Icon as={ArrowRightIcon} color="gray.500" />
+                    <Textarea
+                      defaultValue={strat.action}
+                      isReadOnly={isReadOnly}
+                      resize="none"
+                      size="lg"
+                      w="100%"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Text p={2} textAlign="left">{strat.condition}</Text>
+                    <Icon as={ArrowRightIcon} color="gray.500" />
+                    <Text p={2} textAlign="right">{strat.action}</Text>
+                  </>
+                )}
+              </Grid>
+            </VStack>
           ))}
         </Box>
 
-        {isMember && <Button colorScheme="blue" onClick={saveChanges}>Save Changes</Button>}
+        {isMember && (
+          <Button
+            colorScheme="blue"
+            onClick={saveChanges}
+            mt={6}
+          >
+            Save Changes
+          </Button>
+        )}
       </VStack>
     </Box>
   );

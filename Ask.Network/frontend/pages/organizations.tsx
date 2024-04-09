@@ -8,16 +8,16 @@ import {
     useColorModeValue,
     Icon
 } from '@chakra-ui/react';
+import { AppBar } from '../components/AppBar';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
+import Link from 'next/link';
 import * as anchor from '@project-serum/anchor';
 import {
     useAnchorWallet,
     useConnection,
 } from '@solana/wallet-adapter-react';
-import { AppBar } from '../components/AppBar';
 import { IdlAccounts, Program } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
-import Link from 'next/link';
 import idl from '../../solana/target/idl/ask_network.json';
 import { AskNetwork } from '../../solana/target/types/ask_network';
 
@@ -37,7 +37,6 @@ const Page = () => {
     const [program, setProgram] = useState<anchor.Program<AskNetwork>>();
     const { connection } = useConnection();
     const wallet = useAnchorWallet();
-
 
     /**
      * Initialize wallet provider and onchain program
@@ -78,7 +77,6 @@ const Page = () => {
         }
     }, [wallet]);
 
-
     /**
      * Fetch global account from chain
      * 
@@ -96,7 +94,9 @@ const Page = () => {
         (async () => {
             if (wallet?.publicKey && program) {
                 const [globalPda] = anchor.web3.PublicKey.findProgramAddressSync(
-                    [Buffer.from('global')],
+                    [
+                        Buffer.from('global')
+                    ],
                     program.programId
                 );
                 const globalAccount = await program.account.global.fetchNullable(globalPda);

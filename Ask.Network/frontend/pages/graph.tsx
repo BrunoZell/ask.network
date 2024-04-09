@@ -37,7 +37,7 @@ const Page = () => {
             // Create a new Program instance with the IDL, program ID, and provider
             const program = new anchor.Program(
                 idl as anchor.Idl,
-                new PublicKey('8WfQ3nACPcoBKxFnN4ekiHp8bRTd35R4L8Pu3Ak15is3'),
+                new PublicKey('FEZKARPjNEcugQZPddiCnAS6Quw9hryKkfNjtX8FLmCy'),
                 provider
             );
             setProgram(program as any);

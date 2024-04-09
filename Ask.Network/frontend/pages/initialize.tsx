@@ -6,7 +6,7 @@ import * as anchor from '@project-serum/anchor';
 import idl from '../../solana/target/idl/ask_network.json';
 import { AskNetwork } from '../../solana/target/types/ask_network';
 
-const programID = new anchor.web3.PublicKey('8WfQ3nACPcoBKxFnN4ekiHp8bRTd35R4L8Pu3Ak15is3'); // Replace with your program's public key
+const programID = new anchor.web3.PublicKey('FEZKARPjNEcugQZPddiCnAS6Quw9hryKkfNjtX8FLmCy'); // Replace with your program's public key
 
 const InitializeGlobalPage = () => {
     const wallet = useAnchorWallet();

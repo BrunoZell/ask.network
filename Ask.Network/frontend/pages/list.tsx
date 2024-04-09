@@ -111,7 +111,6 @@ const Page = () => {
         })();
     }, [wallet, program]);
 
-
     const getOrganizations = async (counter: number) => {
         console.log("Fetch all " + counter + " organizations...");
 
@@ -146,6 +145,7 @@ const Page = () => {
                 <Heading as="h1" size="xl" textAlign="center" my="40px">
                     Organizations on Ask Network
                 </Heading>
+
                 {!isInitialized ? (
                     <div>Loading 🧸</div>
                 ) : (

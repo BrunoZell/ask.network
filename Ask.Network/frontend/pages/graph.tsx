@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Box, Heading, Container } from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
 import * as anchor from '@project-serum/anchor';
-import { useConnection } from '@solana/wallet-adapter-react';
 import idl from '../../solana/target/idl/ask_network.json';
 import * as d3 from 'd3';
 import { AskNetwork } from '../../solana/target/types/ask_network';
@@ -13,6 +12,7 @@ type Organization = IdlAccounts<AskNetwork>['organization'];
 
 const Page = () => {
     const [organizations, setOrganizations] = useState<Organization[]>([]);
+    const [isInitialized, setIsInitialized] = useState(false);
     const [program, setProgram] = useState<anchor.Program<AskNetwork>>();
     const svgRef = useRef();
 
@@ -41,7 +41,28 @@ const Page = () => {
     }, []);
 
     useEffect(() => {
-        // Fetch organizations here
+        (async () => {
+            if (program) {
+                const [globalPda] = anchor.web3.PublicKey.findProgramAddressSync(
+                    [
+                        Buffer.from('global')
+                    ],
+                    program.programId
+                );
+                const globalAccount = await program.account.global.fetchNullable(globalPda);
+
+                if (globalAccount) {
+                    console.log('Fetched existing global account:');
+                    console.log(globalAccount);
+
+                    await getOrganizations(globalAccount.runningOrganizationOrdinal.toNumber());
+
+                    setIsInitialized(true);
+                } else {
+                    console.log('Global account does not exist.');
+                }
+            }
+        })();
     }, [program]);
 
     useEffect(() => {
@@ -49,6 +70,33 @@ const Page = () => {
             drawChart(organizations);
         }
     }, [organizations]);
+
+    const getOrganizations = async (counter: number) => {
+        console.log("Fetch all " + counter + " organizations...");
+
+        const organizationAccountKeys = [];
+        try {
+            for (let i = 0; i < counter; i++) {
+                const [organizationPda] = anchor.web3.PublicKey.findProgramAddressSync(
+                    [
+                        Buffer.from('organization'),
+                        new anchor.BN(i).toArrayLike(Buffer, 'le', 8),
+                    ],
+                    program.programId
+                );
+
+                organizationAccountKeys.push(organizationPda);
+            }
+
+            const organizations = await program.account.organization.fetchMultiple(organizationAccountKeys);
+
+            console.log(organizations);
+            setOrganizations(organizations as Organization[]);
+        } catch (error) {
+            console.log('failed to fetch all Organizations from chain', error);
+            setOrganizations([]);
+        }
+    };
 
     const drawChart = (orgs: Organization[]) => {
         const svg = d3.select(svgRef.current);
@@ -99,7 +147,12 @@ const Page = () => {
                 <Heading as="h1" size="xl" textAlign="center" my="40px">
                     Organizations on Ask Network
                 </Heading>
-                <svg ref={svgRef as any} width="800" height="600" style={{ border: "1px solid black" }}></svg>
+
+                {!isInitialized ? (
+                    <div>Loading 🧸</div>
+                ) : (
+                    <svg ref={svgRef as any} width="800" height="600" style={{ border: "1px solid black" }}></svg>
+                )}
             </Container>
         </Box>
     );

@@ -26,7 +26,7 @@ const Page = () => {
               Create an Organization
             </Button>
           </NextLink>
-          <NextLink href="/organizations" passHref>
+          <NextLink href="/list" passHref>
             <Link
               color="teal.600" // Or any color that fits your design
               _hover={{ textDecoration: 'none', color: "teal.700" }} // Change color on hover

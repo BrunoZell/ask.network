@@ -19,12 +19,18 @@ const Page = () => {
     useEffect(() => {
         console.log("Updating provider, then program...");
 
+        // const RPC_URL = "http://localhost:8899";
         const RPC_URL = "https://api.devnet.solana.com";
         const connection = new Connection(RPC_URL, "processed");
+
+        // Generate a dummy keypair
+        const dummyWallet = new anchor.Wallet(anchor.web3.Keypair.generate());
+
+        // Create an AnchorProvider with the connection and dummy wallet
         const provider = new anchor.AnchorProvider(
             connection,
-            new anchor.Wallet(anchor.web3.Keypair.generate()), // This is a dummy wallet, used for read-only operations.
-            anchor.AnchorProvider.defaultOptions()
+            dummyWallet,
+            { preflightCommitment: "processed" },
         );
 
         try {

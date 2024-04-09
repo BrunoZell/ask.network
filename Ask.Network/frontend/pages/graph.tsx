@@ -72,6 +72,8 @@ const Page = () => {
     }, [organizations]);
 
     const getOrganizations = async (counter: number) => {
+        if (!program) return; // Guard clause
+
         console.log("Fetch all " + counter + " organizations...");
 
         const organizationAccountKeys = [];

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import { AppBar } from '../components/AppBar';
+import { useRouter } from 'next/router';
+import { useToast } from '@chakra-ui/react';
 import * as anchor from '@project-serum/anchor';
 import {
   useAnchorWallet,
@@ -12,7 +14,10 @@ import idl from '../../solana/target/idl/ask_network.json';
 import { AskNetwork } from '../../solana/target/types/ask_network';
 
 const Page = () => {
+  const router = useRouter();
+  const toast = useToast();
   const [alias, setAlias] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to handle button disable
   const [program, setProgram] = useState<anchor.Program<AskNetwork>>();
   const { connection } = useConnection();
   const wallet = useAnchorWallet();
@@ -57,9 +62,19 @@ const Page = () => {
   }, [wallet]);
 
   const signUpOrganization = async () => {
-    if (!wallet || !program || !alias.trim()) return;
+    if (!wallet || !program || !alias.trim()) {
+      toast({
+        title: 'Error',
+        description: 'Please ensure all fields are filled and wallet is connected.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
 
     console.log("Create organization...");
+    setIsSubmitting(true); // Disable the button while processing
 
     // Assume `global` account has already been initialized and is a singleton
     const [globalPda] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -75,11 +90,13 @@ const Page = () => {
     console.log("Fetched global account:");
     console.log(globalAccount);
 
+    const thisOrganizationId = globalAccount.runningOrganizationOrdinal;
+
     // Deriving PDAs based on the provided seeds
     const [organizationPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [
         Buffer.from('organization'),
-        new anchor.BN(globalAccount.runningOrganizationOrdinal).toArrayLike(Buffer, 'le', 8),
+        new anchor.BN(thisOrganizationId).toArrayLike(Buffer, 'le', 8),
       ],
       program.programId
     );
@@ -87,30 +104,54 @@ const Page = () => {
     const [initialMembershipPda] = anchor.web3.PublicKey.findProgramAddressSync(
       [
         Buffer.from('member'),
-        new anchor.BN(globalAccount.runningOrganizationOrdinal).toArrayLike(Buffer, 'le', 8),
+        new anchor.BN(thisOrganizationId).toArrayLike(Buffer, 'le', 8),
         wallet.publicKey.toBuffer()
       ],
       program.programId
     );
 
-    console.log('Deploying organization ' + globalAccount.runningOrganizationOrdinal);
+    console.log('Deploying organization ' + thisOrganizationId);
 
-    // Building the instruction with derived accounts
-    const tx = await program.methods
-      .signUpOrganization({
-        alias: alias.trim(),
-      })
-      .accounts({
-        organizationAccount: organizationPda,
-        initialMembership: initialMembershipPda,
-        initialMemberLogin: wallet.publicKey,
-        global: globalPda,
-        systemProgram: anchor.web3.SystemProgram.programId,
-        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-      })
-      .rpc();
+    try {
+      // Building the instruction with derived accounts
+      const tx = await program.methods
+        .signUpOrganization({
+          alias: alias.trim(),
+        })
+        .accounts({
+          organizationAccount: organizationPda,
+          initialMembership: initialMembershipPda,
+          initialMemberLogin: wallet.publicKey,
+          global: globalPda,
+          systemProgram: anchor.web3.SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        })
+        .rpc();
 
-    console.log('Transaction signature', tx);
+      console.log('Transaction signature', tx);
+
+      // Waiting for the transaction to be confirmed
+      const confirmation = await connection.confirmTransaction(tx, 'processed');
+
+      // Check if the transaction is confirmed successfully
+      if (confirmation.value.err) {
+        throw new Error('Transaction failed to confirm');
+      }
+
+      // Navigate to the new page using the ordinal
+      router.push(`/${thisOrganizationId.toString()}`);
+    } catch (error) {
+      console.error('Transaction failed', error);
+      toast({
+        title: 'Transaction Failed',
+        description: (error.message || "The transaction failed to confirm."),
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsSubmitting(false); // Re-enable the button after processing
+    }
   };
 
   return (

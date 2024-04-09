@@ -12,7 +12,7 @@ ask_network = "8WfQ3nACPcoBKxFnN4ekiHp8bRTd35R4L8Pu3Ak15is3"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Devnet"
 wallet = "/root/.config/solana/asknetwork-deploy.json"
 
 [scripts]

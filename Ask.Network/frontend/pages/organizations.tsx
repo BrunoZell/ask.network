@@ -149,30 +149,34 @@ const Page = () => {
                 <Heading as="h1" size="xl" textAlign="center" my="40px">
                     Organizations on Ask Network
                 </Heading>
-                <List spacing={3}>
-                    {organizations.map((org, i) => (
-                        <Link key={i} href={`/${i}`} passHref>
-                            <ListItem
-                                as="a"
-                                padding="20px"
-                                shadow="md"
-                                borderWidth="1px"
-                                borderRadius="md"
-                                display="flex"
-                                justifyContent="space-between"
-                                alignItems="center"
-                                borderColor={borderColor}
-                                _hover={{ bg: useColorModeValue('gray.100', 'gray.700'), textDecoration: 'none' }}
-                            >
-                                <Box flex="1">
-                                    <Heading as="h3" size="lg">{org?.alias ?? ""}</Heading>
-                                    {/* <Box>{org.description}</Box> */}
-                                </Box>
-                                <Icon as={ArrowForwardIcon} w={14} h={14} color={arrowColor} />
-                            </ListItem>
-                        </Link>
-                    ))}
-                </List>
+                {!isInitialized ? (
+                    <div>Loading 🧸</div>
+                ) : (
+                    <List spacing={3}>
+                        {organizations.map((org, i) => (
+                            <Link key={i} href={`/${i}`} passHref>
+                                <ListItem
+                                    as="a"
+                                    padding="20px"
+                                    shadow="md"
+                                    borderWidth="1px"
+                                    borderRadius="md"
+                                    display="flex"
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    borderColor={borderColor}
+                                    _hover={{ bg: useColorModeValue('gray.100', 'gray.700'), textDecoration: 'none' }}
+                                >
+                                    <Box flex="1">
+                                        <Heading as="h3" size="lg">{org?.alias ?? ""}</Heading>
+                                        {/* <Box>{org.description}</Box> */}
+                                    </Box>
+                                    <Icon as={ArrowForwardIcon} w={14} h={14} color={arrowColor} />
+                                </ListItem>
+                            </Link>
+                        ))}
+                    </List>
+                )}
             </Container>
         </Box>
     );

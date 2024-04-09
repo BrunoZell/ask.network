@@ -78,7 +78,7 @@ const Page = () => {
                 <Heading as="h1" size="xl" textAlign="center" my="40px">
                     Organizations on Ask Network
                 </Heading>
-                <svg ref={svgRef} width="800" height="600" style={{ border: "1px solid black" }}></svg>
+                <svg ref={svgRef as any} width="800" height="600" style={{ border: "1px solid black" }}></svg>
             </Container>
         </Box>
     );

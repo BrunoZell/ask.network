@@ -17,8 +17,8 @@ import { AskNetwork } from '../../solana/target/types/ask_network';
 
 type Organization = IdlAccounts<AskNetwork>['organization'];
 
-
 const Page = () => {
+  const router = useRouter();
   const [organization, setOrganization] = useState<Organization>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [program, setProgram] = useState<anchor.Program<AskNetwork>>();
@@ -80,19 +80,31 @@ const Page = () => {
    */
   useEffect(() => {
     (async () => {
-      if (wallet?.publicKey && program) {
-        const orgId = 0;
+      if (wallet?.publicKey && program && router && router.query) {
+        const organizationId = router.query.organizationId;
+
+        console.log(organizationId);
+
+        if (!organizationId) {
+          console.log("organization id undefined");
+          return;
+        }
+
+        const orgIdInt = parseInt(organizationId as string);
+
+        console.log("Trying to fetch organization " + orgIdInt + " from chian");
+
         const [organizationPda] = anchor.web3.PublicKey.findProgramAddressSync(
           [
             Buffer.from('organization'),
-            new anchor.BN(orgId).toArrayLike(Buffer, 'le', 8),
+            new anchor.BN(orgIdInt).toArrayLike(Buffer, 'le', 8),
           ],
           program.programId
         );
         const organizationAccount = await program.account.organization.fetchNullable(organizationPda);
 
         if (organizationAccount) {
-          console.log('Fetched existing organization account:');
+          console.log('Fetched existing organization account ' + organizationPda + ":");
           console.log(organizationAccount);
 
           setOrganization(organizationAccount);
@@ -101,11 +113,13 @@ const Page = () => {
 
           setIsInitialized(true);
         } else {
-          console.log('Organization account ' + orgId + ' does not exist.');
+          console.log('Organization account ' + organizationId + ' does not exist.');
+          setOrganization(null);
+          setIsInitialized(true);
         }
       }
     })();
-  }, [wallet, program]);
+  }, [wallet, program, router]);
 
   return (
     <Box w='full'>
@@ -113,6 +127,8 @@ const Page = () => {
 
       {!isInitialized ? (
         <div>Loading 🧸</div>
+      ) : !organization ? (
+        <div>Organization does not exist</div>
       ) : (
         <VStack spacing={8} align="stretch" my={8} mx="auto" maxW="container.md" px={4}>
           <Heading as="h1" size="2xl" textAlign="center">{organization.alias}</Heading>

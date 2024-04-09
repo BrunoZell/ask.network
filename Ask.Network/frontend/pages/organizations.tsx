@@ -21,17 +21,13 @@ import { PublicKey } from '@solana/web3.js';
 import idl from '../../solana/target/idl/ask_network.json';
 import { AskNetwork } from '../../solana/target/types/ask_network';
 
-const organizations = [
-    { id: 0, name: 'Ask Network', description: 'This is Org One.' },
-    { id: 1, name: 'RABOT CRYPTO GmbH', description: 'This is Org Two.' },
-    { id: 2, name: 'Superteam Germany', description: 'This is Org Three.' },
-];
-
 type Organization = IdlAccounts<AskNetwork>['organization'];
 
 const Page = () => {
     const borderColor = useColorModeValue('gray.200', 'gray.500');
     const arrowColor = useColorModeValue('blue.200', 'blue.500');
+    const hoverBackground = useColorModeValue('gray.100', 'gray.700'); // Define hover background color here
+
     const [organizations, setOrganizations] = useState<Organization[]>([]);
     const [isInitialized, setIsInitialized] = useState(false);
     const [program, setProgram] = useState<anchor.Program<AskNetwork>>();
@@ -166,7 +162,7 @@ const Page = () => {
                                     justifyContent="space-between"
                                     alignItems="center"
                                     borderColor={borderColor}
-                                    _hover={{ bg: useColorModeValue('gray.100', 'gray.700'), textDecoration: 'none' }}
+                                    _hover={{ bg: hoverBackground, textDecoration: 'none' }} // Use the hover background variable here
                                 >
                                     <Box flex="1">
                                         <Heading as="h3" size="lg">{org?.alias ?? ""}</Heading>

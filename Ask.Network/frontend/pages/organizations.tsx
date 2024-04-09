@@ -124,12 +124,13 @@ const Page = () => {
             for (let i = 0; i < counter; i++) {
                 const [organizationPda] = anchor.web3.PublicKey.findProgramAddressSync(
                     [
-                        [Buffer.from('organization')],
+                        Buffer.from('organization'),
                         new anchor.BN(i).toArrayLike(Buffer, 'le', 8),
                     ],
                     program.programId
                 );
-                organizationAccountKeys.push(new PublicKey(organizationPda));
+
+                organizationAccountKeys.push(organizationPda);
             }
 
             const organizations = await program.account.organization.fetchMultiple(organizationAccountKeys);

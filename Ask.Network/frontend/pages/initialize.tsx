@@ -17,9 +17,10 @@ const InitializeGlobalPage = () => {
             return;
         }
 
-        const network = "http://127.0.0.1:8899"; // Adjust for your Solana cluster
+        // const RPC_URL = "http://localhost:8899";
+        const RPC_URL = "https://api.devnet.solana.com";
         const provider = new anchor.AnchorProvider(
-            new Connection(network),
+            new Connection(RPC_URL),
             wallet,
             anchor.AnchorProvider.defaultOptions(),
         );

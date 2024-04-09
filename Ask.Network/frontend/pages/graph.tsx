@@ -7,6 +7,7 @@ import idl from '../../solana/target/idl/ask_network.json';
 import * as d3 from 'd3';
 import { AskNetwork } from '../../solana/target/types/ask_network';
 import { IdlAccounts } from '@project-serum/anchor';
+import { Connection, PublicKey } from '@solana/web3.js';
 
 type Organization = IdlAccounts<AskNetwork>['organization'];
 
@@ -16,7 +17,27 @@ const Page = () => {
     const svgRef = useRef();
 
     useEffect(() => {
-        // Initialize your program here
+        console.log("Updating provider, then program...");
+
+        const RPC_URL = "https://api.devnet.solana.com";
+        const connection = new Connection(RPC_URL, "processed");
+        const provider = new anchor.AnchorProvider(
+            connection,
+            new anchor.Wallet(anchor.web3.Keypair.generate()), // This is a dummy wallet, used for read-only operations.
+            anchor.AnchorProvider.defaultOptions()
+        );
+
+        try {
+            // Create a new Program instance with the IDL, program ID, and provider
+            const program = new anchor.Program(
+                idl as anchor.Idl,
+                new PublicKey('8WfQ3nACPcoBKxFnN4ekiHp8bRTd35R4L8Pu3Ak15is3'),
+                provider
+            );
+            setProgram(program as any);
+        } catch (error) {
+            console.error("Error updating program:", error);
+        }
     }, []);
 
     useEffect(() => {

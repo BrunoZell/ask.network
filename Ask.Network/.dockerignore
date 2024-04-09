@@ -1,0 +1,12 @@
+# Ignore test leder
+solana/test-ledger
+
+# Ignore everything in solana/target, except idl and types as frontend depends on them and the Solana program isn't built in Docker yet
+solana/target/*
+
+!solana/target/idl/
+!solana/target/types/
+
+# Ignore node_modules and .next directories in ask.network
+frontend/node_modules/
+frontend/.next/

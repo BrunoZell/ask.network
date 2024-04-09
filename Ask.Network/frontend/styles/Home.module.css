@@ -14,11 +14,32 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  font-size: 50px;
+  font-size: 32px;
   color: white;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 0.5rem 1rem;
   flex-wrap: wrap;
+}
+
+/* Center "Ask Network" on larger devices */
+@media (min-width: 768px) {
+
+  /* Adjust the min-width as needed for your layout */
+  .AppHeader {
+    justify-content: center;
+    /* Center the items */
+  }
+
+  .AppHeader::before,
+  .AppHeader::after {
+    content: '';
+    display: block;
+    flex: 1;
+  }
+
+  .AppHeader>span {
+    flex: 0 0 auto;
+    /* Ensure the title doesn't grow or shrink */
+  }
 }
 
 .AppBody {

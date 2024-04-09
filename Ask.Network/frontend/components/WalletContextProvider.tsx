@@ -18,7 +18,7 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   return (
-    <ConnectionProvider endpoint='http://localhost:8899'>
+    <ConnectionProvider endpoint='https://api.devnet.solana.com'>
       <WalletProvider wallets={wallets} autoConnect={true}>
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>

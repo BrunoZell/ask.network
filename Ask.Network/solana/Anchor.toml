@@ -3,14 +3,17 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-ask_network = "4ktm3bQPuEfsyGRR95QrkRdcrfb268hGzgjDr9Y17FGE"
+ask_network = "JDX5MmkTDxAwuQomKL3xT9ycETa6T7NNPWFFCAKX1gc9"
+
+[programs.devnet]
+ask_network = "JDX5MmkTDxAwuQomKL3xT9ycETa6T7NNPWFFCAKX1gc9"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
-wallet = "/home/op/.config/solana/id.json"
+cluster = "Devnet"
+wallet = "/root/.config/solana/asknetwork-deploy.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

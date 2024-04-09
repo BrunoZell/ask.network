@@ -23,3 +23,25 @@ a {
 a:active {
   color: grey;
 }
+
+.variable-name {
+  font-weight: bold;
+  color: #555;
+  /* A darker shade for variable names */
+}
+
+.variable-value {
+  font-weight: normal;
+  color: #000;
+  /* A standard color for text, typically black for high contrast */
+}
+
+/* Additional style for your D3 labels if needed */
+.d3-label {
+  font-weight: normal;
+  color: white;
+}
+
+h3 {
+  font-size: 1.5em;
+}

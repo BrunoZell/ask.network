@@ -3,7 +3,7 @@ import type { AppProps } from "next/app"
 import WalletContextProvider from "../components/WalletContextProvider"
 import { ChakraProvider } from "@chakra-ui/react"
 
-function MyApp({ Component, pageProps }: AppProps) {
+function AskNetwork({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <WalletContextProvider>
@@ -13,4 +13,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default MyApp
+export default AskNetwork

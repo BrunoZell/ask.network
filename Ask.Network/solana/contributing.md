@@ -103,7 +103,7 @@ pub use state::*;
 pub mod instructions;
 pub mod state;
 
-declare_id!("EaBpabfkGswhPnC14mnwz3XxHHyJuqZjPZAMU9mR7KR3");
+declare_id!("JDX5MmkTDxAwuQomKL3xT9ycETa6T7NNPWFFCAKX1gc9");
 
 #[program]
 pub mod solana_program {

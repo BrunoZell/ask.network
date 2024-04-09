@@ -95,6 +95,8 @@ const Page = () => {
           console.log('Fetched existing organization account:');
           console.log(organizationAccount);
 
+          setOrganization(organizationAccount);
+
           // await getMembership(globalAccount.runningOrganizationOrdinal.toNumber());
 
           setIsInitialized(true);
@@ -108,11 +110,25 @@ const Page = () => {
   return (
     <Box w='full'>
       <AppBar />
-      {/* {!isInitialized ? (
+
+      {!isInitialized ? (
         <div>Loading 🧸</div>
       ) : (
-
-      )} */}
+        <VStack spacing={8} align="stretch" my={8} mx="auto" maxW="container.md" px={4}>
+          <Heading as="h1" size="2xl" textAlign="center">{organization.alias}</Heading>
+          {/* <Text textAlign="center">{org.description}</Text> */}
+          {/* 
+          {isMember && (
+            <Button
+              colorScheme="blue"
+              onClick={saveChanges}
+              mt={6}
+            >
+              Save Changes
+            </Button>
+          )} */}
+        </VStack>
+      )}
     </Box>
   );
 }

@@ -3,10 +3,10 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-ask_network = "FEZKARPjNEcugQZPddiCnAS6Quw9hryKkfNjtX8FLmCy"
+ask_network = "JDX5MmkTDxAwuQomKL3xT9ycETa6T7NNPWFFCAKX1gc9"
 
 [programs.devnet]
-ask_network = "FEZKARPjNEcugQZPddiCnAS6Quw9hryKkfNjtX8FLmCy"
+ask_network = "JDX5MmkTDxAwuQomKL3xT9ycETa6T7NNPWFFCAKX1gc9"
 
 [registry]
 url = "https://api.apr.dev"

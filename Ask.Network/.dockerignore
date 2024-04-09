@@ -1,0 +1,10 @@
+# Ignore everything in solana/target
+solana/target/*
+solana/test-ledger
+
+# But do not ignore the solana/target/idl directory as frontend depends on them
+!solana/target/idl/
+
+# Ignore node_modules and .next directories in ask.network
+frontend/node_modules/
+frontend/.next/

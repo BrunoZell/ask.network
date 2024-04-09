@@ -11,7 +11,7 @@ pub struct SignUpOrganizationArgs {
 pub struct SignUpOrganization<'info> {
     #[account(
         init,
-        seeds = [b"organization", &global.running_organization_ordinal.to_le_bytes()[..]],
+        seeds = [b"organization", global.running_organization_ordinal.to_le_bytes().as_ref()],
         bump,
         space = Organization::size(args.alias.len()),
         payer = initial_member_login)]
@@ -19,7 +19,7 @@ pub struct SignUpOrganization<'info> {
 
     #[account(
         init,
-        seeds = [b"member", &global.running_organization_ordinal.to_le_bytes()[..], initial_member_login.key().as_ref()],
+        seeds = [b"member", global.running_organization_ordinal.to_le_bytes().as_ref(), initial_member_login.key().as_ref()],
         bump,
         space = Membership::SIZE,
         payer = initial_member_login

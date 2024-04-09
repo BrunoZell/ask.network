@@ -12,7 +12,7 @@ pub struct CancelAsk<'info> {
     #[account(
         mut,
         close = user_login, // after the instruction is executed, the 'ask' account will be closed, and any remaining lamports will be transferred to the 'user' account.
-        seeds = [b"ask", user_account.key().as_ref(), &args.ordinal.to_le_bytes()],
+        seeds = [b"ask", user_account.key().as_ref(), args.ordinal.to_le_bytes().as_ref()],
         bump)]
     pub ask: Account<'info, Ask>,
 

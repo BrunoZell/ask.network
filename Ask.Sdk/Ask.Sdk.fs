@@ -38,7 +38,7 @@ type Observation<'ObservationSpace> = {
 /// an external system with the aim of observing it to later infer what was happening. The observer implementation
 /// interprets the networking traffic and emits strongly-typed 'Percepts whenever there are new measurements obtained.
 type IObserver<'ObservationSpace> =
-    abstract member Observations : IAsyncEnumerable<Observation<'ObservationSpace>>
+    abstract member Observations : unit -> IAsyncEnumerable<Observation<'ObservationSpace>>
 
 // ###################
 // #### DECISIONS ####

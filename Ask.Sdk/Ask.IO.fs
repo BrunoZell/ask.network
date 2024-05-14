@@ -43,12 +43,12 @@ type CapturedMessage<'Message> = {
 /// Network sessions with external IT-Systems are the only entry point for new information into the system.
 /// Special network protocol clients are used in IObserver and IBroker implementations to implicitly capture
 /// all network messages sent and received.
-type MessageSequence<'Session, 'Message> =
+type MessageSequenceHead<'Session, 'Message> =
     | Identity of ProtocolSessionIdentity<'Session>
-    | Message of Node:ProtocolSessionMessage<'Session, 'Message>
-and ProtocolSessionMessage<'Session, 'Message> = {
+    | Message of Node:MessageSequence<'Session, 'Message>
+and MessageSequence<'Session, 'Message> = {
     /// Links previous MessageSequence to form a temporal order.
-    Previous: ContentId<MessageSequence<'Session, 'Message>>
+    Previous: ContentId<MessageSequenceHead<'Session, 'Message>>
 
     /// Cid to the then latest captured message that caused this protocol session head to be appended.
     Capture: CapturedMessage<'Message>

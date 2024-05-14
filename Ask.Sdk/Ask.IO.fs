@@ -2,6 +2,8 @@ module Ask.IO
 
 open System
 open Ask.Host.Persistence
+open System.Threading.Tasks
+open System.Collections.Generic
 
 // ######################
 // ####  Networking  ####
@@ -18,8 +20,8 @@ type INetworkProtocolPersistence<'SessionIdentity, 'Message> =
 
 /// Unique identifier for a single IO-Instance (Observer-Instance or Broker-Instance)
 /// from controller behavior new network protocol sessions are created.
-type InteractorInstanceIdentity =
-    | InteractorInstanceIdentity of StartTimestamp:DateTime * NodeId:int64 * Nonce:int64
+type InteractorIdentity =
+    | InteractorIdentity of StartTimestamp:DateTime * NodeId:int64 * Nonce:int64
 
 type ProtocolSessionIdentity<'Session> =
     | ProtocolSessionIdentity of Origin:InteractorIdentity * InitiationTimestamp:DateTime * Session:'Session * Nonce:int64
@@ -54,5 +56,10 @@ and MessageSequence<'Session, 'Message> = {
     Capture: CapturedMessage<'Message>
 }
 
+/// Interface for interactors that manage multiple network protocols and capture their communications.
 type IInteractor =
-    abstract member Messages : unit -> IAsyncEnumerable<Message<'Protocol, 'Message>>
+    /// An observable that notifies subscribers whenever a new protocol session is started.
+    abstract member NewSession<'Protocol> : unit -> IObservable<'Protocol>
+
+    /// An observable that notifies subscribers of new messages within any session.
+    abstract member NewMessage<'Protocol, 'Message> : unit -> IObservable<MessageSequenceHead<'Protocol, 'Message>>

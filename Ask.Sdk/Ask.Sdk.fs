@@ -5,15 +5,6 @@ open System.Runtime.CompilerServices
 open System.Threading.Tasks
 open Ask.Host.Persistence
 
-// ####################
-// #### NETWORK IO ####
-// ####################
-
-/// Implemented by a persistence backend that accepts and stores
-/// network session states as they are captured.
-type INetworkProtocolPersistence<'SessionIdentity, 'Message> =
-    abstract member Store : 'SessionIdentity -> 'Message -> Task
-
 // ######################
 // #### OBSERVATIONS ####
 // ######################

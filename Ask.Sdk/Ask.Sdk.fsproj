@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Compile Include="Ask.Sdk.fs" />
-    <Compile Include="Ask.IO.fs" />
   </ItemGroup>
 
   <ItemGroup>

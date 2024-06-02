@@ -2,17 +2,6 @@ module Ask.IO
 
 open System
 open Ask.Host.Persistence
-open System.Threading.Tasks
-open System.Collections.Generic
-
-// ######################
-// ####  Networking  ####
-// ######################
-
-/// Implemented by a persistence backend that accepts and stores
-/// network session states as they are captured.
-type INetworkProtocolPersistence<'SessionIdentity, 'Message> =
-    abstract member Store: 'SessionIdentity -> 'Message -> Task
 
 // ##############
 // ####  IO  ####
@@ -56,8 +45,8 @@ and MessageSequence<'Session, 'Message> = {
     Capture: CapturedMessage<'Message>
 }
 
-/// Interface for interactors that manage multiple network protocols and capture their communications.
-type IInteractor =
+/// Interface to observe an Sdk.Interactor instance that controls multiple network protocol types to capture their communications.
+type IObservableInteractor =
     /// An observable that notifies subscribers whenever a new protocol session is started.
     abstract member NewSession<'Protocol> : unit -> IObservable<'Protocol>
 

@@ -6,6 +6,19 @@ open System.Threading.Tasks
 open Ask.Host.Persistence
 
 // ######################
+// ####  Networking  ####
+// ######################
+
+/// Implemented by a persistence backend that accepts and stores
+/// network session states as they are captured.
+type INetworkProtocolPersistence<'SessionIdentity, 'Message> =
+    abstract member Store: 'SessionIdentity -> 'Message -> Task
+
+/// Interface for interactors that manage multiple network protocols and capture their communications.
+type IInteractor =
+    abstract member Interact : unit -> Task
+
+// ######################
 // #### OBSERVATIONS ####
 // ######################
 

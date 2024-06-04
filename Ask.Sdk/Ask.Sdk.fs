@@ -5,9 +5,28 @@ open System.Runtime.CompilerServices
 open System.Threading.Tasks
 open Ask.Host.Persistence
 
-// ######################
-// ####  Networking  ####
-// ######################
+// ##############
+// ####  IO  ####
+// ##############
+
+/// Unique identifier for a single IO-Instance (Observer-Instance or Broker-Instance)
+/// from controller behavior new network protocol sessions are created.
+type InteractorIdentity =
+    | InteractorIdentity of StartTimestamp:DateTime * NodeId:int64 * Nonce:int64
+
+type ProtocolSessionIdentity<'Session> =
+    | ProtocolSessionIdentity of Origin:InteractorIdentity * InitiationTimestamp:DateTime * Session:'Session * Nonce:int64
+
+/// Generated on every network message sent or received from within an interactor implementation.
+/// 'Message is a network protocols 'Message-type
+type CapturedMessage<'Message> = {
+    /// Absolute timestamp of when this observation was recorded.
+    /// As of runtime clock.
+    At: DateTime
+
+    /// All percepts that appeared at this instant, as emitted by an IObserver<'Percept> instance.
+    Message: ContentId<'Message>
+}
 
 /// Implemented by a persistence backend that accepts and stores
 /// network session states as they are captured.
@@ -15,8 +34,8 @@ type INetworkProtocolPersistence<'SessionIdentity, 'Message> =
     abstract member Store: 'SessionIdentity -> 'Message -> Task
 
 /// Interface for interactors that manage multiple network protocols and capture their communications.
-type IInteractor =
-    abstract member Interact : unit -> Task
+type IInteractor<'MessageSpace> =
+    abstract member Interact : unit -> IAsyncEnumerable<CapturedMessage<'MessageSpace>>
 
 // ######################
 // #### OBSERVATIONS ####

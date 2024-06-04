@@ -1,30 +1,8 @@
 module Ask.IO
 
-open System
 open Ask.Host.Persistence
-
-// ##############
-// ####  IO  ####
-// ##############
-
-/// Unique identifier for a single IO-Instance (Observer-Instance or Broker-Instance)
-/// from controller behavior new network protocol sessions are created.
-type InteractorIdentity =
-    | InteractorIdentity of StartTimestamp:DateTime * NodeId:int64 * Nonce:int64
-
-type ProtocolSessionIdentity<'Session> =
-    | ProtocolSessionIdentity of Origin:InteractorIdentity * InitiationTimestamp:DateTime * Session:'Session * Nonce:int64
-
-/// Generated on every network message sent or received from within an interactor implementation.
-/// 'Message is a network protocols 'Message-type
-type CapturedMessage<'Message> = {
-    /// Absolute timestamp of when this observation was recorded.
-    /// As of runtime clock.
-    At: DateTime
-
-    /// All percepts that appeared at this instant, as emitted by an IObserver<'Percept> instance.
-    Message: ContentId<'Message>
-}
+open Sdk
+open System
 
 /// All network sessions originating from an IO-Instance (as embedded in IObserver and IBroker instances)
 /// are recorded into protocol session sequences.

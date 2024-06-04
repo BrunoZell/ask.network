@@ -5,6 +5,14 @@ open System.Runtime.CompilerServices
 open System.Threading.Tasks
 open Ask.Host.Persistence
 
+// #####################
+// #### PERSISTENCE ####
+// #####################
+
+/// Implemented by a persistence backend that accepts and stores network session states as they are captured.
+type INetworkProtocolPersistence<'SessionIdentity, 'State> =
+    abstract member Store: session:'SessionIdentity -> state:'State -> Task
+
 // ##############
 // ####  IO  ####
 // ##############
@@ -28,11 +36,13 @@ type CapturedMessage<'Message> = {
     Message: ContentId<'Message>
 }
 
-/// Implemented by a persistence backend that accepts and stores network session states as they are captured.
-type INetworkProtocolPersistence<'SessionIdentity, 'State> =
-    abstract member Store: session:'SessionIdentity -> state:'State -> Task
+/// IO Runtime interface for interactors that returns all protocol messages exchanged by the Interactor instance.
+/// All exchanges messages are captured and replayed once the Query Runtime calls IInteractor<'MessageSpace>.Interact : IAsyncEnumerable<CapturedMessage<'MessageSpace>>
+type IInteractor =
+    abstract member Interact : unit -> Task
 
-/// Interface for interactors that manage multiple network protocols and capture their communications.
+/// Query Runtime interface for interactors that returns all protocol messages exchanged by the Interactor instance.
+/// An Interactor may manage multiple network protocols, thus 'MessageSpace is a union over protocol types with their 'Message union type as value type.
 type IInteractor<'MessageSpace> =
     abstract member Interact : unit -> IAsyncEnumerable<CapturedMessage<'MessageSpace>>
 

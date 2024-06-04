@@ -28,10 +28,9 @@ type CapturedMessage<'Message> = {
     Message: ContentId<'Message>
 }
 
-/// Implemented by a persistence backend that accepts and stores
-/// network session states as they are captured.
-type INetworkProtocolPersistence<'SessionIdentity, 'Message> =
-    abstract member Store: 'SessionIdentity -> 'Message -> Task
+/// Implemented by a persistence backend that accepts and stores network session states as they are captured.
+type INetworkProtocolPersistence<'SessionIdentity, 'State> =
+    abstract member Store: session:'SessionIdentity -> state:'State -> Task
 
 /// Interface for interactors that manage multiple network protocols and capture their communications.
 type IInteractor<'MessageSpace> =
